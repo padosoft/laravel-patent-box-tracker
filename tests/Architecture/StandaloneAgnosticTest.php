@@ -73,6 +73,40 @@ final class StandaloneAgnosticTest extends TestCase
         );
     }
 
+    public function test_classifier_directory_is_walked_and_clean(): void
+    {
+        // Self-documenting assertion: the recursive walk above already
+        // covers everything under src/, but the Classifier + Models
+        // directories landed in W4.B.2 — make the coverage explicit
+        // so a future contributor doesn't accidentally add an
+        // exemption that hides a leak.
+        $classifierDir = realpath(__DIR__.'/../../src/Classifier');
+        $modelsDir = realpath(__DIR__.'/../../src/Models');
+
+        $this->assertNotFalse($classifierDir, 'src/Classifier/ must exist after W4.B.2.');
+        $this->assertNotFalse($modelsDir, 'src/Models/ must exist after W4.B.2.');
+
+        foreach ([$classifierDir, $modelsDir] as $dir) {
+            $iterator = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS),
+            );
+            foreach ($iterator as $file) {
+                /** @var \SplFileInfo $file */
+                if (! $file->isFile() || strtolower($file->getExtension()) !== 'php') {
+                    continue;
+                }
+                $contents = (string) file_get_contents($file->getPathname());
+                foreach (self::forbiddenNeedles() as $needle) {
+                    $this->assertStringNotContainsString(
+                        $needle,
+                        $contents,
+                        sprintf('%s leaks AskMyDocs symbol "%s".', $file->getPathname(), $needle),
+                    );
+                }
+            }
+        }
+    }
+
     public function test_composer_json_does_not_require_askmydocs(): void
     {
         $composerPath = realpath(__DIR__.'/../../composer.json');

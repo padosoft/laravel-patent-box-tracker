@@ -1,0 +1,62 @@
+[
+    {
+        "sha": "ed3af7d6c2714f47bf1598cdfa200f0b7c59e1fc",
+        "phase": "documentation",
+        "is_rd_qualified": true,
+        "rationale": "PLAN-W4 Patent Box tracker design doc + W3 closure status — publishes the design knowledge for the upcoming W4 cycle and records the W3 outcome. Documentation that publishes architectural intent for an actively-developing IP qualifies under the Patent Box."
+    },
+    {
+        "sha": "0db114ec3dde51a830ca4cbfb298f357e8f8353d",
+        "phase": "design",
+        "is_rd_qualified": true,
+        "rationale": "Vercel AI SDK chat migration design doc + W2 closure — commits an architectural path for the chat layer's migration before any code is written. Architecture/design writing that frames implementation work qualifies as design."
+    },
+    {
+        "sha": "85225b5ac0aae016888cf38bf51be021be6919ab",
+        "phase": "implementation",
+        "is_rd_qualified": true,
+        "rationale": "tenant_id foundation — adds the multi-tenant migration, TenantContext singleton, and the R30/R31 architectural enforcement. New source code realising a designed multi-tenant capability — implementation phase, qualifies."
+    },
+    {
+        "sha": "ee82ef9245789b94dcca8b142466f75ce76e7d79",
+        "phase": "implementation",
+        "is_rd_qualified": true,
+        "rationale": "Backend SSE wire-format alignment to SDK v6 UIMessageChunk shape — code change that realises the V3 streaming protocol contract. Implementation of the streaming layer; qualifies."
+    },
+    {
+        "sha": "8aa8ceebe548909d059df590a76b67800ac3c42e",
+        "phase": "validation",
+        "is_rd_qualified": true,
+        "rationale": "Backend SSE streaming endpoint plus an 8-scenario PHPUnit suite. The dominant artefact is the validation harness covering 8 streaming behaviours; the endpoint is the SUT. Pre-release validation activity, qualifies."
+    },
+    {
+        "sha": "33fef2a06e62bb63f667c90821a49cc9a1f8f1d0",
+        "phase": "research",
+        "is_rd_qualified": true,
+        "rationale": "RegoloProvider delegates to laravel/ai SDK — exploratory rewrite of the provider abstraction prototyping the cleanest delegation path before the package contract is finalised. Investigative work that explores feasibility, qualifies as research."
+    },
+    {
+        "sha": "4a619e5e4f0c58faaffeac25c9efd719c27c85cc",
+        "phase": "non_qualified",
+        "is_rd_qualified": false,
+        "rationale": "PHP_CLI_SERVER_WORKERS env tweak + Playwright retry timeout bump for an artisan-serve flake. Pure CI plumbing / test infrastructure tuning, no R&D content. Does NOT qualify."
+    },
+    {
+        "sha": "e4f7308dbec5c2e9fb9d570485731ab8282fb45d",
+        "phase": "non_qualified",
+        "is_rd_qualified": false,
+        "rationale": "Rename padosoft/agent-llm to padosoft/laravel-ai-regolo across the codebase. Mechanical rename / chore, no design or implementation novelty. Does NOT qualify."
+    },
+    {
+        "sha": "0af105de7c87fd105c82c0cc36ad78417f53492e",
+        "phase": "non_qualified",
+        "is_rd_qualified": false,
+        "rationale": "Add local SQLite artefacts to .gitignore. Repository-hygiene chore with zero R&D substance. Does NOT qualify."
+    },
+    {
+        "sha": "9d4bab76d99d1dcbad962efb3ed81977105b0585",
+        "phase": "documentation",
+        "is_rd_qualified": true,
+        "rationale": "Add UI/UX screenshots and structural updates to the README. Publishes user-facing knowledge of the released-but-evolving IP product surface. Documentation that publishes user-facing knowledge of an actively-developing IP qualifies."
+    }
+]
