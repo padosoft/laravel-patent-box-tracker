@@ -14,5 +14,10 @@ use RuntimeException;
  *
  * Renderers MUST throw this on every failure path — never return
  * an empty / null body silently (R14).
+ *
+ * Not `final` so {@see MissingRendererDependencyException} (and any
+ * future renderer-specific subtype) can specialise the catch surface
+ * while keeping a single `catch (RenderException)` block at every
+ * caller.
  */
-final class RenderException extends RuntimeException {}
+class RenderException extends RuntimeException {}
