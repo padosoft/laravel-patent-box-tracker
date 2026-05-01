@@ -28,7 +28,7 @@ Branch-name conventions:
 
 ## Pull request expectations
 
-- The default `Unit` suite must stay green on the full PHP 8.3 / 8.4 / 8.5 × Laravel 11 / 12 / 13 matrix.
+- The default `Unit` suite must stay green on the full PHP 8.3 / 8.4 / 8.5 × Laravel 12 / 13 matrix.
 - Any new collector implements `EvidenceCollector` and is registered with the boot-time validation pattern (FQCN check + `supports()` mutex per the standalone-agnostic architecture test).
 - Any new classifier prompt change requires a hand-graded regression run on the bundled golden set; F1 must stay ≥ 80%.
 - `vendor/bin/pint --test` must pass with no diffs.

@@ -11,7 +11,7 @@
   <a href="https://packagist.org/packages/padosoft/laravel-patent-box-tracker"><img alt="Total downloads" src="https://img.shields.io/packagist/dt/padosoft/laravel-patent-box-tracker.svg?label=downloads"></a>
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-blue.svg"></a>
   <img alt="PHP version" src="https://img.shields.io/badge/php-8.3%20%7C%208.4%20%7C%208.5-777BB4">
-  <img alt="Laravel version" src="https://img.shields.io/badge/laravel-11%20%7C%2012%20%7C%2013-FF2D20">
+  <img alt="Laravel version" src="https://img.shields.io/badge/laravel-12%20%7C%2013-FF2D20">
   <a href="https://github.com/padosoft/laravel-patent-box-tracker/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/padosoft/laravel-patent-box-tracker"></a>
 </p>
 
@@ -86,7 +86,7 @@ Every tracked commit gets `H(prev_hash || commit_sha)` recorded in the dossier. 
 
 ### 5. Standalone agnostic — no AskMyDocs glue
 
-The package has **zero dependencies** on `lopadova/askmydocs` (CE), `padosoft/askmydocs-pro`, or any other Padosoft proprietary code. It works in any Laravel 11/12/13 application that has `laravel/ai` installed. The reverse direction is the only one that exists: AskMyDocs *uses* this package, never the inverse. An architecture test enforces the boundary on every CI run.
+The package has **zero dependencies** on `lopadova/askmydocs` (CE), `padosoft/askmydocs-pro`, or any other Padosoft proprietary code. It works in any Laravel 12/13 application that has `laravel/ai` installed. The reverse direction is the only one that exists: AskMyDocs *uses* this package, never the inverse. An architecture test enforces the boundary on every CI run.
 
 ## Features at a glance
 
@@ -104,7 +104,7 @@ The package has **zero dependencies** on `lopadova/askmydocs` (CE), `padosoft/as
 - **Browsershot PDF + DomPDF fallback** — Chromium fidelity by default, DomPDF for environments where headless Chromium is unavailable.
 - **Standalone agnostic** — zero dependency on `lopadova/askmydocs` or `padosoft/askmydocs-pro`. Works on any Laravel project. Composable with sister Padosoft packages.
 - **Strict typing** — PHP 8.3+, readonly DTOs, fully-typed signatures, Pint-formatted, PHPStan analysis on every PR.
-- **CI matrix** — every push runs against PHP 8.3 / 8.4 / 8.5 × Laravel 11 / 12 / 13 (9 cells).
+- **CI matrix** — every push runs against PHP 8.3 / 8.4 / 8.5 × Laravel 12 / 13 (6 cells).
 - 🚀 **AI vibe-coding pack ships in the box** — every release includes the [Padosoft Claude pack](#ai-vibe-coding-pack-included) under `.claude/` (skills, rules, agents, slash-commands). The moment you `composer require` this package and open the project in Claude Code, the agent picks up Padosoft's house conventions automatically.
 - 🧪 **Opt-in live test suite** — point `PATENT_BOX_LIVE_API_KEY` at a real provider key and run `vendor/bin/phpunit --testsuite Live` to verify classifier accuracy and PDF rendering against real APIs. Default suite remains 100% offline.
 
@@ -510,7 +510,7 @@ Coverage breakdown:
 | `RenderCommandTest`                | Pre-populated session → PDF exists, page count > 1, JSON sidecar valid against schema.                   |
 | `StandaloneAgnosticTest`           | Architecture test — package source contains zero `KnowledgeDocument` / `KbSearchService` / `lopadova/*` references. |
 
-CI matrix: PHP **8.3 / 8.4 / 8.5** × Laravel **11 / 12 / 13** (9 cells), plus a separate static-analysis job that runs PHPStan and Pint.
+CI matrix: PHP **8.3 / 8.4 / 8.5** × Laravel **12 / 13** (6 cells), plus a separate static-analysis job that runs PHPStan and Pint.
 
 ### Running the live test suite (against a real LLM provider)
 
@@ -618,7 +618,7 @@ Special note on dossier integrity: if you discover a way to mutate a tracked dos
 
 Apache-2.0 — see [`LICENSE`](LICENSE).
 
-Built and maintained by [Padosoft](https://padosoft.com), authored by Lorenzo Padovani. Initially developed alongside [AskMyDocs](https://github.com/lopadova/AskMyDocs) — and dogfooded against Padosoft's own FY2026 Italian Patent Box dossier — but the package is fully **standalone agnostic**: no AskMyDocs dependency, no Padosoft proprietary glue. It works in any Laravel 11/12/13 application that has `laravel/ai` installed.
+Built and maintained by [Padosoft](https://padosoft.com), authored by Lorenzo Padovani. Initially developed alongside [AskMyDocs](https://github.com/lopadova/AskMyDocs) — and dogfooded against Padosoft's own FY2026 Italian Patent Box dossier — but the package is fully **standalone agnostic**: no AskMyDocs dependency, no Padosoft proprietary glue. It works in any Laravel 12/13 application that has `laravel/ai` installed.
 
 Sister packages in the Padosoft AI stack:
 
