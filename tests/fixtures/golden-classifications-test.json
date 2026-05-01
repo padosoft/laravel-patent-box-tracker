@@ -1,0 +1,12 @@
+[
+    {"sha": "1111111111111111111111111111111111111111", "phase": "implementation", "is_rd_qualified": true, "rationale": "synthetic"},
+    {"sha": "2222222222222222222222222222222222222222", "phase": "implementation", "is_rd_qualified": true, "rationale": "synthetic"},
+    {"sha": "3333333333333333333333333333333333333333", "phase": "implementation", "is_rd_qualified": true, "rationale": "synthetic"},
+    {"sha": "4444444444444444444444444444444444444444", "phase": "design", "is_rd_qualified": true, "rationale": "synthetic"},
+    {"sha": "5555555555555555555555555555555555555555", "phase": "design", "is_rd_qualified": true, "rationale": "synthetic"},
+    {"sha": "6666666666666666666666666666666666666666", "phase": "validation", "is_rd_qualified": true, "rationale": "synthetic"},
+    {"sha": "7777777777777777777777777777777777777777", "phase": "documentation", "is_rd_qualified": true, "rationale": "synthetic"},
+    {"sha": "8888888888888888888888888888888888888888", "phase": "research", "is_rd_qualified": true, "rationale": "synthetic"},
+    {"sha": "9999999999999999999999999999999999999999", "phase": "non_qualified", "is_rd_qualified": false, "rationale": "synthetic"},
+    {"sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "phase": "non_qualified", "is_rd_qualified": false, "rationale": "synthetic"}
+]

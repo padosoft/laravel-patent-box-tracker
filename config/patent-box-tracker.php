@@ -91,6 +91,23 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Storage connection
+    |--------------------------------------------------------------------------
+    |
+    | Eloquent connection used by the package's tracking_sessions /
+    | tracked_commits / tracked_evidence / tracked_dossiers tables.
+    | `null` falls back to the application's default connection.
+    | Set this when the consumer wants the dossier data to live on a
+    | separate database (e.g. an audit-grade Postgres instance vs the
+    | main app's SQLite).
+    |
+    */
+    'storage' => [
+        'connection' => env('PATENT_BOX_DB_CONNECTION'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Registered evidence collectors
     |--------------------------------------------------------------------------
     |
