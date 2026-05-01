@@ -114,6 +114,14 @@ final class AiAttributionExtractorTest extends TestCase
             AiAttributionExtractor::ATTRIBUTION_AI_ASSISTED,
             1.0,
         ];
+
+        yield 'co-authored-by claude + AI-Tool copilot → mixed (cross-trailer type)' => [
+            "feat: hybrid\n\nCo-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>\nAI-Tool: copilot",
+            'lorenzo.padovani@padosoft.com',
+            'lorenzo.padovani@padosoft.com',
+            AiAttributionExtractor::ATTRIBUTION_MIXED,
+            0.5,
+        ];
     }
 
     #[DataProvider('commitVariants')]

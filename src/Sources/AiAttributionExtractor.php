@@ -169,10 +169,6 @@ final class AiAttributionExtractor implements EvidenceCollector
             }
         }
 
-        if ($aiTrailerCount > 1) {
-            $hasMultipleAiTrailers = true;
-        }
-
         // 2. Inline AI-Tool: / AI: trailers.
         if (preg_match('/^AI-Tool:\s*(?<tool>\S.*)$/im', $message, $m)) {
             $hasAiTrailer = true;
@@ -183,6 +179,13 @@ final class AiAttributionExtractor implements EvidenceCollector
             $hasAiTrailer = true;
             $markers[] = 'ai:'.strtolower(trim($m['tool']));
             $aiTrailerCount++;
+        }
+
+        // Evaluate after ALL trailer types (Co-Authored-By + AI-Tool: + AI:)
+        // so a mix such as "Co-Authored-By: Claude + AI-Tool: copilot" also
+        // triggers the mixed classification below.
+        if ($aiTrailerCount > 1) {
+            $hasMultipleAiTrailers = true;
         }
 
         // 3. Author / committer email pattern match (signal without trailer).
