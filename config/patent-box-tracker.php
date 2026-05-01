@@ -1,6 +1,10 @@
 <?php
 
 declare(strict_types=1);
+use Padosoft\PatentBoxTracker\Sources\AiAttributionExtractor;
+use Padosoft\PatentBoxTracker\Sources\BranchSemanticsCollector;
+use Padosoft\PatentBoxTracker\Sources\DesignDocCollector;
+use Padosoft\PatentBoxTracker\Sources\GitSourceCollector;
 
 return [
     /*
@@ -83,5 +87,26 @@ return [
             'chrome_path' => env('BROWSERSHOT_CHROME_PATH'),
             'timeout' => 60,
         ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Registered evidence collectors
+    |--------------------------------------------------------------------------
+    |
+    | The pluggable EvidenceCollector pipeline (W4.B.1). Each FQCN is
+    | validated at boot-time to (a) implement EvidenceCollector and
+    | (b) NOT overlap with any other registered collector on supports()
+    | unless an explicit overlapsBy() exemption is declared. See R23.
+    |
+    | Add custom collectors by appending an FQCN here in the consumer's
+    | published config; the registry will pick them up on first dispatch.
+    |
+    */
+    'collectors' => [
+        GitSourceCollector::class,
+        AiAttributionExtractor::class,
+        DesignDocCollector::class,
+        BranchSemanticsCollector::class,
     ],
 ];

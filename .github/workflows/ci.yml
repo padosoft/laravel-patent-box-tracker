@@ -62,5 +62,11 @@ jobs:
       - name: Run PHPStan
         run: vendor/bin/phpstan analyse --no-progress
 
+      - name: Build synthetic git fixture
+        run: bash tests/fixtures/repos/build-synthetic.sh
+
       - name: Run PHPUnit (Unit suite — offline)
         run: vendor/bin/phpunit --testsuite Unit
+
+      - name: Run PHPUnit (Architecture suite)
+        run: vendor/bin/phpunit --testsuite Architecture

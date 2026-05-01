@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Padosoft\PatentBoxTracker;
 
 use Illuminate\Support\ServiceProvider;
+use Padosoft\PatentBoxTracker\Sources\CollectorRegistry;
+use Padosoft\PatentBoxTracker\Sources\EvidenceCollector;
 
 final class PatentBoxTrackerServiceProvider extends ServiceProvider
 {
@@ -14,6 +16,13 @@ final class PatentBoxTrackerServiceProvider extends ServiceProvider
             __DIR__.'/../config/patent-box-tracker.php',
             'patent-box-tracker'
         );
+
+        $this->app->singleton(CollectorRegistry::class, function ($app): CollectorRegistry {
+            /** @var array<int, class-string<EvidenceCollector>> $fqcns */
+            $fqcns = (array) ($app['config']->get('patent-box-tracker.collectors') ?? []);
+
+            return new CollectorRegistry($fqcns);
+        });
     }
 
     public function boot(): void
