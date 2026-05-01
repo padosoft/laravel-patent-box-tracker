@@ -64,6 +64,13 @@ abstract class LiveTestCase extends TestCase
             return (string) $_ENV[$key];
         }
 
+        // PHPUnit `<server>` injection + some CI runners populate $_SERVER
+        // instead of $_ENV; fall back to it so the live-suite skip guard
+        // is consistent across runners.
+        if (isset($_SERVER[$key]) && $_SERVER[$key] !== '') {
+            return (string) $_SERVER[$key];
+        }
+
         return null;
     }
 }

@@ -40,6 +40,14 @@
 
 ---
 
+> ## Pre-release status
+>
+> This README documents the full **v0.1.0** scope. The currently published code is the **W4.A scaffold** — a Laravel package skeleton with `composer.json`, `PatentBoxTrackerServiceProvider`, `config/patent-box-tracker.php`, the offline `Unit` + opt-in `Live` testsuites, the CI matrix, the .claude vibe-coding pack, and a `Padosoft\PatentBoxTracker\PatentBoxTracker` placeholder class whose every entrypoint throws `RuntimeException`.
+>
+> The runtime functionality lands across W4.B (evidence collectors + LLM classifier + golden-set validator), W4.C (PDF + JSON dossier renderers + hash-chain), and W4.D (cross-repo orchestration + dogfooding). Each sub-task ships as its own PR and ticks off the corresponding bullets in [Features at a glance](#features-at-a-glance) when it lands.
+>
+> The first published Packagist tag will be `v0.1.0` after W4.D closes — earlier `v0.0.x` tags, if any, are scaffold previews.
+
 ## Why this package
 
 The Italian **Patent Box** (regime "Nuovo Patent Box" introduced from FY2021 and consolidated under D.L. 146/2021 art. 6) grants a **110% super-deduction** on qualified R&D costs incurred to develop intangible assets — patents, registered software (SIAE), industrial designs. Each €1 of qualified R&D effectively saves around €0.30 of tax (IRPEF + IRAP + INPS combined for an Italian sole proprietor).
@@ -156,20 +164,20 @@ composer require padosoft/laravel-patent-box-tracker
 
 The package auto-registers via Laravel's package discovery — no manual provider entry in `config/app.php` needed.
 
-Publish the config and migrations:
+Publish the config:
 
 ```bash
 php artisan vendor:publish --tag=patent-box-tracker-config
-php artisan vendor:publish --tag=patent-box-tracker-migrations
-php artisan migrate
 ```
+
+Migrations land in W4.B (the storage schema for `tracking_sessions`, `tracked_commits`, `tracked_evidence`, `tracked_dossiers`); the W4.A scaffold publishes only the config file.
 
 Configure your `laravel/ai` provider of choice (Regolo is the default; OpenAI, Anthropic, Gemini all work). Minimal `.env`:
 
 ```dotenv
 # Pick any laravel/ai provider — Regolo recommended for cost (~€0.05 per 1k commits).
 REGOLO_API_KEY=rg_live_...
-PATENT_BOX_PROVIDER=regolo
+PATENT_BOX_DRIVER=regolo
 PATENT_BOX_MODEL=claude-sonnet-4-6
 ```
 
@@ -353,17 +361,14 @@ The full default config lives at `config/patent-box-tracker.php`. Key entries:
 | `patent-box-tracker.classifier.seed`               | int     | `0xC0DEC0DE`                      | Fixed seed for byte-identical re-runs.                                                 |
 | `patent-box-tracker.classifier.batch_size`         | int     | `20`                              | Commits per LLM call. Higher = cheaper, lower = more diff context per commit.          |
 | `patent-box-tracker.classifier.cost_cap_eur_per_run` | float | `50.00`                           | Hard stop. Run aborts with exit code 2 before exceeding this projected cost.           |
-| `patent-box-tracker.git.excluded_authors`          | array   | `['dependabot[bot]', 'renovate[bot]']` | Author emails / names skipped during the git walk.                                |
-| `patent-box-tracker.git.first_parent_only`         | bool    | `true`                            | Walk `git log --first-parent` (recommended) vs `git log --all`.                        |
-| `patent-box-tracker.evidence.docs_paths`           | array   | `['docs/', 'plans/']`             | Folders scanned by `DesignDocCollector`.                                               |
-| `patent-box-tracker.evidence.proximity_days`       | int     | `14`                              | Date-window for design-doc-to-commit correlation.                                      |
-| `patent-box-tracker.renderer.pdf_engine`           | string  | `browsershot`                     | `browsershot` (Chromium) or `dompdf` fallback.                                         |
-| `patent-box-tracker.renderer.locale`               | string  | `it`                              | `it` ships in v0.1; `en` planned for v0.2.                                             |
-| `patent-box-tracker.cost_model.hourly_rate_eur`    | float   | `80`                              | Default hourly rate. Override via fluent API or YAML config.                           |
-| `patent-box-tracker.cost_model.daily_hours_max`    | int     | `8`                               | Cap on per-day qualified hours (Patent Box auditors prefer transparent inputs).        |
-| `patent-box-tracker.storage.disk`                  | string  | `local`                           | Disk where rendered dossiers land.                                                     |
+| `patent-box-tracker.regime`                        | string  | `documentazione_idonea`           | Italian Patent Box regime. `documentazione_idonea` enables the penalty-protection contract under D.M. 6 ottobre 2022; `non_documentazione` is the alternative. |
+| `patent-box-tracker.locale`                        | string  | `it`                              | Dossier locale. `it` ships in v0.1; `en` and others planned for v0.2.                  |
+| `patent-box-tracker.excluded_authors`              | array   | `['dependabot[bot]', 'renovate[bot]', 'github-actions[bot]']` | Author email substrings skipped during the git walk so bot-authored commits do not count as qualified R&D. |
+| `patent-box-tracker.renderer.driver`               | string  | `browsershot`                     | `browsershot` (Chromium) or `dompdf` fallback.                                         |
+| `patent-box-tracker.renderer.browsershot.chrome_path` | string\|null | `null`                       | Override the headless Chromium binary path; defaults to Browsershot's auto-detection.  |
+| `patent-box-tracker.renderer.browsershot.timeout`  | int     | `60`                              | Browsershot render timeout (seconds).                                                  |
 
-Every key is also overridable per-call via the fluent builder or the YAML cross-repo config.
+The W4.A scaffold ships exactly the keys listed above. Cost-model inputs (`hourly_rate_eur`, `daily_hours_max`), evidence-collector knobs (`docs_paths`, `proximity_days`, `first_parent_only`), and storage routing (`disk`) are added by W4.B / W4.C alongside the code that reads them — the documentation evolves with the feature surface, not ahead of it. Every key is also overridable per-call via the fluent builder or the YAML cross-repo config (W4.D).
 
 ## Architecture
 
@@ -610,7 +615,7 @@ We follow the project conventions documented in [`CONTRIBUTING.md`](CONTRIBUTING
 
 ## Security
 
-Found a security issue? Please **do not open a public issue**. Email `security@padosoft.com` instead. We follow standard responsible-disclosure timelines documented in [`SECURITY.md`](SECURITY.md).
+Found a security issue? Please **do not open a public issue**. Email `lorenzo.padovani@padosoft.com` instead. We follow standard responsible-disclosure timelines documented in [`SECURITY.md`](SECURITY.md).
 
 Special note on dossier integrity: if you discover a way to mutate a tracked dossier without breaking the hash chain, this is a **critical** finding — please flag it as such in the disclosure. The chain is the audit-trail anchor; an integrity break is a release blocker.
 
