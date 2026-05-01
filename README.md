@@ -42,11 +42,15 @@
 
 > ## Pre-release status
 >
-> This README documents the full **v0.1.0** scope. The currently published code is the **W4.A scaffold** — a Laravel package skeleton with `composer.json`, `PatentBoxTrackerServiceProvider`, `config/patent-box-tracker.php`, the offline `Unit` + opt-in `Live` testsuites, the CI matrix, the .claude vibe-coding pack, and a `Padosoft\PatentBoxTracker\PatentBoxTracker` placeholder class whose every entrypoint throws `RuntimeException`.
+> All four W4 sub-tasks have shipped on `main`:
 >
-> The runtime functionality lands across W4.B (evidence collectors + LLM classifier + golden-set validator), W4.C (PDF + JSON dossier renderers + hash-chain), and W4.D (cross-repo orchestration + dogfooding). Each sub-task ships as its own PR and ticks off the corresponding bullets in [Features at a glance](#features-at-a-glance) when it lands.
+> - **W4.A** — package scaffold, `PatentBoxTrackerServiceProvider`, `config/patent-box-tracker.php`, the CI matrix on PHP 8.3 / 8.4 / 8.5 × Laravel 12 / 13, the `.claude/` vibe-coding pack, and the `Live` testsuite scaffold.
+> - **W4.B.1** — four `EvidenceCollector` implementations (`GitSourceCollector`, `AiAttributionExtractor`, `DesignDocCollector`, `BranchSemanticsCollector`) + `CollectorRegistry` boot-time validation per R23.
+> - **W4.B.2** — `CommitClassifier` + `ClassifierBatcher` + `CostCapGuard` + `GoldenSetValidator` + storage models (`TrackingSession`, `TrackedCommit`, `TrackedEvidence`, `TrackedDossier`).
+> - **W4.C** — `PdfDossierRenderer` (Browsershot + DomPDF fallback) + `JsonDossierRenderer` + Italian Blade template + `HashChainBuilder` + `RenderCommand`.
+> - **W4.D** — `TrackCommand` (`patent-box:track`) + `CrossRepoCommand` (`patent-box:cross-repo`) + `CrossRepoConfigValidator` + the fluent builder API documented in [Quick start](#quick-start).
 >
-> The first published Packagist tag will be `v0.1.0` after W4.D closes — earlier `v0.0.x` tags, if any, are scaffold previews.
+> The next milestone is the `v0.1.0` tag and the corresponding Packagist publish. The Roadmap section below is now accurate; planned items are explicitly tagged for v0.2 and beyond.
 
 ## Why this package
 
@@ -170,7 +174,11 @@ Publish the config:
 php artisan vendor:publish --tag=patent-box-tracker-config
 ```
 
-Migrations land in W4.B (the storage schema for `tracking_sessions`, `tracked_commits`, `tracked_evidence`, `tracked_dossiers`); the W4.A scaffold publishes only the config file.
+Run the migrations to create the storage tables (`tracking_sessions`, `tracked_commits`, `tracked_evidence`, `tracked_dossiers`):
+
+```bash
+php artisan migrate
+```
 
 Configure your `laravel/ai` provider of choice (Regolo is the default; OpenAI, Anthropic, Gemini all work). Minimal `.env`:
 
@@ -588,7 +596,7 @@ Open an issue or PR if you want a `workflow_dispatch` job added to this repo to 
 
 | Version | Status   | Highlights                                                                                                  |
 |---------|----------|-------------------------------------------------------------------------------------------------------------|
-| v0.1    | shipped  | 4 evidence collectors + deterministic LLM classifier + Italian PDF + JSON sidecar + hash-chain tamper evidence + cross-repo YAML orchestration + cost-cap guard + hand-graded golden set ≥ 80% F1 + opt-in Live testsuite + AI vibe-coding pack. **First public release.** |
+| v0.1    | code complete; tag pending | 4 evidence collectors + deterministic LLM classifier + Italian PDF + JSON sidecar + hash-chain tamper evidence + cross-repo YAML orchestration + cost-cap guard + hand-graded golden set ≥ 80% F1 + opt-in Live testsuite + AI vibe-coding pack. **First public release.** |
 | v0.2    | planned  | Time-tracking integrations (Toggl / Harvest / RescueTime / Clockify). Calendar collector for off-keyboard R&D. Live terminal session capture (Cursor / Claude Code). Token-by-token AI-vs-human line-level attribution. English locale for the dossier template. |
 | v0.3    | planned  | Direct UIBM / SIAE / EPO API integration — auto-link IP filings to dossier entries.                         |
 | v1.0    | tracking | Web UI dashboard (Filament panel). Tax-jurisdiction support beyond Italy (UK Patent Box, Irish Knowledge Box, German FuE-Zulage). Multi-tenant SaaS deployment. |

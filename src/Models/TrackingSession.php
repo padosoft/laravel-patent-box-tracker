@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Padosoft\PatentBoxTracker\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Padosoft\PatentBoxTracker\Renderers\DossierRenderBuilder;
 
 /**
  * One Patent Box tracking session — a single dossier-generation
@@ -59,5 +60,18 @@ final class TrackingSession extends Model
     public function getConnectionName(): ?string
     {
         return config('patent-box-tracker.storage.connection') ?: parent::getConnectionName();
+    }
+
+    /**
+     * Build a fluent dossier-render expression rooted at this session.
+     *
+     * Mirrors the README quick-start verbatim:
+     *
+     *     $session->renderDossier()->locale('it')->toPdf()->save(storage_path('dossier.pdf'));
+     *     $session->renderDossier()->toJson()->save(storage_path('dossier.json'));
+     */
+    public function renderDossier(): DossierRenderBuilder
+    {
+        return new DossierRenderBuilder($this);
     }
 }

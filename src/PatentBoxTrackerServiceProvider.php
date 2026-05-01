@@ -10,7 +10,10 @@ use Padosoft\PatentBoxTracker\Classifier\ClassifierBatcher;
 use Padosoft\PatentBoxTracker\Classifier\ClassifierPrompts;
 use Padosoft\PatentBoxTracker\Classifier\CommitClassifier;
 use Padosoft\PatentBoxTracker\Classifier\CostCapGuard;
+use Padosoft\PatentBoxTracker\Config\CrossRepoConfigValidator;
+use Padosoft\PatentBoxTracker\Console\CrossRepoCommand;
 use Padosoft\PatentBoxTracker\Console\RenderCommand;
+use Padosoft\PatentBoxTracker\Console\TrackCommand;
 use Padosoft\PatentBoxTracker\Hash\HashChainBuilder;
 use Padosoft\PatentBoxTracker\Renderers\DefaultRendererCapabilities;
 use Padosoft\PatentBoxTracker\Renderers\DossierPayloadAssembler;
@@ -38,6 +41,7 @@ final class PatentBoxTrackerServiceProvider extends ServiceProvider
 
         $this->app->singleton(ClassifierPrompts::class, fn (): ClassifierPrompts => new ClassifierPrompts);
         $this->app->singleton(CostCapGuard::class, fn (): CostCapGuard => new CostCapGuard);
+        $this->app->singleton(CrossRepoConfigValidator::class, fn (): CrossRepoConfigValidator => new CrossRepoConfigValidator);
         $this->app->singleton(HashChainBuilder::class, fn (): HashChainBuilder => new HashChainBuilder);
         $this->app->singleton(RendererCapabilities::class, fn (): RendererCapabilities => new DefaultRendererCapabilities);
 
@@ -109,6 +113,8 @@ final class PatentBoxTrackerServiceProvider extends ServiceProvider
 
             $this->commands([
                 RenderCommand::class,
+                TrackCommand::class,
+                CrossRepoCommand::class,
             ]);
         }
     }
