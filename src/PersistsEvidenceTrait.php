@@ -30,10 +30,10 @@ trait PersistsEvidenceTrait
             }
 
             $payload = $item->payload;
-            $slug = is_string($payload['slug'] ?? null) ? (string) $payload['slug'] : null;
-            $kind = is_string($payload['kind'] ?? null) ? (string) $payload['kind'] : 'plan';
-            $path = is_string($payload['path'] ?? null) ? (string) $payload['path'] : null;
-            $title = is_string($payload['title'] ?? null) ? (string) $payload['title'] : null;
+            $slug = $this->payloadString($payload, 'slug');
+            $kind = $this->payloadString($payload, 'kind') ?? 'plan';
+            $path = $this->payloadString($payload, 'path');
+            $title = $this->payloadString($payload, 'title');
 
             TrackedEvidence::query()->updateOrCreate(
                 [

@@ -403,9 +403,12 @@ final class TrackCommand extends Command
         CommitClassification $classification,
     ): array {
         $payload = $commitItem->payload;
+        // Role is pre-validated against ALLOWED_ROLES in handle() before
+        // this method is ever reached; casting here is safe.
+        $role = (string) $this->option('role');
 
         return [
-            'repository_role' => (string) $this->option('role'),
+            'repository_role' => $role,
             'author_name' => $this->payloadString($payload, 'authorName'),
             'author_email' => $this->payloadString($payload, 'authorEmail'),
             'committer_email' => $this->payloadString($payload, 'committerEmail'),
