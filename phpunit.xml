@@ -12,6 +12,13 @@
             <directory>tests/Unit</directory>
         </testsuite>
 
+        <!-- Architecture suite: textual / file-system invariants
+             (standalone-agnostic, no AskMyDocs symbols). CI runs this
+             suite alongside Unit. See R10 / PLAN-W4 §6.5. -->
+        <testsuite name="Architecture">
+            <directory>tests/Architecture</directory>
+        </testsuite>
+
         <!-- Opt-in live suite: hits a real LLM provider configured
              via the laravel/ai SDK to validate end-to-end classifier
              wire compatibility. Requires PATENT_BOX_LIVE_API_KEY env
