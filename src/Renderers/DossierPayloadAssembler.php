@@ -373,7 +373,11 @@ final class DossierPayloadAssembler
         }
 
         if ($value instanceof \DateTimeInterface) {
-            return $value->format('Y-m-d\TH:i:s\Z');
+            // Normalise to UTC via Unix timestamp so the `Z` suffix is
+            // accurate regardless of the Carbon / DateTimeInterface
+            // object's stored timezone.
+            return (new DateTimeImmutable('@'.$value->getTimestamp()))
+                ->format('Y-m-d\TH:i:s\Z');
         }
 
         if (is_string($value) && $value !== '') {
