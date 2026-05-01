@@ -23,10 +23,10 @@ final readonly class GoldenSetReport
      * @param  float  $macroF1  Macro-averaged F1 over the classes that have non-zero
      *                          support OR non-zero predictions (zero-support classes
      *                          are dropped to avoid biasing the macro mean).
-     * @param  int  $totalPredictions  Number of predictions evaluated.
-     * @param  int  $totalGroundTruth  Number of golden-set entries that had a matching
-     *                                 prediction (orphan ground-truth labels are
-     *                                 counted as misses).
+     * @param  int  $totalPredictions  Number of golden-set entries that had a matching
+     *                                 prediction in the supplied predictions list.
+     * @param  int  $totalGroundTruth  Total number of entries in the golden-set fixture
+     *                                 (including those with no matching prediction).
      * @param  list<string>  $missingPredictions  Golden-set SHAs with no matching
      *                                            prediction. Surfaced so callers can
      *                                            decide whether the run was incomplete.

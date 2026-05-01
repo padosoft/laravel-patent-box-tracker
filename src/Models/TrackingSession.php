@@ -58,6 +58,6 @@ final class TrackingSession extends Model
 
     public function getConnectionName(): ?string
     {
-        return config('patent-box-tracker.storage.connection') ?? parent::getConnectionName();
+        return config('patent-box-tracker.storage.connection') ?: parent::getConnectionName();
     }
 }

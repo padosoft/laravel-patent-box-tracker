@@ -66,7 +66,6 @@ final class GoldenSetValidator
         $support = [];
         $missingPredictions = [];
 
-        $matchedCount = 0;
         $evaluatedPredictions = 0;
 
         foreach ($this->groundTruth as $entry) {
@@ -81,7 +80,6 @@ final class GoldenSetValidator
                 continue;
             }
 
-            $matchedCount++;
             $evaluatedPredictions++;
 
             $prediction = $byShaPrediction[$sha];
@@ -102,7 +100,7 @@ final class GoldenSetValidator
             perClass: $perClass,
             macroF1: $macroF1,
             totalPredictions: $evaluatedPredictions,
-            totalGroundTruth: $matchedCount,
+            totalGroundTruth: count($this->groundTruth),
             missingPredictions: $missingPredictions,
         );
     }
