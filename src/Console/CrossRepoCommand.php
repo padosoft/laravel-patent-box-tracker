@@ -14,8 +14,8 @@ use Padosoft\PatentBoxTracker\Config\CrossRepoConfigException;
 use Padosoft\PatentBoxTracker\Config\CrossRepoConfigValidator;
 use Padosoft\PatentBoxTracker\Config\RepoConfig;
 use Padosoft\PatentBoxTracker\Models\TrackedCommit;
-use Padosoft\PatentBoxTracker\Models\TrackedEvidence;
 use Padosoft\PatentBoxTracker\Models\TrackingSession;
+use Padosoft\PatentBoxTracker\PersistsEvidenceTrait;
 use Padosoft\PatentBoxTracker\Sources\CollectorContext;
 use Padosoft\PatentBoxTracker\Sources\CollectorRegistry;
 use Padosoft\PatentBoxTracker\Sources\EvidenceItem;
@@ -44,6 +44,8 @@ use Throwable;
  */
 final class CrossRepoCommand extends Command
 {
+    use PersistsEvidenceTrait;
+
     /** @var string */
     protected $signature = 'patent-box:cross-repo
         {config : Path to the YAML config file describing the cross-repo run.}
@@ -97,7 +99,7 @@ final class CrossRepoCommand extends Command
         $position = 0;
         foreach ($config->repositories as $repoConfig) {
             $position++;
-            $this->writeStderr(sprintf(
+            $this->writeProgress(sprintf(
                 "[%d/%d] %s (%s) — walking…\n",
                 $position,
                 $config->repositoryCount(),
@@ -194,7 +196,7 @@ final class CrossRepoCommand extends Command
             $persisted = $this->classifyAndPersist($session, $repoConfig, $items);
             $persistedByRepo[$repoConfig->path] = $persisted;
 
-            $this->writeStderr(sprintf(
+            $this->writeProgress(sprintf(
                 "[%d/%d] %s: %d commit(s) classified.\n",
                 $idx + 1,
                 $config->repositoryCount(),
@@ -248,39 +250,6 @@ final class CrossRepoCommand extends Command
         $config = (array) config('patent-box-tracker.excluded_authors', []);
 
         return array_values(array_filter($config, 'is_string'));
-    }
-
-    /**
-     * @param  list<EvidenceItem>  $items
-     */
-    private function persistEvidence(TrackingSession $session, array $items): void
-    {
-        foreach ($items as $item) {
-            if ($item->kind !== EvidenceItem::KIND_DESIGN_DOC_LINK) {
-                continue;
-            }
-
-            $payload = $item->payload;
-            $slug = is_string($payload['slug'] ?? null) ? (string) $payload['slug'] : null;
-            $kind = is_string($payload['kind'] ?? null) ? (string) $payload['kind'] : 'plan';
-            $path = is_string($payload['path'] ?? null) ? (string) $payload['path'] : null;
-            $title = is_string($payload['title'] ?? null) ? (string) $payload['title'] : null;
-
-            TrackedEvidence::query()->updateOrCreate(
-                [
-                    'tracking_session_id' => $session->id,
-                    'kind' => $kind,
-                    'slug' => $slug,
-                    'path' => $path,
-                ],
-                [
-                    'title' => $title,
-                    'first_seen_at' => $payload['firstSeenAt'] ?? null,
-                    'last_modified_at' => $payload['lastModifiedAt'] ?? null,
-                    'linked_commit_count' => 0,
-                ],
-            );
-        }
     }
 
     /**
@@ -348,19 +317,6 @@ final class CrossRepoCommand extends Command
         }
 
         return $persisted;
-    }
-
-    /**
-     * @param  array<string, mixed>  $payload
-     */
-    private function payloadString(array $payload, string $key): ?string
-    {
-        $value = $payload[$key] ?? null;
-        if (is_string($value) && $value !== '') {
-            return $value;
-        }
-
-        return null;
     }
 
     /**
@@ -477,13 +433,13 @@ final class CrossRepoCommand extends Command
     }
 
     /**
-     * Emit a progress line. Routed through the command's standard
-     * output (rather than stderr) so test fixtures can capture it
-     * via `$this->artisan(...)` without needing custom stream
-     * plumbing — and so progress lines sit alongside the final
-     * summary in operator transcripts.
+     * Emit a per-repo progress line to the command output so that
+     * operators see streaming progress alongside the final summary.
+     * Routed through standard output rather than stderr so
+     * `$this->artisan(...)` assertions in tests capture it without
+     * needing custom stream plumbing.
      */
-    private function writeStderr(string $message): void
+    private function writeProgress(string $message): void
     {
         // Trim the trailing newline because $this->line() adds its own.
         $this->line(rtrim($message, "\n"));

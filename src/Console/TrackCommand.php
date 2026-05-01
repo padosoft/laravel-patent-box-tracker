@@ -12,8 +12,8 @@ use Padosoft\PatentBoxTracker\Classifier\CommitClassification;
 use Padosoft\PatentBoxTracker\Classifier\CostCapExceededException;
 use Padosoft\PatentBoxTracker\Classifier\CostCapGuard;
 use Padosoft\PatentBoxTracker\Models\TrackedCommit;
-use Padosoft\PatentBoxTracker\Models\TrackedEvidence;
 use Padosoft\PatentBoxTracker\Models\TrackingSession;
+use Padosoft\PatentBoxTracker\PersistsEvidenceTrait;
 use Padosoft\PatentBoxTracker\Sources\CollectorContext;
 use Padosoft\PatentBoxTracker\Sources\CollectorRegistry;
 use Padosoft\PatentBoxTracker\Sources\EvidenceItem;
@@ -41,6 +41,8 @@ use Throwable;
  */
 final class TrackCommand extends Command
 {
+    use PersistsEvidenceTrait;
+
     /** @var string */
     protected $signature = 'patent-box:track
         {repo : Path to the git repository to track.}
@@ -359,39 +361,6 @@ final class TrackCommand extends Command
 
     /**
      * @param  list<EvidenceItem>  $items
-     */
-    private function persistEvidence(TrackingSession $session, array $items): void
-    {
-        foreach ($items as $item) {
-            if ($item->kind !== EvidenceItem::KIND_DESIGN_DOC_LINK) {
-                continue;
-            }
-
-            $payload = $item->payload;
-            $slug = is_string($payload['slug'] ?? null) ? (string) $payload['slug'] : null;
-            $kind = is_string($payload['kind'] ?? null) ? (string) $payload['kind'] : 'plan';
-            $path = is_string($payload['path'] ?? null) ? (string) $payload['path'] : null;
-            $title = is_string($payload['title'] ?? null) ? (string) $payload['title'] : null;
-
-            TrackedEvidence::query()->updateOrCreate(
-                [
-                    'tracking_session_id' => $session->id,
-                    'kind' => $kind,
-                    'slug' => $slug,
-                    'path' => $path,
-                ],
-                [
-                    'title' => $title,
-                    'first_seen_at' => $payload['firstSeenAt'] ?? null,
-                    'last_modified_at' => $payload['lastModifiedAt'] ?? null,
-                    'linked_commit_count' => 0,
-                ],
-            );
-        }
-    }
-
-    /**
-     * @param  list<EvidenceItem>  $items
      * @return list<CommitClassification>
      */
     private function classifyAndPersist(TrackingSession $session, array $items): array
@@ -410,7 +379,7 @@ final class TrackCommand extends Command
             }
             $commitItem = $bySha[$classification->sha];
 
-            $row = $this->buildCommitRow($session, $commitItem, $classification);
+            $row = $this->buildCommitRow($commitItem, $classification);
             TrackedCommit::query()->updateOrCreate(
                 [
                     'tracking_session_id' => $session->id,
@@ -430,14 +399,13 @@ final class TrackCommand extends Command
      * @return array<string, mixed>
      */
     private function buildCommitRow(
-        TrackingSession $session,
         EvidenceItem $commitItem,
         CommitClassification $classification,
     ): array {
         $payload = $commitItem->payload;
 
         return [
-            'repository_role' => $this->resolveRoleForSession($session, $commitItem),
+            'repository_role' => (string) $this->option('role'),
             'author_name' => $this->payloadString($payload, 'authorName'),
             'author_email' => $this->payloadString($payload, 'authorEmail'),
             'committer_email' => $this->payloadString($payload, 'committerEmail'),
@@ -457,27 +425,6 @@ final class TrackCommand extends Command
             'hash_chain_prev' => $this->payloadString($payload, 'hashChainPrev'),
             'hash_chain_self' => $this->payloadString($payload, 'hashChainSelf'),
         ];
-    }
-
-    private function resolveRoleForSession(TrackingSession $session, EvidenceItem $item): string
-    {
-        $_ = $session;
-        $role = (string) $this->option('role');
-
-        return in_array($role, self::ALLOWED_ROLES, true) ? $role : 'primary_ip';
-    }
-
-    /**
-     * @param  array<string, mixed>  $payload
-     */
-    private function payloadString(array $payload, string $key): ?string
-    {
-        $value = $payload[$key] ?? null;
-        if (is_string($value) && $value !== '') {
-            return $value;
-        }
-
-        return null;
     }
 
     /**

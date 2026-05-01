@@ -10,7 +10,6 @@ use Padosoft\PatentBoxTracker\Classifier\ClassifierBatcher;
 use Padosoft\PatentBoxTracker\Classifier\CommitClassification;
 use Padosoft\PatentBoxTracker\Classifier\CostCapGuard;
 use Padosoft\PatentBoxTracker\Models\TrackedCommit;
-use Padosoft\PatentBoxTracker\Models\TrackedEvidence;
 use Padosoft\PatentBoxTracker\Models\TrackingSession;
 use Padosoft\PatentBoxTracker\Sources\CollectorContext;
 use Padosoft\PatentBoxTracker\Sources\CollectorRegistry;
@@ -43,6 +42,8 @@ use Padosoft\PatentBoxTracker\Sources\EvidenceItem;
  */
 class PatentBoxTracker
 {
+    use PersistsEvidenceTrait;
+
     /**
      * @var list<string>
      */
@@ -312,39 +313,6 @@ class PatentBoxTracker
     }
 
     /**
-     * @param  list<EvidenceItem>  $items
-     */
-    private function persistEvidence(TrackingSession $session, array $items): void
-    {
-        foreach ($items as $item) {
-            if ($item->kind !== EvidenceItem::KIND_DESIGN_DOC_LINK) {
-                continue;
-            }
-
-            $payload = $item->payload;
-            $slug = is_string($payload['slug'] ?? null) ? (string) $payload['slug'] : null;
-            $kind = is_string($payload['kind'] ?? null) ? (string) $payload['kind'] : 'plan';
-            $path = is_string($payload['path'] ?? null) ? (string) $payload['path'] : null;
-            $title = is_string($payload['title'] ?? null) ? (string) $payload['title'] : null;
-
-            TrackedEvidence::query()->updateOrCreate(
-                [
-                    'tracking_session_id' => $session->id,
-                    'kind' => $kind,
-                    'slug' => $slug,
-                    'path' => $path,
-                ],
-                [
-                    'title' => $title,
-                    'first_seen_at' => $payload['firstSeenAt'] ?? null,
-                    'last_modified_at' => $payload['lastModifiedAt'] ?? null,
-                    'linked_commit_count' => 0,
-                ],
-            );
-        }
-    }
-
-    /**
      * @return array<string, mixed>
      */
     private function buildCommitRow(EvidenceItem $commitItem, CommitClassification $classification): array
@@ -372,19 +340,6 @@ class PatentBoxTracker
             'hash_chain_prev' => $this->payloadString($payload, 'hashChainPrev'),
             'hash_chain_self' => $this->payloadString($payload, 'hashChainSelf'),
         ];
-    }
-
-    /**
-     * @param  array<string, mixed>  $payload
-     */
-    private function payloadString(array $payload, string $key): ?string
-    {
-        $value = $payload[$key] ?? null;
-        if (is_string($value) && $value !== '') {
-            return $value;
-        }
-
-        return null;
     }
 
     private function parseIsoDate(string $field, string $value): DateTimeImmutable
