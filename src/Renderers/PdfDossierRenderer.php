@@ -98,7 +98,7 @@ final class PdfDossierRenderer implements DossierRenderer
         $hashHead = (string) ($payload['hash_chain']['head'] ?? '');
 
         $view = $this->viewFactory->make(
-            'patent-box-tracker::pdf.it.dossier',
+            sprintf('patent-box-tracker::pdf.%s.dossier', $this->locale),
             [
                 'payload' => $payload,
                 'taxIdentity' => (array) ($payload['tax_identity'] ?? []),

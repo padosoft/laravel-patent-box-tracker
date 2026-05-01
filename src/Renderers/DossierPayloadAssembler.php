@@ -6,6 +6,7 @@ namespace Padosoft\PatentBoxTracker\Renderers;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use Illuminate\Support\Carbon;
 use Padosoft\PatentBoxTracker\Hash\HashChainBuilder;
 use Padosoft\PatentBoxTracker\Models\TrackedCommit;
 use Padosoft\PatentBoxTracker\Models\TrackedEvidence;
@@ -356,8 +357,11 @@ final class DossierPayloadAssembler
 
     private function nowIsoUtc(): string
     {
-        return (new DateTimeImmutable('now', new DateTimeZone('UTC')))
-            ->format('Y-m-d\TH:i:s\Z');
+        // Use Carbon::now() instead of DateTimeImmutable('now') so that
+        // Carbon::setTestNow() in tests can freeze time and make the
+        // generated_at field deterministic across repeated renders of
+        // the same session.
+        return Carbon::now('UTC')->format('Y-m-d\TH:i:s\Z');
     }
 
     /**
@@ -373,10 +377,11 @@ final class DossierPayloadAssembler
         }
 
         if ($value instanceof \DateTimeInterface) {
-            // Normalise to UTC via Unix timestamp so the `Z` suffix is
-            // accurate regardless of the Carbon / DateTimeInterface
-            // object's stored timezone.
-            return (new DateTimeImmutable('@'.$value->getTimestamp()))
+            // Normalise to UTC using setTimezone() (via createFromInterface)
+            // to preserve sub-second precision while ensuring the `Z` suffix
+            // is accurate regardless of the Carbon object's stored timezone.
+            return DateTimeImmutable::createFromInterface($value)
+                ->setTimezone(new DateTimeZone('UTC'))
                 ->format('Y-m-d\TH:i:s\Z');
         }
 

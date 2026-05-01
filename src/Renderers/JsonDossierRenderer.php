@@ -19,11 +19,13 @@ use Padosoft\PatentBoxTracker\Models\TrackingSession;
  *      cosmetic backslash escaping.
  *   3. No pretty-printing: a single newline at end-of-file is the
  *      only whitespace.
- *   4. The `hash_chain.head` digest is recomputed AFTER serialisation
- *      from the manifest section so the head signs the actual bytes
- *      that ship — but the manifest itself is built before
- *      serialisation, since the per-commit `prev_hash` / `self_hash`
- *      fields are part of the JSON shape.
+ *   4. The `hash_chain.head` value is produced by the assembled
+ *      manifest/commit hash-chain before serialisation; it is not
+ *      recomputed from the final JSON bytes. Deterministic key
+ *      ordering and encoding make the chain reproducible across
+ *      runs, while the artefact-level integrity is covered by the
+ *      `sha256` field on {@see RenderedDossier} computed from
+ *      `$contents` after encoding.
  */
 final class JsonDossierRenderer implements DossierRenderer
 {

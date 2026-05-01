@@ -23,14 +23,28 @@ final class RenderCommandTest extends TestCase
 
     protected function tearDown(): void
     {
-        if (is_dir($this->outputDir)) {
-            foreach (glob($this->outputDir.'/*') ?: [] as $f) {
-                @unlink($f);
-            }
-            @rmdir($this->outputDir);
-        }
+        $this->deleteDirectoryRecursively($this->outputDir);
 
         parent::tearDown();
+    }
+
+    private function deleteDirectoryRecursively(string $path): void
+    {
+        if (! file_exists($path)) {
+            return;
+        }
+
+        if (is_file($path) || is_link($path)) {
+            @unlink($path);
+
+            return;
+        }
+
+        foreach (array_diff(scandir($path) ?: [], ['.', '..']) as $item) {
+            $this->deleteDirectoryRecursively($path.DIRECTORY_SEPARATOR.$item);
+        }
+
+        @rmdir($path);
     }
 
     public function test_command_renders_json_dossier_and_records_audit_row(): void

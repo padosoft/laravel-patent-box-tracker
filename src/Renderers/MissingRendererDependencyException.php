@@ -7,9 +7,9 @@ namespace Padosoft\PatentBoxTracker\Renderers;
 /**
  * Thrown when neither Browsershot nor DomPDF is installed in the
  * consumer environment yet a PDF render was requested. Both engines
- * are declared as `require-dev` (Browsershot) / `suggest` (DomPDF) on
- * the package so consumers can choose their PDF stack — but the JSON
- * sidecar pathway works without either.
+ * are declared under `require-dev` and `suggest` on the package so
+ * consumers can choose their PDF stack — but the JSON sidecar
+ * pathway works without either.
  *
  * The exception message lists the install commands so the consumer
  * can recover without grepping the README.

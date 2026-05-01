@@ -86,7 +86,7 @@ final class RenderCommand extends Command
 
         $outPath = $this->resolveOutPath($sessionId, $format);
 
-        $renderer = $this->resolveRenderer($format);
+        $renderer = $this->resolveRenderer($format, $locale);
 
         try {
             $rendered = $renderer->render($session);
@@ -156,8 +156,14 @@ final class RenderCommand extends Command
         return $base.DIRECTORY_SEPARATOR.$sessionId.'.'.$format;
     }
 
-    private function resolveRenderer(string $format): DossierRenderer
+    private function resolveRenderer(string $format, string $locale): DossierRenderer
     {
+        // Push the CLI locale into config before resolving so the
+        // container-bound renderer picks it up at instantiation time.
+        // Both JsonDossierRenderer and PdfDossierRenderer read
+        // `patent-box-tracker.locale` from config during `bind()`.
+        $this->getLaravel()['config']->set('patent-box-tracker.locale', $locale);
+
         /** @var DossierRenderer $renderer */
         $renderer = match ($format) {
             'pdf' => $this->getLaravel()->make(PdfDossierRenderer::class),
