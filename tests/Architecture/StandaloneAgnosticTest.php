@@ -77,16 +77,27 @@ final class StandaloneAgnosticTest extends TestCase
     {
         // Self-documenting assertion: the recursive walk above already
         // covers everything under src/, but the Classifier + Models
-        // directories landed in W4.B.2 — make the coverage explicit
-        // so a future contributor doesn't accidentally add an
-        // exemption that hides a leak.
-        $classifierDir = realpath(__DIR__.'/../../src/Classifier');
-        $modelsDir = realpath(__DIR__.'/../../src/Models');
+        // directories landed in W4.B.2, and the Console + Config
+        // directories landed in W4.D — make the coverage explicit so
+        // a future contributor doesn't accidentally add an exemption
+        // that hides a leak.
+        $directories = [
+            'src/Classifier' => 'W4.B.2',
+            'src/Models' => 'W4.B.2',
+            'src/Console' => 'W4.C/W4.D',
+            'src/Config' => 'W4.D',
+            'src/Renderers' => 'W4.C',
+            'src/Hash' => 'W4.C',
+            'src/Sources' => 'W4.B.1',
+        ];
 
-        $this->assertNotFalse($classifierDir, 'src/Classifier/ must exist after W4.B.2.');
-        $this->assertNotFalse($modelsDir, 'src/Models/ must exist after W4.B.2.');
+        foreach ($directories as $relative => $milestone) {
+            $dir = realpath(__DIR__.'/../../'.$relative);
+            $this->assertNotFalse(
+                $dir,
+                sprintf('%s/ must exist after %s.', $relative, $milestone),
+            );
 
-        foreach ([$classifierDir, $modelsDir] as $dir) {
             $iterator = new RecursiveIteratorIterator(
                 new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS),
             );

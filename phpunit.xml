@@ -12,6 +12,13 @@
             <directory>tests/Unit</directory>
         </testsuite>
 
+        <!-- Feature suite: end-to-end against artisan commands +
+             package migrations + Http::fake(). Same offline guarantee
+             as Unit; CI runs both as part of the default invocation. -->
+        <testsuite name="Feature">
+            <directory>tests/Feature</directory>
+        </testsuite>
+
         <!-- Architecture suite: textual / file-system invariants
              (standalone-agnostic, no AskMyDocs symbols). CI runs this
              suite alongside Unit. See R10 / PLAN-W4 §6.5. -->
