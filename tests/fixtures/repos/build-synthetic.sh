@@ -156,5 +156,10 @@ commit \
 # Convert to bare so tests use a stable layout.
 git clone --quiet --bare "${WORK_DIR}" "${TARGET}"
 
+# Strip the cloned origin remote so the fixture config does not embed the
+# transient temp directory path from WORK_DIR (which would leak the local
+# username and break determinism across rebuilds on different machines).
+git --git-dir="${TARGET}" config --remove-section remote.origin 2>/dev/null || true
+
 # Final cleanup.
 echo "Built fixture at: ${TARGET}"

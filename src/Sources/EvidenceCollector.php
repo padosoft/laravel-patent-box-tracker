@@ -24,9 +24,19 @@ namespace Padosoft\PatentBoxTracker\Sources;
  *   1. Every registered FQCN MUST implement this interface — the registry
  *      asserts `is_subclass_of(<fqcn>, EvidenceCollector::class)` at boot
  *      and throws InvalidArgumentException if not.
- *   2. For any single CollectorContext, AT MOST ONE registered collector
- *      MAY return true from `supports()`. The registry tests every pair
- *      against a fixture context and throws on overlap.
+ *   2. For any CollectorContext that reaches `dispatch()`, AT MOST ONE
+ *      non-exempt registered collector MAY return true from `supports()`.
+ *      The registry enforces this at TWO points:
+ *        - At boot, against a synthetic non-git fixture context (best
+ *          effort: catches naive always-on overlaps).
+ *        - At every `dispatch()` call, against the REAL context (catches
+ *          context-sensitive overlaps that the synthetic fixture cannot
+ *          exercise — e.g. two collectors that only return true when a
+ *          real `.git` directory is present).
+ *      A collector that intentionally shares a context with another may
+ *      declare the overlap via the optional `overlapsBy(): list<class-string>`
+ *      method on its concrete class — both sides of the exemption must
+ *      still produce distinct `EvidenceItem` kinds.
  *
  * @see CollectorRegistry
  */
@@ -36,8 +46,11 @@ interface EvidenceCollector
      * Whether this collector applies to the given session context.
      *
      * MUST be deterministic — repeated calls with the same context return
-     * the same boolean. Two registered collectors MUST NOT both return true
-     * for the same context (the registry enforces a non-overlap mutex).
+     * the same boolean. Two non-exempt registered collectors MUST NOT both
+     * return true for the same context. The registry enforces this at boot
+     * (synthetic fixture, best effort) AND at every dispatch (real context,
+     * authoritative); overlapping collectors that share a source by design
+     * declare the exemption via `overlapsBy()` on the concrete class.
      */
     public function supports(CollectorContext $context): bool;
 

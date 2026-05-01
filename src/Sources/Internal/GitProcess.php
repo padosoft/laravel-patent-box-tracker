@@ -9,8 +9,9 @@ use RuntimeException;
 /**
  * Minimal git wrapper around `proc_open()`. Used by the collectors so the
  * package does not need a hard dependency on symfony/process beyond what
- * Laravel already pulls in transitively. Captures stdout AND stderr,
- * streams stdout to a string, returns the exit code.
+ * Laravel already pulls in transitively. Captures stdout and stderr,
+ * streams stdout to a string, and throws on non-zero exit codes (the exit
+ * code is consumed for error wrapping but is not returned to callers).
  *
  * Internal — not part of the public API surface.
  */
@@ -73,7 +74,20 @@ final class GitProcess
 
             $changed = @stream_select($read, $write, $except, $sec, $usec);
             if ($changed === false) {
-                break;
+                // stream_select() returned an error. Treat it as a hard
+                // failure: terminate the subprocess, drain pipes, and
+                // throw with the command + cwd so the caller does not
+                // hang on `proc_close()` waiting for a runaway git that
+                // the OS can no longer signal.
+                proc_terminate($process);
+                fclose($pipes[1]);
+                fclose($pipes[2]);
+                proc_close($process);
+                throw new RuntimeException(sprintf(
+                    'GitProcess: stream_select() failed while running git [%s] in "%s".',
+                    implode(' ', $args),
+                    $cwd,
+                ));
             }
 
             foreach ($read as $stream) {

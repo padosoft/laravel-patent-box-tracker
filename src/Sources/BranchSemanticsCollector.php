@@ -175,14 +175,16 @@ final class BranchSemanticsCollector implements EvidenceCollector
                     if (str_starts_with($ref, 'tag:')) {
                         continue;
                     }
-                    if ($ref === '' || $ref === 'HEAD') {
-                        continue;
-                    }
-                    // Drop remote prefix (e.g. "origin/main") — we only want
-                    // semantic branch names. Strip everything up to the
-                    // first slash IF the first segment is a known remote.
+                    // Drop remote prefix (e.g. "origin/main", "origin/HEAD")
+                    // BEFORE the HEAD/empty filter — otherwise a configured
+                    // remote HEAD ("origin/HEAD") slips through the literal
+                    // "HEAD" check and ends up in the result set as a fake
+                    // branch with `unknown` semantics.
                     if (preg_match('#^(origin|upstream|fork)/(.+)$#', $ref, $m)) {
                         $ref = $m[2];
+                    }
+                    if ($ref === '' || $ref === 'HEAD') {
+                        continue;
                     }
                     $set[$ref] = true;
                 }

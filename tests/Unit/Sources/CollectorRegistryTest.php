@@ -64,6 +64,50 @@ final class NotACollector
     }
 }
 
+/**
+ * Returns true only when the context targets a specific path. Used to
+ * exercise the dispatch-time mutex: this collector returns FALSE on the
+ * synthetic boot fixture (`sys_get_temp_dir()`), so boot validation passes,
+ * but TRUE on a chosen real path — where the dispatch-time mutex must fire.
+ */
+final class SupportsOnlyOnSpecificPathA implements EvidenceCollector
+{
+    public const TARGET = '/path-that-only-a-and-b-claim';
+
+    public function name(): string
+    {
+        return 'specific-a';
+    }
+
+    public function supports(CollectorContext $context): bool
+    {
+        return $context->repositoryPath === self::TARGET;
+    }
+
+    public function collect(CollectorContext $context): iterable
+    {
+        return [];
+    }
+}
+
+final class SupportsOnlyOnSpecificPathB implements EvidenceCollector
+{
+    public function name(): string
+    {
+        return 'specific-b';
+    }
+
+    public function supports(CollectorContext $context): bool
+    {
+        return $context->repositoryPath === SupportsOnlyOnSpecificPathA::TARGET;
+    }
+
+    public function collect(CollectorContext $context): iterable
+    {
+        return [];
+    }
+}
+
 final class CollectorRegistryTest extends TestCase
 {
     public function test_registers_four_canonical_collectors_without_overlap(): void
@@ -155,5 +199,35 @@ final class CollectorRegistryTest extends TestCase
         $items = iterator_to_array($registry->dispatch($context), false);
 
         $this->assertSame([], $items);
+    }
+
+    public function test_dispatch_throws_when_real_context_creates_overlap_that_boot_fixture_missed(): void
+    {
+        // Both collectors return false on the synthetic boot fixture
+        // (sys_get_temp_dir() is not /path-that-only-a-and-b-claim), so
+        // validate() passes silently. The overlap is real for the actual
+        // dispatch context — dispatch() must surface it instead of letting
+        // both collectors emit conflicting evidence on the real run.
+        $registry = new CollectorRegistry([
+            SupportsOnlyOnSpecificPathA::class,
+            SupportsOnlyOnSpecificPathB::class,
+        ]);
+
+        // Boot validation passes — neither collector supports the synthetic
+        // sys_get_temp_dir() fixture.
+        $registry->validate();
+
+        $context = new CollectorContext(
+            repositoryPath: SupportsOnlyOnSpecificPathA::TARGET,
+            repositoryRole: 'support',
+            branch: null,
+            periodFrom: new \DateTimeImmutable('2026-01-01T00:00:00Z'),
+            periodTo: new \DateTimeImmutable('2026-12-31T23:59:59Z'),
+        );
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/dispatch context.*forbids non-exempt overlap/');
+
+        iterator_to_array($registry->dispatch($context), false);
     }
 }

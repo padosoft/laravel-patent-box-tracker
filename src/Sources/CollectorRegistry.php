@@ -12,11 +12,21 @@ use InvalidArgumentException;
  * Pluggable EvidenceCollector registry per R23 (boot-time FQCN validation +
  * non-overlap mutex on `supports()`).
  *
- * Validation runs on first `dispatch()` call. The cost of eager validation
- * is a class-existence check per FQCN plus one synthetic `supports()` call
- * per pair — small enough that lazy/eager is mostly stylistic. We chose
- * lazy so a misconfigured `config/patent-box-tracker.php` does not crash a
- * `php artisan` boot in unrelated commands.
+ * Validation runs in two phases:
+ *
+ *   1. **Boot-time / first-dispatch (static)** — every registered FQCN must
+ *      `class_exists` and `is_subclass_of(EvidenceCollector::class)`. The
+ *      registry then runs a best-effort mutex check against a single
+ *      synthetic CollectorContext (a non-git temp directory) so the most
+ *      common misconfigurations (two collectors that always return true)
+ *      are caught at boot.
+ *
+ *   2. **Per-dispatch (dynamic)** — for every real CollectorContext, the
+ *      registry filters collectors by `supports()`, then re-runs the
+ *      pair-wise mutex on the SUPPORTING set. This catches context-sensitive
+ *      overlaps that the synthetic boot fixture cannot exercise (a
+ *      collector that only returns `true` when an actual git repository is
+ *      present, for example).
  *
  * Overlap exemption: two collectors that intentionally share a context
  * (e.g. AiAttributionExtractor projecting GitSourceCollector) declare
@@ -24,6 +34,12 @@ use InvalidArgumentException;
  * The registry treats an exemption as a contract: BOTH collectors must
  * still emit DISTINCT EvidenceItem kinds, which the EvidenceItem kind
  * constants enforce structurally.
+ *
+ * The cost of eager validation is a class-existence check per FQCN plus
+ * one synthetic `supports()` call per pair — small enough that lazy/eager
+ * is mostly stylistic. We chose lazy so a misconfigured
+ * `config/patent-box-tracker.php` does not crash a `php artisan` boot in
+ * unrelated commands.
  */
 final class CollectorRegistry
 {
@@ -52,6 +68,13 @@ final class CollectorRegistry
      * EvidenceItem any collector emits. Triggers boot-time validation on
      * first call; subsequent calls re-use the validated instances.
      *
+     * Per-dispatch the registry ALSO re-runs the supports() mutex against
+     * the actual context (not the synthetic boot fixture), so a
+     * context-sensitive overlap that slipped through validate() — for
+     * example, two collectors that both return true only when a real `.git`
+     * directory is present — is caught here before the dispatch produces
+     * conflicting evidence.
+     *
      * @return Generator<int, EvidenceItem>
      */
     public function dispatch(CollectorContext $context): Generator
@@ -63,12 +86,53 @@ final class CollectorRegistry
         // non-null local for the generator.
         $collectors = $this->resolvedCollectors ?? [];
 
+        $supporting = [];
         foreach ($collectors as $collector) {
-            if (! $collector->supports($context)) {
-                continue;
+            if ($collector->supports($context)) {
+                $supporting[] = $collector;
             }
+        }
+
+        $this->guardSupportsMutexForRealContext($supporting, $context);
+
+        foreach ($supporting as $collector) {
             foreach ($collector->collect($context) as $item) {
                 yield $item;
+            }
+        }
+    }
+
+    /**
+     * @param  list<EvidenceCollector>  $supporting  Collectors whose `supports()` returned
+     *                                               true for the actual context.
+     */
+    private function guardSupportsMutexForRealContext(array $supporting, CollectorContext $context): void
+    {
+        $count = count($supporting);
+        if ($count < 2) {
+            return;
+        }
+
+        for ($i = 0; $i < $count; $i++) {
+            for ($j = $i + 1; $j < $count; $j++) {
+                $a = $supporting[$i];
+                $b = $supporting[$j];
+
+                if ($this->isExempted($a, $b)) {
+                    continue;
+                }
+
+                throw new InvalidArgumentException(sprintf(
+                    'CollectorRegistry: collectors "%s" (%s) and "%s" (%s) BOTH return true from supports() '
+                    .'for the dispatch context "%s" (role=%s). R23 forbids non-exempt overlap; either narrow '
+                    .'one collector\'s supports() predicate or declare the overlap via overlapsBy().',
+                    $a::class,
+                    $a->name(),
+                    $b::class,
+                    $b->name(),
+                    $context->repositoryPath,
+                    $context->repositoryRole,
+                ));
             }
         }
     }
