@@ -19,4 +19,6 @@ namespace Padosoft\PatentBoxTracker\Renderers;
  * `catch (RenderException)` block without a separate branch for missing
  * dependencies.
  */
-final class MissingRendererDependencyException extends RenderException {}
+final class MissingRendererDependencyException extends RenderException
+{
+}
