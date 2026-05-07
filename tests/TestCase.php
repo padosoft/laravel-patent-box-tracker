@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Padosoft\PatentBoxTracker\Tests;
 
-use Illuminate\Foundation\Application;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\RateLimiter;
 use Laravel\Ai\AiServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;

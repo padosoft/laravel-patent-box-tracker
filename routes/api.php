@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Route;
 use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\CapabilitiesController;
-use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\QueueRenderDossierController;
-use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\QueueTrackingSessionController;
-use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\TrackingDryRunController;
-use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\ValidateRepositoryController;
+use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\DownloadTrackedDossierController;
+use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\HealthController;
 use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\ListTrackedCommitsController;
 use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\ListTrackedDossiersController;
-use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\DownloadTrackedDossierController;
 use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\ListTrackedEvidenceController;
 use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\ListTrackingSessionsController;
-use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\HealthController;
+use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\QueueRenderDossierController;
+use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\QueueTrackingSessionController;
 use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\ShowTrackingSessionController;
+use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\TrackingDryRunController;
+use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\ValidateRepositoryController;
 use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\VerifySessionIntegrityController;
 use Padosoft\PatentBoxTracker\Http\Middleware\HandleApiErrors;
 

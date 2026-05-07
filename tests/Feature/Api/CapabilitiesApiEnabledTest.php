@@ -41,4 +41,3 @@ final class CapabilitiesApiEnabledTest extends TestCase
         $response->assertJsonPath('data.classifier.model', 'claude-sonnet-4-6');
     }
 }
-

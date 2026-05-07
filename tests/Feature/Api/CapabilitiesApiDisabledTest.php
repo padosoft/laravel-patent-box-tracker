@@ -14,4 +14,3 @@ final class CapabilitiesApiDisabledTest extends TestCase
             ->assertNotFound();
     }
 }
-

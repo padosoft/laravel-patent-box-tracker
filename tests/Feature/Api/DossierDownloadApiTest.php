@@ -72,4 +72,3 @@ final class DossierDownloadApiTest extends TestCase
             ->assertNotFound();
     }
 }
-

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Padosoft\PatentBoxTracker\Api;
 
-use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\JsonResponse;
 
 final class ApiResponse
 {
     /**
-     * @param array|Arrayable<string, mixed> $data
-     * @param array<string, mixed>|null $meta
+     * @param  array|Arrayable<string, mixed>  $data
+     * @param  array<string, mixed>|null  $meta
      */
     public static function success(array|Arrayable $data, ?array $meta = null, int $status = 200): JsonResponse
     {
@@ -27,7 +27,7 @@ final class ApiResponse
     }
 
     /**
-     * @param array<string, mixed> $details
+     * @param  array<string, mixed>  $details
      */
     public static function error(
         string $code,

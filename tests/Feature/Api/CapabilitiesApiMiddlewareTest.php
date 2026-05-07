@@ -43,4 +43,3 @@ final class RejectAllApiMiddleware
         ], 401);
     }
 }
-
