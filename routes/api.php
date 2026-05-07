@@ -14,10 +14,13 @@ use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\ShowTrackingSessionControl
 use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\VerifySessionIntegrityController;
 
 $prefix = trim((string) config('patent-box-tracker.api.prefix', 'api/patent-box'), '/');
-$middleware = array_values(array_unique(array_merge(
-    (array) config('patent-box-tracker.api.middleware', []),
-    [SubstituteBindings::class],
-)));
+$middleware = (array) config('patent-box-tracker.api.middleware', ['api']);
+$rateLimiter = (string) config('patent-box-tracker.api.rate_limiter', 'api');
+if ($rateLimiter !== '') {
+    $middleware[] = sprintf('throttle:%s', $rateLimiter);
+}
+$middleware[] = SubstituteBindings::class;
+$middleware = array_values(array_unique($middleware));
 
 Route::prefix($prefix)
     ->middleware($middleware)

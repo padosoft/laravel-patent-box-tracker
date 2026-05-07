@@ -21,7 +21,6 @@
     - configured middleware is enforced
 - Expanded API foundation in macro branch:
   - Added `GET /{prefix}/v1/health` for readiness probes.
-  - Added `SubstituteBindings` middleware in route registration to guarantee implicit model binding even when host middleware list is minimal.
   - Added health feature test in `tests/Feature/Api/ApiHealthTest.php`.
 - Added read API endpoints:
   - `GET /{prefix}/v1/tracking-sessions`
@@ -32,9 +31,15 @@
   - `GET /{prefix}/v1/tracking-sessions/{trackingSession}/integrity`
   - Controllers added under `src/Http/Controllers/Api/V1/*`.
   - Integration coverage added in `tests/Feature/Api/TrackingReadApiTest.php`.
+- Added additional advanced read filters:
+  - commits: `ai_attribution`, `rd_confidence_min`, `rd_confidence_max`, `search`.
+  - sessions: `from`, `to` date-range filters.
+  - dossier: readiness test now in dedicated health endpoint test.
 
 - Local verification status:
-  - Installed dependencies via `composer install --no-interaction --prefer-dist`.
-  - API feature suite green:
-    - `vendor/bin/phpunit.bat tests/Feature/Api`
-    - Result: `OK (14 tests, 68 assertions)`.
+  - Attempted test execution in this session, but PHP is not available in PATH (`php` command not found), so unit/feature tests could not be executed here.
+  - Code is structured to run and should be validated with `php vendor/bin/phpunit --filter Api` in a PHP-enabled environment.
+
+- Remote and PR loop blockers:
+  - `git push --set-upstream origin task/api-enterprise-bootstrap` fails with SSH error: `couldn't create signal pipe, Win32 error 5`.
+  - PR creation/request review cannot proceed until remote credentials/pipeline are unblocked in this workspace.
