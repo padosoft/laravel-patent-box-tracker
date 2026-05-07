@@ -35,7 +35,10 @@ final class ListTrackedCommitsController extends Controller
         }
 
         if (($qualified = $request->query('is_rd_qualified')) !== null && is_string($qualified) && $qualified !== '') {
-            $query->where('is_rd_qualified', filter_var($qualified, FILTER_VALIDATE_BOOL));
+            $qualifiedValue = filter_var($qualified, FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE);
+            if ($qualifiedValue !== null) {
+                $query->where('is_rd_qualified', $qualifiedValue);
+            }
         }
 
         if (($aiAttribution = $request->query('ai_attribution')) !== null && is_string($aiAttribution) && $aiAttribution !== '') {

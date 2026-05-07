@@ -29,6 +29,20 @@ final class TrackingDryRunController extends Controller
             return ApiResponse::error('validation_failed', 'The given data was invalid.', $validator->errors()->toArray(), 422);
         }
         $payload = $validator->validated();
+        if ((string) $payload['mode'] === 'cross_repo') {
+            $hasPrimaryIp = false;
+            foreach ((array) $payload['repositories'] as $repository) {
+                if (($repository['role'] ?? null) === 'primary_ip') {
+                    $hasPrimaryIp = true;
+                    break;
+                }
+            }
+            if (! $hasPrimaryIp) {
+                return ApiResponse::error('validation_failed', 'The given data was invalid.', [
+                    'repositories' => ['At least one repository with role primary_ip is required in cross_repo mode.'],
+                ], 422);
+            }
+        }
 
         $from = new \DateTimeImmutable((string) $payload['period']['from'].'T00:00:00Z');
         $to = new \DateTimeImmutable((string) $payload['period']['to'].'T00:00:00Z');

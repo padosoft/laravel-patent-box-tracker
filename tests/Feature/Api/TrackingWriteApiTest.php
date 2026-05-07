@@ -113,6 +113,24 @@ final class TrackingWriteApiTest extends TestCase
             ->assertJsonPath('error.code', 'validation_failed');
     }
 
+    public function test_dry_run_cross_repo_requires_primary_ip_repository(): void
+    {
+        $this->postJson('/api/patent-box/v1/tracking-sessions/dry-run', [
+            'mode' => 'cross_repo',
+            'period' => [
+                'from' => '2026-01-01',
+                'to' => '2026-12-31',
+            ],
+            'repositories' => [
+                [
+                    'path' => self::FIXTURE_REPO,
+                    'role' => 'support',
+                ],
+            ],
+        ])->assertStatus(422)
+            ->assertJsonPath('error.code', 'validation_failed');
+    }
+
     public function test_create_tracking_session_dispatches_job(): void
     {
         Bus::fake();

@@ -71,4 +71,24 @@ final class DossierDownloadApiTest extends TestCase
         $this->get('/api/patent-box/v1/tracking-sessions/'.$sessionB->id.'/dossiers/'.$dossier->id.'/download')
             ->assertNotFound();
     }
+
+    public function test_download_returns_404_when_hash_or_size_does_not_match_recorded_integrity(): void
+    {
+        $session = TrackingSession::query()->create(['status' => TrackingSession::STATUS_RENDERED]);
+        $tmp = tempnam(sys_get_temp_dir(), 'patent-box-dossier-');
+        file_put_contents($tmp, '{"ok":false}');
+
+        $dossier = TrackedDossier::query()->create([
+            'tracking_session_id' => $session->id,
+            'format' => 'json',
+            'locale' => 'it',
+            'path' => $tmp,
+            'byte_size' => 11,
+            'sha256' => hash('sha256', '{"ok":true}'),
+            'generated_at' => now(),
+        ]);
+
+        $this->get('/api/patent-box/v1/tracking-sessions/'.$session->id.'/dossiers/'.$dossier->id.'/download')
+            ->assertNotFound();
+    }
 }

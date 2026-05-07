@@ -32,8 +32,10 @@ final class HandleApiErrors
             return ApiResponse::error('not_found', 'The requested resource was not found.', [], 404);
         } catch (CostCapExceededException $exception) {
             return ApiResponse::error('cost_cap_exceeded', $exception->getMessage(), [], 422);
-        } catch (AuthorizationException|AuthenticationException $exception) {
+        } catch (AuthenticationException $exception) {
             return ApiResponse::error('unauthorized', $exception->getMessage(), [], 401);
+        } catch (AuthorizationException $exception) {
+            return ApiResponse::error('forbidden', $exception->getMessage(), [], 403);
         } catch (ConflictHttpException $exception) {
             return ApiResponse::error('conflict', $exception->getMessage(), [], 409);
         } catch (TooManyRequestsHttpException $exception) {
@@ -45,7 +47,9 @@ final class HandleApiErrors
                 [],
                 $exception->getStatusCode(),
             );
-        } catch (Throwable) {
+        } catch (Throwable $exception) {
+            report($exception);
+
             return ApiResponse::error('internal_error', 'Internal server error', [], 500);
         }
     }

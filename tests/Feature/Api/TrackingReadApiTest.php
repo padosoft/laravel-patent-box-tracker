@@ -94,6 +94,13 @@ final class TrackingReadApiTest extends TestCase
             ->assertJsonPath('data.0.ai_attribution', 'human');
     }
 
+    public function test_list_commits_ignores_invalid_boolean_filter_value(): void
+    {
+        $this->getJson('/api/patent-box/v1/tracking-sessions/'.$this->session->id.'/commits?is_rd_qualified=not-a-bool')
+            ->assertOk()
+            ->assertJsonPath('meta.total', 2);
+    }
+
     public function test_list_commits_supports_confidence_range_filters(): void
     {
         $this->getJson('/api/patent-box/v1/tracking-sessions/'.$this->session->id.'/commits?rd_confidence_min=0.9&rd_confidence_max=1')

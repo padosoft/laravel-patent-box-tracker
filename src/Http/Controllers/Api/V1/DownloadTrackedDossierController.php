@@ -31,6 +31,12 @@ final class DownloadTrackedDossierController extends Controller
         if ($bytes === false) {
             abort(404);
         }
+        if (hash('sha256', $bytes) !== (string) $row->sha256) {
+            abort(404);
+        }
+        if (strlen($bytes) !== (int) $row->byte_size) {
+            abort(404);
+        }
 
         $contentType = $row->format === 'pdf'
             ? 'application/pdf'

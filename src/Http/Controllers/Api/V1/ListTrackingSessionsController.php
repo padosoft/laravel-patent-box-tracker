@@ -7,6 +7,7 @@ namespace Padosoft\PatentBoxTracker\Http\Controllers\Api\V1;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Padosoft\PatentBoxTracker\Api\ApiResponse;
 use Padosoft\PatentBoxTracker\Models\TrackedCommit;
 use Padosoft\PatentBoxTracker\Models\TrackingSession;
@@ -48,6 +49,13 @@ final class ListTrackingSessionsController extends Controller
 
         $paginator = $query->paginate($perPage);
         $rows = [];
+        $sessionIds = [];
+        foreach ($paginator->items() as $session) {
+            if ($session instanceof TrackingSession) {
+                $sessionIds[] = (int) $session->id;
+            }
+        }
+        $summaries = $this->summariesFor($sessionIds);
 
         foreach ($paginator->items() as $session) {
             if (! $session instanceof TrackingSession) {
@@ -55,7 +63,11 @@ final class ListTrackingSessionsController extends Controller
             }
 
             $taxIdentity = (array) ($session->tax_identity_json ?? []);
-            $summary = $this->summaryFor((int) $session->id);
+            $summary = $summaries[(int) $session->id] ?? [
+                'commit_count' => 0,
+                'qualified_commit_count' => 0,
+                'repository_count' => 0,
+            ];
 
             $rows[] = [
                 'id' => (int) $session->id,
@@ -91,27 +103,34 @@ final class ListTrackingSessionsController extends Controller
     /**
      * @return array{commit_count:int,qualified_commit_count:int,repository_count:int}
      */
-    private function summaryFor(int $sessionId): array
+    private function summariesFor(array $sessionIds): array
     {
-        $commitCount = TrackedCommit::query()
-            ->where('tracking_session_id', $sessionId)
-            ->count();
+        if ($sessionIds === []) {
+            return [];
+        }
 
-        $qualifiedCount = TrackedCommit::query()
-            ->where('tracking_session_id', $sessionId)
-            ->where('is_rd_qualified', true)
-            ->count();
+        $rows = TrackedCommit::query()
+            ->select([
+                'tracking_session_id',
+                DB::raw('COUNT(*) AS commit_count'),
+                DB::raw('SUM(CASE WHEN is_rd_qualified = 1 THEN 1 ELSE 0 END) AS qualified_commit_count'),
+                DB::raw('COUNT(DISTINCT repository_path) AS repository_count'),
+            ])
+            ->whereIn('tracking_session_id', $sessionIds)
+            ->groupBy('tracking_session_id')
+            ->get();
 
-        $repositoryCount = (int) TrackedCommit::query()
-            ->where('tracking_session_id', $sessionId)
-            ->distinct('repository_path')
-            ->count('repository_path');
+        $out = [];
+        foreach ($rows as $row) {
+            $sessionId = (int) $row->tracking_session_id;
+            $out[$sessionId] = [
+                'commit_count' => (int) $row->commit_count,
+                'qualified_commit_count' => (int) $row->qualified_commit_count,
+                'repository_count' => (int) $row->repository_count,
+            ];
+        }
 
-        return [
-            'commit_count' => (int) $commitCount,
-            'qualified_commit_count' => (int) $qualifiedCount,
-            'repository_count' => $repositoryCount,
-        ];
+        return $out;
     }
 
     private function iso(mixed $value): ?string

@@ -33,7 +33,6 @@ final class RenderTrackingSessionDossierJob implements ShouldQueue
             return;
         }
         $session->status = TrackingSession::STATUS_RUNNING;
-        $session->finished_at = null;
         $session->save();
 
         try {
@@ -45,7 +44,6 @@ final class RenderTrackingSessionDossierJob implements ShouldQueue
             $this->persistRenderedDossier($rendered, $outPath);
         } catch (\Throwable $exception) {
             $session->status = TrackingSession::STATUS_FAILED;
-            $session->finished_at = now()->toDateTimeString();
             $session->save();
             throw $exception;
         }
@@ -61,7 +59,6 @@ final class RenderTrackingSessionDossierJob implements ShouldQueue
         ]);
 
         $session->status = TrackingSession::STATUS_RENDERED;
-        $session->finished_at = now()->toDateTimeString();
         $session->save();
     }
 
@@ -71,7 +68,10 @@ final class RenderTrackingSessionDossierJob implements ShouldQueue
             ? storage_path('dossiers')
             : sys_get_temp_dir().DIRECTORY_SEPARATOR.'patent-box-dossiers';
 
-        return $base.DIRECTORY_SEPARATOR.$this->sessionId.'.'.$this->format;
+        $stamp = now()->setTimezone('UTC')->format('YmdHisv');
+        $random = bin2hex(random_bytes(4));
+
+        return $base.DIRECTORY_SEPARATOR.$this->sessionId.'-'.$this->locale.'-'.$stamp.'-'.$random.'.'.$this->format;
     }
 
     private function persistRenderedDossier(RenderedDossier $rendered, string $outPath): void
