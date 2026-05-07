@@ -7,16 +7,22 @@ namespace Padosoft\PatentBoxTracker\Http\Controllers\Api\V1;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Padosoft\PatentBoxTracker\Api\ApiResponse;
 use Padosoft\PatentBoxTracker\Models\TrackedCommit;
 use Padosoft\PatentBoxTracker\Models\TrackingSession;
 
 final class ListTrackedCommitsController extends Controller
 {
-    public function __invoke(Request $request, TrackingSession $trackingSession): JsonResponse
+    public function __invoke(Request $request, int $trackingSession): JsonResponse
     {
+        $session = TrackingSession::query()->find((int) $trackingSession);
+        if (! $session instanceof TrackingSession) {
+            return ApiResponse::error('not_found', 'The requested resource was not found.', [], 404);
+        }
+
         $perPage = max(1, min((int) $request->query('per_page', 50), 200));
         $query = TrackedCommit::query()
-            ->where('tracking_session_id', $trackingSession->id)
+            ->where('tracking_session_id', $session->id)
             ->orderByDesc('committed_at')
             ->orderByDesc('id');
 
@@ -94,13 +100,10 @@ final class ListTrackedCommitsController extends Controller
             ];
         }
 
-        return response()->json([
-            'data' => $rows,
-            'meta' => [
-                'page' => (int) $paginator->currentPage(),
-                'per_page' => (int) $paginator->perPage(),
-                'total' => (int) $paginator->total(),
-            ],
+        return ApiResponse::success($rows, [
+            'page' => (int) $paginator->currentPage(),
+            'per_page' => (int) $paginator->perPage(),
+            'total' => (int) $paginator->total(),
         ]);
     }
 

@@ -26,6 +26,7 @@ description: Continue or resume enterprise-grade API implementation for laravel-
 8. Request Copilot review and verify it exists.
 9. Loop on review comments and CI until clean.
 10. Merge and continue.
+11. Immediately start the next roadmap block without waiting for extra user confirmation.
 
 ## Copilot Review
 
@@ -42,4 +43,3 @@ If `gh pr edit <PR> --add-reviewer @copilot` fails because of CLI scope or user 
 - Keep `docs/PROGRESS.md` current with branch/PR/CI/Copilot status.
 - Add reusable findings to `docs/LESSON.md`.
 - Reflect durable discoveries back into rules and skills.
-

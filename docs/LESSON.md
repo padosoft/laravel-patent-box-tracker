@@ -15,3 +15,13 @@
 - `rate_limiter` in `config/patent-box-tracker.api` should be applied to the API middleware stack, otherwise the setting is dead config.
 - API bootstrap now includes a dedicated `GET /v1/health` endpoint for environment-level smoke checks before UI/API calls.
 - In questo subtask `ApiResponse::success` viene usato come wrapper unico: evitare accidentalmente livelli doppi (`data: { data: {...} }`).
+- 2026-05-07: error taxonomy middleware ora normalizza gli errori Foundation in `error.code` (`not_found`, `validation_failed`, `conflict`, `internal_error` ecc.) e i test contract coprono anche il caso 404 + 422.
+- 2026-05-07: gli endpoint async ora espongono `job.id` quando disponibile dal dispatcher (`Bus::dispatch`) e propagano stato `queued` lato risposta; utile per polling UI.
+- 2026-05-07: i job async dovrebbero aggiornare sempre `tracking_sessions.status`:
+  - start -> `running`,
+  - catch -> `failed` + `finished_at`,
+  - render dossier completato -> `rendered` + `path` fisico persistito.
+- Per consistenza list/filter in API read: i filtri testati dal frontend devono coprire `search` + `path_like`, e i response list devono avere `meta.page/per_page/total` anche su endpoints con paging esplicito.
+- 2026-05-07: per garantire contratto stabile `{error:{...}}`, alcuni endpoint write/read ora validano esplicitamente gli input con `Validator` e normalizzano `not_found/conflict` in controller quando il flusso implicito del middleware non intercettava in modo affidabile i fallback.
+- 2026-05-07: in questa macchina i run completi `--testsuite Feature`/default possono andare in timeout prolungato; nel frattempo conviene isolare suite per superficie (`tests/Feature/Api`, `Architecture`) per mantenere prove verdi verificabili mentre si indaga il blocco del resto.
+- 2026-05-07: regola operativa obbligatoria consolidata in rules/agents/claude: avanzamento automatico block-by-block fino al 100% roadmap, con stop solo su blocker esterni reali.

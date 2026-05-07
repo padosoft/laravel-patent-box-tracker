@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Padosoft\PatentBoxTracker\Tests;
 
 use Illuminate\Foundation\Application;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
 use Laravel\Ai\AiServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use Padosoft\PatentBoxTracker\PatentBoxTrackerServiceProvider;
@@ -53,6 +55,10 @@ abstract class TestCase extends BaseTestCase
             'key' => 'test-key-anthropic',
             'url' => 'https://api.anthropic.com/v1',
         ]);
+
+        // Testbench apps may not define the default "api" limiter used
+        // by the framework's api middleware group.
+        RateLimiter::for('api', static fn (): Limit => Limit::perMinute(120));
     }
 
     /**

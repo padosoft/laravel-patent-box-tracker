@@ -26,6 +26,7 @@ If a session restarts with missing context, read these files first, in this orde
 - Keep compatibility with Laravel 12/13 and PHP 8.3+ unless a macro task explicitly changes the matrix.
 - Never leak secrets in logs, docs, API responses, debug payloads, or test fixtures.
 - Do not mark a task as done until local tests are green, PR review loop is complete, and merge is done.
+- Do not pause between roadmap blocks waiting for new user confirmation; continue automatically block-by-block until full roadmap completion or a hard external blocker.
 
 ## Branch And PR Loop
 
@@ -76,4 +77,3 @@ Playwright is mandatory only for UI/UX tasks.
 ## Remote Blockers
 
 If GitHub/Copilot/CI checks cannot be verified in the current session, do not fake completion. Record exact blocker and next remote action in `docs/PROGRESS.md`.
-

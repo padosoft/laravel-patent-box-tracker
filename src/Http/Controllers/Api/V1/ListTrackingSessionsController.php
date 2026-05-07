@@ -7,6 +7,7 @@ namespace Padosoft\PatentBoxTracker\Http\Controllers\Api\V1;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Padosoft\PatentBoxTracker\Api\ApiResponse;
 use Padosoft\PatentBoxTracker\Models\TrackedCommit;
 use Padosoft\PatentBoxTracker\Models\TrackingSession;
 
@@ -36,6 +37,13 @@ final class ListTrackingSessionsController extends Controller
 
         if (($to = $request->query('to')) !== null && is_string($to) && $to !== '') {
             $query->whereDate('period_to', '<=', $to);
+        }
+
+        if (($search = $request->query('search')) !== null && is_string($search) && trim($search) !== '') {
+            $id = (int) trim($search);
+            if ((string) $id === trim($search)) {
+                $query->where('id', $id);
+            }
         }
 
         $paginator = $query->paginate($perPage);
@@ -73,13 +81,10 @@ final class ListTrackingSessionsController extends Controller
             ];
         }
 
-        return response()->json([
-            'data' => $rows,
-            'meta' => [
-                'page' => (int) $paginator->currentPage(),
-                'per_page' => (int) $paginator->perPage(),
-                'total' => (int) $paginator->total(),
-            ],
+        return ApiResponse::success($rows, [
+            'page' => (int) $paginator->currentPage(),
+            'per_page' => (int) $paginator->perPage(),
+            'total' => (int) $paginator->total(),
         ]);
     }
 

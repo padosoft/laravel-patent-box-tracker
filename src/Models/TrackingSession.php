@@ -34,6 +34,8 @@ final class TrackingSession extends Model
 
     public const STATUS_RUNNING = 'running';
 
+    public const STATUS_QUEUED = 'queued';
+
     public const STATUS_CLASSIFIED = 'classified';
 
     public const STATUS_RENDERED = 'rendered';

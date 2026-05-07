@@ -6,16 +6,22 @@ namespace Padosoft\PatentBoxTracker\Http\Controllers\Api\V1;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use Padosoft\PatentBoxTracker\Api\ApiResponse;
 use Padosoft\PatentBoxTracker\Hash\HashChainBuilder;
 use Padosoft\PatentBoxTracker\Models\TrackedCommit;
 use Padosoft\PatentBoxTracker\Models\TrackingSession;
 
 final class VerifySessionIntegrityController extends Controller
 {
-    public function __invoke(TrackingSession $trackingSession, HashChainBuilder $hashChainBuilder): JsonResponse
+    public function __invoke(int $trackingSession, HashChainBuilder $hashChainBuilder): JsonResponse
     {
+        $session = TrackingSession::query()->find((int) $trackingSession);
+        if (! $session instanceof TrackingSession) {
+            return ApiResponse::error('not_found', 'The requested resource was not found.', [], 404);
+        }
+
         $commits = TrackedCommit::query()
-            ->where('tracking_session_id', $trackingSession->id)
+            ->where('tracking_session_id', $session->id)
             ->orderBy('committed_at')
             ->orderBy('id')
             ->get();
@@ -38,13 +44,11 @@ final class VerifySessionIntegrityController extends Controller
             $head = hash('sha256', '');
         }
 
-        return response()->json([
-            'data' => [
-                'verified' => $verified,
-                'head' => $head,
-                'commit_count' => $commits->count(),
-                'first_failure' => $firstFailure,
-            ],
+        return ApiResponse::success([
+            'verified' => $verified,
+            'head' => $head,
+            'commit_count' => $commits->count(),
+            'first_failure' => $firstFailure,
         ]);
     }
 

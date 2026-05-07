@@ -6,18 +6,24 @@ namespace Padosoft\PatentBoxTracker\Http\Controllers\Api\V1;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use Padosoft\PatentBoxTracker\Api\ApiResponse;
 use Padosoft\PatentBoxTracker\Models\TrackedCommit;
 use Padosoft\PatentBoxTracker\Models\TrackedDossier;
 use Padosoft\PatentBoxTracker\Models\TrackingSession;
 
 final class ShowTrackingSessionController extends Controller
 {
-    public function __invoke(TrackingSession $trackingSession): JsonResponse
+    public function __invoke(int $trackingSession): JsonResponse
     {
-        $taxIdentity = (array) ($trackingSession->tax_identity_json ?? []);
+        $session = TrackingSession::query()->find((int) $trackingSession);
+        if (! $session instanceof TrackingSession) {
+            return ApiResponse::error('not_found', 'The requested resource was not found.', [], 404);
+        }
+
+        $taxIdentity = (array) ($session->tax_identity_json ?? []);
 
         $repositories = TrackedCommit::query()
-            ->where('tracking_session_id', $trackingSession->id)
+            ->where('tracking_session_id', $session->id)
             ->selectRaw('repository_path, repository_role, COUNT(*) as commit_count')
             ->groupBy('repository_path', 'repository_role')
             ->orderBy('repository_path')
@@ -30,7 +36,7 @@ final class ShowTrackingSessionController extends Controller
             ->all();
 
         $dossiers = TrackedDossier::query()
-            ->where('tracking_session_id', $trackingSession->id)
+            ->where('tracking_session_id', $session->id)
             ->orderByDesc('generated_at')
             ->orderByDesc('id')
             ->get()
@@ -45,35 +51,33 @@ final class ShowTrackingSessionController extends Controller
             ->all();
 
         $head = TrackedCommit::query()
-            ->where('tracking_session_id', $trackingSession->id)
+            ->where('tracking_session_id', $session->id)
             ->orderByDesc('committed_at')
             ->orderByDesc('id')
             ->value('hash_chain_self');
 
-        return response()->json([
-            'data' => [
-                'id' => (int) $trackingSession->id,
-                'status' => (string) $trackingSession->status,
-                'tax_identity' => $taxIdentity,
-                'period' => [
-                    'from' => $this->iso($trackingSession->period_from),
-                    'to' => $this->iso($trackingSession->period_to),
-                ],
-                'classifier' => [
-                    'provider' => (string) ($trackingSession->classifier_provider ?? ''),
-                    'model' => (string) ($trackingSession->classifier_model ?? ''),
-                    'seed' => (int) ($trackingSession->classifier_seed ?? 0),
-                ],
-                'cost' => [
-                    'projected_eur' => $trackingSession->cost_eur_projected !== null ? (float) $trackingSession->cost_eur_projected : null,
-                    'actual_eur' => $trackingSession->cost_eur_actual !== null ? (float) $trackingSession->cost_eur_actual : null,
-                ],
-                'repositories' => $repositories,
-                'dossiers' => $dossiers,
-                'hash_chain_head' => is_string($head) ? $head : null,
-                'finished_at' => $this->iso($trackingSession->finished_at),
-                'created_at' => $this->iso($trackingSession->created_at),
+        return ApiResponse::success([
+            'id' => (int) $session->id,
+            'status' => (string) $session->status,
+            'tax_identity' => $taxIdentity,
+            'period' => [
+                'from' => $this->iso($session->period_from),
+                'to' => $this->iso($session->period_to),
             ],
+            'classifier' => [
+                'provider' => (string) ($session->classifier_provider ?? ''),
+                'model' => (string) ($session->classifier_model ?? ''),
+                'seed' => (int) ($session->classifier_seed ?? 0),
+            ],
+            'cost' => [
+                'projected_eur' => $session->cost_eur_projected !== null ? (float) $session->cost_eur_projected : null,
+                'actual_eur' => $session->cost_eur_actual !== null ? (float) $session->cost_eur_actual : null,
+            ],
+            'repositories' => $repositories,
+            'dossiers' => $dossiers,
+            'hash_chain_head' => is_string($head) ? $head : null,
+            'finished_at' => $this->iso($session->finished_at),
+            'created_at' => $this->iso($session->created_at),
         ]);
     }
 
@@ -86,3 +90,4 @@ final class ShowTrackingSessionController extends Controller
         return null;
     }
 }
+

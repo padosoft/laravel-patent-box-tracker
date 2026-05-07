@@ -19,6 +19,7 @@ This file mirrors `AGENTS.md` for Claude-compatible flows.
 - Update `docs/PROGRESS.md` during work and `docs/LESSON.md` when discovering reusable patterns.
 - Keep API additions backward-compatible with existing CLI/fluent surfaces.
 - Keep the package standalone and reusable across Laravel hosts.
+- Continue automatically to the next roadmap block without waiting for additional user confirmation, unless blocked by an external dependency.
 
 ## Skills
 
@@ -30,4 +31,3 @@ Use these repo-local skills when relevant:
 ## Release Rule
 
 The release macro includes README polish, lessons-to-rules consolidation, version tag, and GitHub release publication only after all previous macro branches are merged.
-

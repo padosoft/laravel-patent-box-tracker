@@ -53,6 +53,14 @@ final class TrackingReadApiTest extends TestCase
             ->assertJsonPath('meta.total', 0);
     }
 
+    public function test_list_tracking_sessions_supports_search(): void
+    {
+        $this->getJson('/api/patent-box/v1/tracking-sessions?search='.$this->session->id)
+            ->assertOk()
+            ->assertJsonPath('meta.total', 1)
+            ->assertJsonPath('data.0.id', (int) $this->session->id);
+    }
+
     public function test_show_tracking_session_returns_repositories_and_dossiers(): void
     {
         $this->assertSame(2, TrackedCommit::query()->where('tracking_session_id', $this->session->id)->count());
@@ -112,6 +120,22 @@ final class TrackingReadApiTest extends TestCase
             ->assertJsonPath('data.0.slug', 'plan:PLAN-W4');
     }
 
+    public function test_list_evidence_supports_path_like_filter(): void
+    {
+        $this->getJson('/api/patent-box/v1/tracking-sessions/'.$this->session->id.'/evidence?path_like=PLAN')
+            ->assertOk()
+            ->assertJsonPath('meta.total', 1)
+            ->assertJsonPath('data.0.path', 'docs/PLAN-W4.md');
+    }
+
+    public function test_list_evidence_supports_search(): void
+    {
+        $this->getJson('/api/patent-box/v1/tracking-sessions/'.$this->session->id.'/evidence?search=Plan')
+            ->assertOk()
+            ->assertJsonPath('meta.total', 1)
+            ->assertJsonPath('data.0.title', 'Plan W4');
+    }
+
     public function test_list_dossiers_returns_rows(): void
     {
         $this->assertSame(1, TrackedDossier::query()->where('tracking_session_id', $this->session->id)->count());
@@ -119,7 +143,8 @@ final class TrackingReadApiTest extends TestCase
         $this->getJson('/api/patent-box/v1/tracking-sessions/'.$this->session->id.'/dossiers')
             ->assertOk()
             ->assertJsonPath('data.0.tracking_session_id', (int) $this->session->id)
-            ->assertJsonPath('data.0.sha256', str_repeat('a', 64));
+            ->assertJsonPath('data.0.sha256', str_repeat('a', 64))
+            ->assertJsonPath('meta.total', 1);
     }
 
     public function test_integrity_endpoint_reports_verified_chain(): void

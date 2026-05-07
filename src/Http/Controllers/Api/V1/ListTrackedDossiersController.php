@@ -5,19 +5,38 @@ declare(strict_types=1);
 namespace Padosoft\PatentBoxTracker\Http\Controllers\Api\V1;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Padosoft\PatentBoxTracker\Api\ApiResponse;
 use Padosoft\PatentBoxTracker\Models\TrackedDossier;
 use Padosoft\PatentBoxTracker\Models\TrackingSession;
 
 final class ListTrackedDossiersController extends Controller
 {
-    public function __invoke(TrackingSession $trackingSession): JsonResponse
+    public function __invoke(Request $request, int $trackingSession): JsonResponse
     {
-        $rows = TrackedDossier::query()
-            ->where('tracking_session_id', $trackingSession->id)
+        $session = TrackingSession::query()->find((int) $trackingSession);
+        if (! $session instanceof TrackingSession) {
+            return ApiResponse::error('not_found', 'The requested resource was not found.', [], 404);
+        }
+
+        $perPage = max(1, min((int) $request->query('per_page', 50), 200));
+        $query = TrackedDossier::query()
+            ->where('tracking_session_id', $session->id)
             ->orderByDesc('generated_at')
-            ->orderByDesc('id')
-            ->get()
+            ->orderByDesc('id');
+
+        if (($format = $request->query('format')) !== null && is_string($format) && $format !== '') {
+            $query->where('format', $format);
+        }
+
+        if (($locale = $request->query('locale')) !== null && is_string($locale) && $locale !== '') {
+            $query->where('locale', $locale);
+        }
+
+        $paginator = $query->paginate($perPage);
+        $rows = collect($paginator->items())
+            ->filter(static fn (mixed $item): bool => $item instanceof TrackedDossier)
             ->map(static fn (TrackedDossier $dossier): array => [
                 'id' => (int) $dossier->id,
                 'tracking_session_id' => (int) $dossier->tracking_session_id,
@@ -30,8 +49,10 @@ final class ListTrackedDossiersController extends Controller
             ])
             ->all();
 
-        return response()->json([
-            'data' => $rows,
+        return ApiResponse::success($rows, [
+            'page' => (int) $paginator->currentPage(),
+            'per_page' => (int) $paginator->perPage(),
+            'total' => (int) $paginator->total(),
         ]);
     }
 }

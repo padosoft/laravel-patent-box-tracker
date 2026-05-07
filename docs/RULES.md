@@ -29,6 +29,16 @@ A task/subtask is complete only when all of these hold:
 
 If any point fails, fix and loop again.
 
+## Autoloop Rule (Mandatory)
+
+- Do not stop after completing one block and do not wait for a user "go ahead" between roadmap blocks.
+- Continue automatically to the next roadmap block until 100% completion.
+- Stop only for hard blockers:
+  - missing external access (GitHub push/PR/Copilot/CI unavailable),
+  - required secrets/credentials unavailable,
+  - contradictory requirements that cannot be safely resolved.
+- When blocked, record blocker + exact next action in `docs/PROGRESS.md`, then continue with every other unblocked roadmap item.
+
 ## Copilot Review Request
 
 Primary:
@@ -57,4 +67,3 @@ The REST call using `reviewers[]=copilot` is not equivalent and may return succe
 - Update `docs/PROGRESS.md` incrementally.
 - Update `docs/LESSON.md` when new reusable findings appear.
 - Keep README and docs aligned with implemented behavior.
-

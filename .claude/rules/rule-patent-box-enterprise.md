@@ -5,4 +5,4 @@
 - Request GitHub Copilot Code Review on every PR and verify it actually started.
 - Keep API work additive and opt-in; preserve existing command/fluent compatibility.
 - Update progress and lessons during work, not only at handoff.
-
+- Mandatory autoloop: do not wait for user confirmation between roadmap blocks; continue until 100% completion unless hard-blocked by external constraints.
