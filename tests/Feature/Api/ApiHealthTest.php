@@ -23,10 +23,10 @@ final class ApiHealthTest extends TestCase
     {
         $this->getJson('/api/patent-box/v1/health')
             ->assertOk()
-            ->assertExactJson([
-                'status' => 'ok',
-                'version' => 'v1',
-            ]);
+            ->assertJsonStructure([
+                'data' => ['status', 'version'],
+            ])
+            ->assertJsonPath('data.status', 'ok')
+            ->assertJsonPath('data.version', 'v1');
     }
 }
-

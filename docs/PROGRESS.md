@@ -36,9 +36,52 @@
   - sessions: `from`, `to` date-range filters.
   - dossier: readiness test now in dedicated health endpoint test.
 
+## 2026-05-07 — Macro 1 Subtask 1.1 (in corso)
+
+- Branch attiva: `task/api-foundation-hardening`.
+- Obiettivo subtask: introdurre envelope unificato `{data, meta?, error}` almeno su endpoint foundation (`health`, `capabilities`) e iniziare la suite contract.
+- Implementato:
+  - `src/Api/ApiResponse.php` con helper `success()` ed `error()`.
+  - `HealthController` aggiornato con payload envelope.
+  - `CapabilitiesController` aggiornato con payload envelope.
+  - `tests/Feature/Api/ApiHealthTest.php` aggiornato per `data.status` / `data.version`.
+- Note:
+  - ambiente locale: php non disponibile in PATH, quindi `composer validate` e `composer test` rimangono da eseguire in ambiente PHP.
+  - PR/loop remoto non avviato in questa sessione; mantenere blocco remoto in fase successiva.
+
+- Added write/queue API endpoints:
+  - `POST /{prefix}/v1/repositories/validate`
+  - `POST /{prefix}/v1/tracking-sessions/dry-run`
+  - `POST /{prefix}/v1/tracking-sessions`
+  - `POST /{prefix}/v1/tracking-sessions/{trackingSession}/dossiers`
+  - Added supporting classes:
+    - `src/Api/TrackingApiSupport.php`
+    - `src/Api/RunTrackingSessionAction.php`
+    - `src/Jobs/RunTrackingSessionJob.php`
+    - `src/Jobs/RenderTrackingSessionDossierJob.php`
+    - related controllers under `src/Http/Controllers/Api/V1`.
+
+- Added hardening download endpoint:
+  - `GET /{prefix}/v1/tracking-sessions/{trackingSession}/dossiers/{dossier}/download`
+  - Enforces session-scoped dossier ownership and real file existence before streaming.
+  - Test coverage added in `tests/Feature/Api/DossierDownloadApiTest.php`.
+
 - Local verification status:
-  - Attempted test execution in this session, but PHP is not available in PATH (`php` command not found), so unit/feature tests could not be executed here.
-  - Code is structured to run and should be validated with `php vendor/bin/phpunit --filter Api` in a PHP-enabled environment.
+  - Dependencies installed with `composer install --no-interaction --prefer-dist`.
+  - API feature suite is green:
+    - `vendor/bin/phpunit.bat tests/Feature/Api`
+    - Result: `OK (20 tests, 94 assertions)`.
+  - Full package suites are not yet confirmed in this cycle:
+    - `vendor/bin/phpunit.bat` timed out.
+    - `vendor/bin/phpunit.bat --testsuite Feature --stop-on-failure` timed out.
+  - `vendor/bin/phpunit.bat --testsuite Architecture --stop-on-failure` passed.
+  - Re-ran API suite after write/hardening/doc updates:
+    - `vendor/bin/phpunit.bat tests/Feature/Api`
+    - Result confirmed stable: `OK (20 tests, 94 assertions)`.
+
+- Documentation updates:
+  - Added `docs/API_REFERENCE.md` with implemented v1 endpoint contract.
+  - Added README section `Optional HTTP API (v1)` linking to API reference.
 
 - Remote and PR loop blockers:
   - `git push --set-upstream origin task/api-enterprise-bootstrap` fails with SSH error: `couldn't create signal pipe, Win32 error 5`.
