@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Padosoft\PatentBoxTracker\Http\Controllers\Api\V1;
 
-use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Padosoft\PatentBoxTracker\Models\TrackedDossier;
 use Padosoft\PatentBoxTracker\Models\TrackingSession;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 final class DownloadTrackedDossierController extends Controller
 {
-    public function __invoke(TrackingSession $trackingSession, int $dossier): Response
+    public function __invoke(TrackingSession $trackingSession, int $dossier): BinaryFileResponse
     {
         $row = TrackedDossier::query()
             ->where('id', $dossier)
@@ -27,14 +27,13 @@ final class DownloadTrackedDossierController extends Controller
             abort(404);
         }
 
-        $bytes = @file_get_contents($real);
-        if ($bytes === false) {
+        $fileHash = hash_file('sha256', $real);
+        if ($fileHash === false || $fileHash !== (string) $row->sha256) {
             abort(404);
         }
-        if (hash('sha256', $bytes) !== (string) $row->sha256) {
-            abort(404);
-        }
-        if (strlen($bytes) !== (int) $row->byte_size) {
+
+        $fileSize = filesize($real);
+        if ($fileSize === false || $fileSize !== (int) $row->byte_size) {
             abort(404);
         }
 
@@ -42,9 +41,8 @@ final class DownloadTrackedDossierController extends Controller
             ? 'application/pdf'
             : 'application/json';
 
-        return response($bytes, 200, [
-            'Content-Type' => $contentType,
-            'Content-Disposition' => sprintf('attachment; filename="dossier-%d-%s.%s"', (int) $trackingSession->id, $row->locale, $row->format),
-        ]);
+        $filename = sprintf('dossier-%d-%s.%s', (int) $trackingSession->id, $row->locale, $row->format);
+
+        return response()->download($real, $filename, ['Content-Type' => $contentType]);
     }
 }
