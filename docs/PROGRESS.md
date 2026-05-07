@@ -46,8 +46,10 @@
   - `CapabilitiesController` aggiornato con payload envelope.
   - `tests/Feature/Api/ApiHealthTest.php` aggiornato per `data.status` / `data.version`.
 - Note:
-  - ambiente locale: php non disponibile in PATH, quindi `composer validate` e `composer test` rimangono da eseguire in ambiente PHP.
-  - PR/loop remoto non avviato in questa sessione; mantenere blocco remoto in fase successiva.
+  - ambiente locale: `php` non disponibile in PATH, quindi `composer validate` e `composer test` rimangono da eseguire in ambiente PHP.
+  - commit locale eseguito: `f72c9a1`.
+  - push al remote bloccato da SSH: `fatal: Could not read from remote repository` (`couldn't create signal pipe, Win32 error 5`).
+  - PR/loop remoto non avviato in questa sessione; blocco da risolvere nel prossimo ambiente.
 
 - Added write/queue API endpoints:
   - `POST /{prefix}/v1/repositories/validate`
