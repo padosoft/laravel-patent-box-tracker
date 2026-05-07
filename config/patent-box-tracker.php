@@ -9,6 +9,23 @@ use Padosoft\PatentBoxTracker\Sources\GitSourceCollector;
 return [
     /*
     |--------------------------------------------------------------------------
+    | HTTP API
+    |--------------------------------------------------------------------------
+    |
+    | The package is headless-first and CLI-first by default. Set
+    | PATENT_BOX_API_ENABLED=true to expose a versioned HTTP surface for
+    | admin panels or external operators.
+    |
+    */
+    'api' => [
+        'enabled' => env('PATENT_BOX_API_ENABLED', false),
+        'prefix' => env('PATENT_BOX_API_PREFIX', 'api/patent-box'),
+        'middleware' => [],
+        'rate_limiter' => env('PATENT_BOX_API_RATE_LIMITER', 'api'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Default classifier provider
     |--------------------------------------------------------------------------
     |

@@ -1,0 +1,88 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Padosoft\PatentBoxTracker\Http\Controllers\Api\V1;
+
+use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
+use Padosoft\PatentBoxTracker\Models\TrackedCommit;
+use Padosoft\PatentBoxTracker\Models\TrackedDossier;
+use Padosoft\PatentBoxTracker\Models\TrackingSession;
+
+final class ShowTrackingSessionController extends Controller
+{
+    public function __invoke(TrackingSession $trackingSession): JsonResponse
+    {
+        $taxIdentity = (array) ($trackingSession->tax_identity_json ?? []);
+
+        $repositories = TrackedCommit::query()
+            ->where('tracking_session_id', $trackingSession->id)
+            ->selectRaw('repository_path, repository_role, COUNT(*) as commit_count')
+            ->groupBy('repository_path', 'repository_role')
+            ->orderBy('repository_path')
+            ->get()
+            ->map(static fn ($row): array => [
+                'path' => (string) $row->repository_path,
+                'role' => (string) ($row->repository_role ?? ''),
+                'commit_count' => (int) $row->commit_count,
+            ])
+            ->all();
+
+        $dossiers = TrackedDossier::query()
+            ->where('tracking_session_id', $trackingSession->id)
+            ->orderByDesc('generated_at')
+            ->orderByDesc('id')
+            ->get()
+            ->map(static fn (TrackedDossier $dossier): array => [
+                'id' => (int) $dossier->id,
+                'format' => (string) $dossier->format,
+                'locale' => (string) $dossier->locale,
+                'byte_size' => $dossier->byte_size !== null ? (int) $dossier->byte_size : null,
+                'sha256' => $dossier->sha256,
+                'generated_at' => $dossier->generated_at?->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z'),
+            ])
+            ->all();
+
+        $head = TrackedCommit::query()
+            ->where('tracking_session_id', $trackingSession->id)
+            ->orderByDesc('committed_at')
+            ->orderByDesc('id')
+            ->value('hash_chain_self');
+
+        return response()->json([
+            'data' => [
+                'id' => (int) $trackingSession->id,
+                'status' => (string) $trackingSession->status,
+                'tax_identity' => $taxIdentity,
+                'period' => [
+                    'from' => $this->iso($trackingSession->period_from),
+                    'to' => $this->iso($trackingSession->period_to),
+                ],
+                'classifier' => [
+                    'provider' => (string) ($trackingSession->classifier_provider ?? ''),
+                    'model' => (string) ($trackingSession->classifier_model ?? ''),
+                    'seed' => (int) ($trackingSession->classifier_seed ?? 0),
+                ],
+                'cost' => [
+                    'projected_eur' => $trackingSession->cost_eur_projected !== null ? (float) $trackingSession->cost_eur_projected : null,
+                    'actual_eur' => $trackingSession->cost_eur_actual !== null ? (float) $trackingSession->cost_eur_actual : null,
+                ],
+                'repositories' => $repositories,
+                'dossiers' => $dossiers,
+                'hash_chain_head' => is_string($head) ? $head : null,
+                'finished_at' => $this->iso($trackingSession->finished_at),
+                'created_at' => $this->iso($trackingSession->created_at),
+            ],
+        ]);
+    }
+
+    private function iso(mixed $value): ?string
+    {
+        if ($value instanceof \DateTimeInterface) {
+            return $value->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z');
+        }
+
+        return null;
+    }
+}
