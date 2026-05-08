@@ -20,9 +20,10 @@ use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\TrackingDryRunController;
 use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\ValidateRepositoryController;
 use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\VerifySessionIntegrityController;
 use Padosoft\PatentBoxTracker\Http\Middleware\HandleApiErrors;
+use Padosoft\PatentBoxTracker\Http\Middleware\ProtectPatentBoxApi;
 
 $prefix = trim((string) config('patent-box-tracker.api.prefix', 'api/patent-box'), '/');
-$middleware = [HandleApiErrors::class];
+$middleware = [HandleApiErrors::class, ProtectPatentBoxApi::class];
 $configuredMiddleware = (array) config('patent-box-tracker.api.middleware', []);
 $rateLimiter = (string) config('patent-box-tracker.api.rate_limiter', 'api');
 

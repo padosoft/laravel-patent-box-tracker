@@ -2,6 +2,16 @@
 
 ## 2026-05-08
 
+- Package: subtask `4.1 Authorization and middleware override strategy` avviato su branch `task/api-security-hardening-subtask-4.1-api-token-gate`.
+- Aggiunti:
+  - configurazione facoltativa `patent-box-tracker.api.auth_token` e env `PATENT_BOX_API_TOKEN`;
+  - middleware `ProtectPatentBoxApi` applicato automaticamente alla catena API quando il token è impostato;
+  - test `ApiAuthGateTest` con casi: senza token (200), token mancante (401, `error.code = unauthorized`), header/bearer validi (200).
+  - API reference aggiornato con comportamento di autenticazione opzionale.
+- Stato locale: non riesco ad aprire push/PR loop in questa sessione per blocker remoto (`Win32 error 5` su git/SSH). Documentato e continuato al prossimo punto operativo.
+
+## 2026-05-08
+
 - Package avanzato a `task/api-read-models` con consolidamento Macro 2:
   - Subtask `2.4 Dossier detail endpoint`: completato.
   - Aggiunti:

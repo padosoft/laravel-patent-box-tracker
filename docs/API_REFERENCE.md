@@ -10,6 +10,7 @@ Optional config:
 
 - `PATENT_BOX_API_PREFIX` (default `api/patent-box`)
 - `patent-box-tracker.api.middleware` (array)
+- `PATENT_BOX_API_TOKEN` (optional): when set, requires `X-Patent-Box-Api-Key` or `Authorization: Bearer <token>` on every request.
 
 ## Health
 
