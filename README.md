@@ -97,6 +97,14 @@ No equivalent package exists on Packagist. The closest analogues — `gitinspect
 
 > **`padosoft/laravel-patent-box-tracker-admin` ships the production-grade Laravel admin UI on top of this package.**
 
+<p align="center">
+  <a href="https://github.com/padosoft/laravel-patent-box-tracker-admin">
+    <img src="resources/screenshoots/Patent-Box-Admin-Panel-dashboard.png" alt="Patent Box admin panel — FY 2026 dashboard with KPIs, phase distribution, AI attribution, SHA-256 hash-chain anchor, and recent sessions table" width="100%">
+  </a>
+  <br/>
+  <sub><em>Admin panel dashboard — FY-bound KPIs (sessions, classified commits, R&D-qualified, projected vs actual cost, dossiers), phase distribution, AI attribution split, hash-chain integrity badge, recent sessions table. Source: <a href="https://github.com/padosoft/laravel-patent-box-tracker-admin"><code>padosoft/laravel-patent-box-tracker-admin</code></a>.</em></sub>
+</p>
+
 This package is **API-first and CLI-first**. If you want a polished web interface for non-technical users (commercialista, auditor, project lead) to drive sessions, browse classifications, fix labels, and download dossiers — install the companion admin panel:
 
 📦 **[`padosoft/laravel-patent-box-tracker-admin`](https://github.com/padosoft/laravel-patent-box-tracker-admin)**
