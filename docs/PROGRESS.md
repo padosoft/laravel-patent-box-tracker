@@ -2,6 +2,17 @@
 
 ## 2026-05-08
 
+- Macro security completata:
+  - PR #9 (`task/api-security-hardening` -> `main`) mergeata con CI matrix tutta verde.
+  - Auth gate API opzionale attivo via `PATENT_BOX_API_TOKEN` con test `ApiAuthGateTest`.
+- Pulizia flusso PR:
+  - PR #8 (base intermedia `task/api-read-models`) chiusa come superseded dopo merge su `main`.
+- Stato attuale:
+  - branch di lavoro: `task/release-readme-tag`
+  - task in corso: consolidamento finale docs/rules/agents + release tag.
+
+## 2026-05-08
+
 - Package: subtask `4.1 Authorization and middleware override strategy` in corso su branch `task/api-security-hardening`.
 - Subtask `4.4 Rate limiting and abuse guardrails` verificato con test (`ApiRateLimitTest`) che imposta un limiter temporaneo e attende `429 Too Many Attempts`.
 - Aggiunti:
@@ -12,9 +23,9 @@
 - Stato locale:
   - Branch e PR pubblicati (`task/api-security-hardening`, `task/api-write-jobs`) a supporto del flusso macro.
 - Stato PR:
-  - PR aperta: https://github.com/padosoft/laravel-patent-box-tracker/pull/10 (base `task/api-write-jobs`, head `task/api-security-hardening`)
+  - PR aperta: https://github.com/padosoft/laravel-patent-box-tracker/pull/11 (base `task/api-write-jobs`, head `task/api-security-hardening`)
   - Copilot review richiesta: verificata (`Copilot` in reviewers)
-  - Verifica checks: `gh pr checks 10` => tutti passati
+  - Verifica checks: `gh pr checks 11` => no checks reported su branch base non `main` (CI filtrata su `main`)
 
 ## 2026-05-08
 

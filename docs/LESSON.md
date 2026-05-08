@@ -31,3 +31,5 @@
 - Dettaglio dossier di una sessione (`GET /tracking-sessions/{trackingSession}/dossiers/{dossier}`): non basta verificare solo l'ownership DB, va validata anche l'esistenza fisica del file.
 - Rispetto dello scope sessione nei read endpoints: se l'ID non corrisponde al sessione corrente, anche con dossier valido nel DB, la risposta deve restituire `error.code = not_found`.
 - Per Macro 4.1, il token API opzionale (`PATENT_BOX_API_TOKEN`) è stato introdotto come primo layer di protezione: non richiede dipendenze host (`auth`/Sanctum), resta compatibile con `patent-box-tracker.api.middleware` personalizzato e risponde `error.code = unauthorized` su token mancante/non valido.
+- In questo repository il reviewer corretto per Copilot via CLI è `copilot-pull-request-reviewer`; `copilot` fallisce con `Could not resolve user`.
+- Dopo merge di una PR macro/subtask, controllare sempre `gh pr list --state open` per chiudere PR intermedie rimaste aperte su base branch non più valida.
