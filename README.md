@@ -99,7 +99,7 @@ No equivalent package exists on Packagist. The closest analogues — `gitinspect
 
 <p align="center">
   <a href="https://github.com/padosoft/laravel-patent-box-tracker-admin">
-    <img src="resources/screenshoots/Patent-Box-Admin-Panel-dashboard.png" alt="Patent Box admin panel — FY 2026 dashboard with KPIs, phase distribution, AI attribution, SHA-256 hash-chain anchor, and recent sessions table" width="100%">
+    <img src="resources/screenshots/Patent-Box-Admin-Panel-dashboard.png" alt="Patent Box admin panel — FY 2026 dashboard with KPIs, phase distribution, AI attribution, SHA-256 hash-chain anchor, and recent sessions table" width="100%">
   </a>
   <br/>
   <sub><em>Admin panel dashboard — FY-bound KPIs (sessions, classified commits, R&D-qualified, projected vs actual cost, dossiers), phase distribution, AI attribution split, hash-chain integrity badge, recent sessions table. Source: <a href="https://github.com/padosoft/laravel-patent-box-tracker-admin"><code>padosoft/laravel-patent-box-tracker-admin</code></a>.</em></sub>
