@@ -11,6 +11,7 @@ Optional config:
 - `PATENT_BOX_API_PREFIX` (default `api/patent-box`)
 - `patent-box-tracker.api.middleware` (array)
 - `PATENT_BOX_API_TOKEN` (optional): when set, requires `X-Patent-Box-Api-Key` or `Authorization: Bearer <token>` on every request.
+- `PATENT_BOX_API_RATE_LIMITER` (default empty): name of an existing Laravel RateLimiter rate. If missing, no rate middleware is applied.
 
 ## Health
 
