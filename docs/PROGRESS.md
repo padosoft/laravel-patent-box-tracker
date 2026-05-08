@@ -17,16 +17,22 @@
   - PR #9 (token gate base) merged.
   - PR #12 (rate limiter stabilization + hardening branch tip) merged.
   - PR #11, #10 ora chiusi/superseded in catena.
-- Stato PR corrente (nuovo blocco):
-  - Branch lavoro: `task/api-contract-tests-docs-subtask-5.4-release-docs` (derivato da `task/api-contract-tests-docs`).
-  - Subtask obiettivo: chiusura finale Macro 5/6 (doc-releasability, changelog, CI trigger globale su pull_request, blocker log).
-- Contesto operativo:
-  - remote/GH ora disponibile in questa sessione (auth OK, read:project presente).
-  - nessun blocker locale bloccante su branch e file editing.
-- Azioni completate localmente:
+- Stato PR corrente (subtask attivo):
+  - PR attiva: #13 (`task/api-contract-tests-docs-subtask-5.4-release-docs` -> `task/api-contract-tests-docs`).
+  - Subtask obiettivo: chiusura Macro 5 (release/readiness/doc alignment + contract fixture pipeline).
+  - Stato locale: branch subtask e docs/test/ci aggiornati, PR aperta.
+  - Remote/GH disponibile in questa sessione (`read:project` verificato).
+  - Copilot review richiesta con successo: user `Copilot` in reviewer.
+  - CI attiva in pending su 6 job matrix.
+- Azioni completate (questo subtask):
   - `.github/workflows/ci.yml` aggiornato a `pull_request` globale per eseguire CI anche su PR intermedie (non solo verso `main`).
-  - aggiornamenti in `CHANGELOG.md` per API v1 contract/security hardening e documentazione API.
+  - aggiornamenti in `CHANGELOG.md`/`README.md` per API v1 contract/security hardening e status `v0.1.1`.
   - `docs/PROGRESS.md` e `docs/LESSON.md` aggiornati con stato PR reale e pattern review.
+  - aggiunto `tests/Feature/Api/ApiContractFixturesTest.php` + fixture JSON per contract consistency.
+
+### Bloccanti
+
+- Nessun blocker infrastrutturale bloccante in questa fase. CI pending in attesa esecuzione remota.
 
 ## 2026-05-08
 
