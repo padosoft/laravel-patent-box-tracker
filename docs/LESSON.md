@@ -1,5 +1,12 @@
 # LESSON
 
+## 2026-05-08
+
+- In questa sessione `gh` era inizialmente bloccato, ma ora risulta autenticato con `read:project`; i check PR e i loop sono tornati operativi.
+- In catene di PR, un PR precedente puo essere chiuso/superseded senza perdita di lavoro; registrare in `PROGRESS.md` solo lo stato operativo del PR corrente.
+- `pull_request` dovrebbe essere triggerato senza filtro `branches` quando la roadmap usa PR intermedie su branch non-maini.
+- Tenere allineato `docs/PROGRESS.md` con lo stato reale di merge/close dei PR per evitare stato stale ("in corso") quando il lavoro e' gia merge-abile.
+
 ## 2026-05-07
 
 - In this workspace, GitHub CLI reviewer requests can fail before adding `@copilot` if token scope lacks `read:project`.
@@ -31,3 +38,4 @@
 - Dettaglio dossier di una sessione (`GET /tracking-sessions/{trackingSession}/dossiers/{dossier}`): non basta verificare solo l'ownership DB, va validata anche l'esistenza fisica del file.
 - Rispetto dello scope sessione nei read endpoints: se l'ID non corrisponde al sessione corrente, anche con dossier valido nel DB, la risposta deve restituire `error.code = not_found`.
 - Per Macro 4.1, il token API opzionale (`PATENT_BOX_API_TOKEN`) è stato introdotto come primo layer di protezione: non richiede dipendenze host (`auth`/Sanctum), resta compatibile con `patent-box-tracker.api.middleware` personalizzato e risponde `error.code = unauthorized` su token mancante/non valido.
+- Per il contratto API, una suite fixture-driven con `required_paths` riduce regressioni silenziose: aggiungere nuovi endpoint al JSON fixture e lasciare invariati i path esistenti.

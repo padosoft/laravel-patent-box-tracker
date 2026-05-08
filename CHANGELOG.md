@@ -8,6 +8,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ### Added
 - **W4.A — repository scaffold.** `composer.json` (PHP 8.3+, Laravel 12 / 13, `laravel/ai` ^0.6, `symfony/yaml` ^7|^8), `PatentBoxTrackerServiceProvider`, `config/patent-box-tracker.php` defaults (Regolo classifier, `documentazione_idonea` regime, Italian locale, four canonical collectors registered), `phpunit.xml` with the `Unit` + opt-in `Live` testsuites, GitHub Actions matrix on PHP 8.3 / 8.4 / 8.5 × Laravel 12 / 13, README following the canonical 14-section Padosoft WOW structure, `.claude/` vibe-coding pack inherited from the Padosoft baseline.
+- **API v1 Foundations, Read and Write.** Added opt-in HTTP API with versioned prefix `/api/patent-box/v1`, contract envelope (`data`/`meta`/`error`) via `ApiResponse`, central error mapping middleware, Foundation/Read/Write endpoints for sessions, commits, evidence, dossier metadata/download, integrity, repository validation, dry-run, and queue-backed tracking/dossier rendering.
+- **API security hardening.** Added optional token auth middleware (`PATENT_BOX_API_TOKEN`), configurable rate limiting per route stack (`PATENT_BOX_API_RATE_LIMITER`), and contract tests for unauthorized + 429 abuse patterns.
 - **W4.B.1 — evidence collectors + registry.** `Sources\EvidenceCollector` interface, `Sources\CollectorRegistry` with R23 boot-time validation + non-overlap mutex on `supports()`, four canonical collectors:
   - `GitSourceCollector` — walks `git log --first-parent` with bot-author filtering and per-commit hash chain.
   - `AiAttributionExtractor` — parses `Co-Authored-By` trailers + committer-email signatures into `human` / `ai_assisted` / `ai_authored` / `mixed`.

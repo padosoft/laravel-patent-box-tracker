@@ -4,7 +4,6 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
 
 permissions:
   contents: read
@@ -73,5 +72,10 @@ jobs:
       - name: Run PHPUnit (Feature suite — offline)
         run: vendor/bin/phpunit --testsuite Feature
 
+      - name: Run PHPUnit (API contract fixtures)
+        run: vendor/bin/phpunit tests/Feature/Api/ApiContractFixturesTest.php
+
       - name: Run PHPUnit (Architecture suite)
         run: vendor/bin/phpunit --testsuite Architecture
+
+

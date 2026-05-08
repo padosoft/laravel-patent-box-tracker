@@ -2,6 +2,34 @@
 
 ## 2026-05-08
 
+- Macro 5 in esecuzione su `task/api-contract-tests-docs`:
+  - aggiunto fixture file `tests/fixtures/api-contract/read-contract-cases.json`;
+  - aggiunto test `tests/Feature/Api/ApiContractFixturesTest.php` per verificare i path obbligatori del contratto read API;
+  - aggiornata CI con step dedicato `Run PHPUnit (API contract fixtures)`.
+- Regola autoloop aggiornata su richiesta utente:
+  - `docs/ENTERPRISE_PLAN.md`: guardrail di ogni macro con "continue immediately to the next step";
+  - `docs/RULES.md`: obbligo esplicito step-by-step di non fermarsi e passare subito al punto successivo.
+
+## 2026-05-08
+
+- Stato consolidato package: API hardening e PR loop proseguono su `main`.
+- Merge verificato:
+  - PR #9 (token gate base) merged.
+  - PR #12 (rate limiter stabilization + hardening branch tip) merged.
+  - PR #11, #10 ora chiusi/superseded in catena.
+- Stato PR corrente (nuovo blocco):
+  - Branch lavoro: `task/api-contract-tests-docs-subtask-5.4-release-docs` (derivato da `task/api-contract-tests-docs`).
+  - Subtask obiettivo: chiusura finale Macro 5/6 (doc-releasability, changelog, CI trigger globale su pull_request, blocker log).
+- Contesto operativo:
+  - remote/GH ora disponibile in questa sessione (auth OK, read:project presente).
+  - nessun blocker locale bloccante su branch e file editing.
+- Azioni completate localmente:
+  - `.github/workflows/ci.yml` aggiornato a `pull_request` globale per eseguire CI anche su PR intermedie (non solo verso `main`).
+  - aggiornamenti in `CHANGELOG.md` per API v1 contract/security hardening e documentazione API.
+  - `docs/PROGRESS.md` e `docs/LESSON.md` aggiornati con stato PR reale e pattern review.
+
+## 2026-05-08
+
 - Package: subtask `4.1 Authorization and middleware override strategy` in corso su branch `task/api-security-hardening`.
 - Subtask `4.4 Rate limiting and abuse guardrails` verificato con test (`ApiRateLimitTest`) che imposta un limiter temporaneo e attende `429 Too Many Attempts`.
 - Aggiunti:
