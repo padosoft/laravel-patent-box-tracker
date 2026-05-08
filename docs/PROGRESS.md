@@ -12,9 +12,9 @@
 - Stato locale:
   - Branch e PR pubblicati (`task/api-security-hardening`, `task/api-write-jobs`) a supporto del flusso macro.
 - Stato PR:
-  - PR aperta: https://github.com/padosoft/laravel-patent-box-tracker/pull/10 (base `task/api-write-jobs`, head `task/api-security-hardening`)
+  - PR aperta: https://github.com/padosoft/laravel-patent-box-tracker/pull/11 (base `task/api-write-jobs`, head `task/api-security-hardening`)
   - Copilot review richiesta: verificata (`Copilot` in reviewers)
-  - Verifica checks: `gh pr checks 10` => tutti passati
+  - Verifica checks: `gh pr checks 11` => no checks reported (workflow in questo repo ora filtra solo `pull_request` verso `main`)
 
 ## 2026-05-08
 
