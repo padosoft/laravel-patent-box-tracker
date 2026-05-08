@@ -36,8 +36,9 @@ final class ApiContractFixturesTest extends TestCase
     public function test_read_contract_fixtures_are_respected(): void
     {
         /** @var array<int, array{name: string, method: string, uri: string, status: int, required_paths: array<int, string>}> $cases */
+        $fixturePath = dirname(__DIR__, 2).'/fixtures/api-contract/read-contract-cases.json';
         $cases = json_decode(
-            (string) file_get_contents(__DIR__.'/../../fixtures/api-contract/read-contract-cases.json'),
+            (string) file_get_contents($fixturePath),
             true,
             512,
             JSON_THROW_ON_ERROR
