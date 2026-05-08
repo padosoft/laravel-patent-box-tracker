@@ -50,13 +50,15 @@ final class ApiContractFixturesTest extends TestCase
             $response->assertStatus($case['status']);
 
             foreach ($case['required_paths'] as $path) {
-                $value = $this->readPath($response, $path);
-                $this->assertNotNull($value, sprintf('Case "%s" missing path "%s"', $case['name'], $path));
+                $this->assertTrue(
+                    $this->hasPath($response, $path),
+                    sprintf('Case "%s" missing path "%s"', $case['name'], $path)
+                );
             }
         }
     }
 
-    private function readPath(TestResponse $response, string $path): mixed
+    private function hasPath(TestResponse $response, string $path): bool
     {
         $payload = $response->json();
         $segments = explode('.', $path);
@@ -78,10 +80,10 @@ final class ApiContractFixturesTest extends TestCase
                 }
             }
 
-            return null;
+            return false;
         }
 
-        return $cursor;
+        return true;
     }
 
     private function seedSession(): void
