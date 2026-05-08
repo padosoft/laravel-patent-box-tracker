@@ -1,3 +1,8 @@
+---
+name: admin-interface-frontend
+description: Use when implementing the JS/CSS frontend of a complex Laravel admin page (entrypoint, API client, filters, table, KPI/charts, modals, empty/loading/error states). Trigger on tasks like "wire admin page JS", "build admin filters", "render admin table", or anything touching frontend modules of an admin view.
+---
+
 # Admin Interface Frontend
 
 Skill per la parte frontend di una pagina admin complessa.

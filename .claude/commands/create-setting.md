@@ -1,3 +1,8 @@
+---
+name: create-setting
+description: Use when introducing a new persisted Laravel setting (feature flag, runtime limit, parameter, external endpoint). Helps decide between static config vs admin-editable settings table, defines a stable key, default, migration/seed, and a dedicated repository/service to read it. Trigger on tasks like "add config flag", "make X configurable", "expose setting in admin".
+---
+
 # Create Setting
 
 Pattern generale per introdurre un setting persistito in un progetto Laravel.

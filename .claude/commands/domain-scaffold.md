@@ -1,3 +1,8 @@
+---
+name: domain-scaffold
+description: Use when scaffolding a new bounded-context domain/module in a Laravel 13 app — directory layout (Actions/Services, Dto, Http, Jobs, Models, Policies, Routes), boundary definition, and contract decisions before generating files in bulk. Trigger on tasks like "create new domain X", "scaffold module", "set up bounded context".
+---
+
 # Domain Scaffold
 
 Scaffold concettuale per un nuovo dominio/modulo Laravel.

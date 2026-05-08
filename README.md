@@ -6,13 +6,21 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/padosoft/laravel-patent-box-tracker/releases/latest"><img alt="Stable release" src="https://img.shields.io/github/v/release/padosoft/laravel-patent-box-tracker?label=stable&color=2ea44f"></a>
   <a href="https://github.com/padosoft/laravel-patent-box-tracker/actions/workflows/ci.yml"><img alt="CI status" src="https://img.shields.io/github/actions/workflow/status/padosoft/laravel-patent-box-tracker/ci.yml?branch=main&label=tests"></a>
   <a href="https://packagist.org/packages/padosoft/laravel-patent-box-tracker"><img alt="Packagist version" src="https://img.shields.io/packagist/v/padosoft/laravel-patent-box-tracker.svg?label=packagist"></a>
   <a href="https://packagist.org/packages/padosoft/laravel-patent-box-tracker"><img alt="Total downloads" src="https://img.shields.io/packagist/dt/padosoft/laravel-patent-box-tracker.svg?label=downloads"></a>
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-blue.svg"></a>
   <img alt="PHP version" src="https://img.shields.io/badge/php-8.3%20%7C%208.4%20%7C%208.5-777BB4">
   <img alt="Laravel version" src="https://img.shields.io/badge/laravel-12%20%7C%2013-FF2D20">
+  <img alt="API v1 stable" src="https://img.shields.io/badge/HTTP%20API-v1%20stable-2ea44f">
+  <img alt="Vibe-coding ready" src="https://img.shields.io/badge/vibe--coding-Claude%20Code%20pack-7c3aed">
+  <a href="https://github.com/padosoft/laravel-patent-box-tracker-admin"><img alt="Admin panel companion" src="https://img.shields.io/badge/admin%20panel-laravel--patent--box--tracker--admin-0ea5e9"></a>
   <a href="https://github.com/padosoft/laravel-patent-box-tracker/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/padosoft/laravel-patent-box-tracker"></a>
+</p>
+
+<p align="center">
+  <em>v1.0.0 — production-ready. CLI + fluent API + stable HTTP API v1 + companion web admin panel + AI vibe-coding pack in the box.</em>
 </p>
 
 ---
@@ -20,46 +28,28 @@
 ## Table of contents
 
 1. [Why this package](#why-this-package)
-2. [Design rationale](#design-rationale)
-3. [Features at a glance](#features-at-a-glance)
-4. [Comparison vs alternatives](#comparison-vs-alternatives)
-5. [Italian Patent Box primer](#italian-patent-box-primer)
-6. [Installation](#installation)
-7. [Quick start](#quick-start)
-8. [Usage examples](#usage-examples)
-9. [Configuration reference](#configuration-reference)
-10. [Architecture](#architecture)
-11. [🚀 AI vibe-coding pack included](#ai-vibe-coding-pack-included)
-12. [Testing](#testing)
+2. [What ships in v1.0](#what-ships-in-v10)
+3. [Companion admin web panel](#companion-admin-web-panel)
+4. [Design rationale](#design-rationale)
+5. [Features at a glance](#features-at-a-glance)
+6. [Comparison vs alternatives](#comparison-vs-alternatives)
+7. [Italian Patent Box primer](#italian-patent-box-primer)
+8. [Installation](#installation)
+9. [Quick start](#quick-start)
+10. [Usage examples](#usage-examples)
+11. [HTTP API v1 (stable)](#http-api-v1-stable)
+12. [Configuration reference](#configuration-reference)
+13. [Architecture](#architecture)
+14. [🚀 AI vibe-coding pack included](#-ai-vibe-coding-pack-included)
+15. [Testing](#testing)
     - [Default suite — offline](#default-suite--offline-zero-cost-runs-everywhere)
-    - [Running the live test suite](#running-the-live-test-suite-against-a-real-llm-provider)
-13. [Roadmap](#roadmap)
-14. [Contributing](#contributing)
-15. [Security](#security)
-16. [License & credits](#license--credits)
+    - [Live test suite](#running-the-live-test-suite-against-a-real-llm-provider)
+16. [Roadmap](#roadmap)
+17. [Contributing](#contributing)
+18. [Security](#security)
+19. [License & credits](#license--credits)
 
 ---
-
-> ## Pre-release status
->
-> All four W4 sub-tasks have shipped on `main`:
->
-> - **W4.A** — package scaffold, `PatentBoxTrackerServiceProvider`, `config/patent-box-tracker.php`, the CI matrix on PHP 8.3 / 8.4 / 8.5 × Laravel 12 / 13, the `.claude/` vibe-coding pack, and the `Live` testsuite scaffold.
-> - **W4.B.1** — four `EvidenceCollector` implementations (`GitSourceCollector`, `AiAttributionExtractor`, `DesignDocCollector`, `BranchSemanticsCollector`) + `CollectorRegistry` boot-time validation per R23.
-> - **W4.B.2** — `CommitClassifier` + `ClassifierBatcher` + `CostCapGuard` + `GoldenSetValidator` + storage models (`TrackingSession`, `TrackedCommit`, `TrackedEvidence`, `TrackedDossier`).
-> - **W4.C** — `PdfDossierRenderer` (Browsershot + DomPDF fallback) + `JsonDossierRenderer` + Italian Blade template + `HashChainBuilder` + `RenderCommand`.
-> - **W4.D** — `TrackCommand` (`patent-box:track`) + `CrossRepoCommand` (`patent-box:cross-repo`) + `CrossRepoConfigValidator` + the fluent builder API documented in [Quick start](#quick-start).
->
-> API v1 is now active, hardened and tested on:
->
-> - `GET /api/patent-box/v1/health`
-> - `GET /api/patent-box/v1/capabilities`
-> - read endpoints per sessioni/commits/evidence/dossier/integrity
-> - write endpoints con coda per tracciamento classificazione e render
-> - optional API auth + rate limiter
-> - unified API error/error code contract
->
-> The next milestone is the `v0.1.1` tag and the corresponding Packagist publish. The Roadmap section below is now accurate; planned items are explicitly tagged for v0.2 and beyond.
 
 ## Why this package
 
@@ -83,7 +73,42 @@ The package was built **by an Italian Patent Box filer for Italian Patent Box fi
 
 ### Community angle
 
-No equivalent package exists on Packagist as of 2026. The closest analogues — `gitinspector`, `commitlint` + custom downstream tooling, Toggl / Harvest plugins, commercialista Excel templates — solve adjacent problems but **none produce the documentation that Agenzia delle Entrate actually accepts** for the documentazione idonea regime. The market gap is real and large enough that the package is expected to drive its own adoption arc.
+No equivalent package exists on Packagist. The closest analogues — `gitinspector`, `commitlint` + custom downstream tooling, Toggl / Harvest plugins, commercialista Excel templates — solve adjacent problems but **none produce the documentation that Agenzia delle Entrate actually accepts** for the documentazione idonea regime. The market gap is real and large enough that the package is expected to drive its own adoption arc.
+
+## What ships in v1.0
+
+> **v1.0.0 is the first stable release.** Public API is locked under SemVer; HTTP API is `/api/patent-box/v1/...` and frozen.
+
+- ✅ **Deterministic classification pipeline** — `temperature=0` + fixed seed + recorded prompt/model — byte-identical re-runs.
+- ✅ **Four pluggable evidence collectors** — `GitSourceCollector`, `AiAttributionExtractor`, `DesignDocCollector`, `BranchSemanticsCollector` with boot-time FQCN validation and non-overlapping `supports()` predicates (R23).
+- ✅ **Hand-graded golden-set release gate** — ≥ 80% F1 on real `feature/v4.x` commits, validated by commercialista review before every `v*.*.0` tag.
+- ✅ **Italian fiscal A4 PDF + machine-readable JSON sidecar** — Browsershot (Chromium) primary, DomPDF fallback. Ready for documentazione idonea filings.
+- ✅ **Per-commit hash chain + per-dossier SHA-256** — retroactive edits to either the repo or the dossier break the chain at the exact tampered row.
+- ✅ **Cross-repository orchestration** — single YAML config, per-repo roles (`primary_ip`, `support`, `meta_self`), one consolidated dossier in minutes.
+- ✅ **Cost-cap pre-flight guard** — projects token cost before any LLM call; aborts with exit code 2 over `cost_cap_eur_per_run` (default €50).
+- ✅ **Three Artisan commands + fluent PHP builder** — `patent-box:track`, `patent-box:render`, `patent-box:cross-repo`, plus `PatentBoxTracker::for(...)`.
+- ✅ **Stable HTTP API v1** — opt-in, versioned, unified `{data, meta?, error}` envelope, fixed error taxonomy, optional token gate, configurable rate limiter, contract-fixture tests in CI. Full surface in [HTTP API v1 (stable)](#http-api-v1-stable).
+- ✅ **Companion admin web panel** — see [`padosoft/laravel-patent-box-tracker-admin`](https://github.com/padosoft/laravel-patent-box-tracker-admin) for a production-grade Laravel admin UI on top of the v1 API.
+- ✅ **AI vibe-coding pack** — `.claude/` directory with skills, rules, agents and slash-commands shipping in every release — see [🚀 AI vibe-coding pack included](#-ai-vibe-coding-pack-included).
+- ✅ **Opt-in live test suite** — point `PATENT_BOX_LIVE_API_KEY` at a real provider key to verify classifier accuracy and PDF rendering against real APIs. Default suite remains 100% offline.
+- ✅ **CI matrix** — every push runs against PHP **8.3 / 8.4 / 8.5** × Laravel **12 / 13** plus a dedicated API-contract job.
+
+## Companion admin web panel
+
+> **`padosoft/laravel-patent-box-tracker-admin` ships the production-grade Laravel admin UI on top of this package.**
+
+This package is **API-first and CLI-first**. If you want a polished web interface for non-technical users (commercialista, auditor, project lead) to drive sessions, browse classifications, fix labels, and download dossiers — install the companion admin panel:
+
+📦 **[`padosoft/laravel-patent-box-tracker-admin`](https://github.com/padosoft/laravel-patent-box-tracker-admin)**
+
+The admin panel is a separate package on purpose:
+
+- **Zero coupling** — `laravel-patent-box-tracker` has no dependency on the admin. You can run it headless (CLI/API only) for years without ever installing the panel.
+- **Talks the public v1 API** — the admin is just a typed client + UI on top of `/api/patent-box/v1/...`. Anything the panel does, you can do via cURL/Postman.
+- **Drop-in install** — `composer require padosoft/laravel-patent-box-tracker-admin` mounts the panel under a configurable prefix; auth is host-app-driven (Sanctum, session, custom guard).
+- **Designed for fiscal review** — session detail view, classification audit trail, cost projection, PDF preview, integrity check button, evidence link inspection.
+
+Pick what you need: tracker only, tracker + admin, or admin in a separate operations app pointing at a centralized tracker — they all work.
 
 ## Design rationale
 
@@ -109,6 +134,10 @@ Every tracked commit gets `H(prev_hash || commit_sha)` recorded in the dossier. 
 
 The package has **zero dependencies** on `lopadova/askmydocs` (CE), `padosoft/askmydocs-pro`, or any other Padosoft proprietary code. It works in any Laravel 12/13 application that has `laravel/ai` installed. The reverse direction is the only one that exists: AskMyDocs *uses* this package, never the inverse. An architecture test enforces the boundary on every CI run.
 
+### 6. API-first, admin separate
+
+The HTTP API is the contract. The web admin panel is a separate package that *consumes* that contract. Headless installs never install the admin; admin installs never bypass the API. One contract, two delivery surfaces.
+
 ## Features at a glance
 
 - **Audit-grade dossier** — Italian fiscal A4 portrait PDF + machine-readable JSON sidecar, suitable for the **documentazione idonea** regime under D.M. 6 ottobre 2022 + provv. AdE 15 febbraio 2023.
@@ -120,13 +149,15 @@ The package has **zero dependencies** on `lopadova/askmydocs` (CE), `padosoft/as
 - **Design-doc correlation** — auto-links commits to PLAN / ADR / spec / lessons-learned files by filename match, slug match, and date proximity.
 - **Branch-semantics heuristics** — `feature/v4.0-W*-...` → development phase, `chore/*` → typically non-qualified, `fix/*` → context-dependent (pre-release qualifies, post-release maintenance does not).
 - **Cost-cap hard stop** — pre-flight token-cost projection; aborts with exit code 2 before exceeding `cost_cap_eur_per_run` (default €50). No accidental classification of a 10-year-old monorepo at full price.
-- **Three Artisan commands** — `patent-box:track`, `patent-box:render`, `patent-box:cross-repo`. Plus a fluent PHP builder API for programmatic use.
+- **Three Artisan commands + fluent builder** — `patent-box:track`, `patent-box:render`, `patent-box:cross-repo`. Plus `PatentBoxTracker::for(...)` for programmatic use.
 - **Hand-graded golden set ≥ 80% F1** — release gate enforced before every `v*.*.0` tag. Real `feature/v4.x` commits, real commercialista-validated labels.
 - **Browsershot PDF + DomPDF fallback** — Chromium fidelity by default, DomPDF for environments where headless Chromium is unavailable.
+- **Stable HTTP API v1** — opt-in, versioned, envelope-standardized, queue-aware, integrity-aware. See [HTTP API v1 (stable)](#http-api-v1-stable).
+- **Companion admin web panel** — separate package [`padosoft/laravel-patent-box-tracker-admin`](https://github.com/padosoft/laravel-patent-box-tracker-admin).
 - **Standalone agnostic** — zero dependency on `lopadova/askmydocs` or `padosoft/askmydocs-pro`. Works on any Laravel project. Composable with sister Padosoft packages.
 - **Strict typing** — PHP 8.3+, readonly DTOs, fully-typed signatures, Pint-formatted, PHPStan analysis on every PR.
-- **CI matrix** — every push runs against PHP 8.3 / 8.4 / 8.5 × Laravel 12 / 13 (6 cells).
-- 🚀 **AI vibe-coding pack ships in the box** — every release includes the [Padosoft Claude pack](#ai-vibe-coding-pack-included) under `.claude/` (skills, rules, agents, slash-commands). The moment you `composer require` this package and open the project in Claude Code, the agent picks up Padosoft's house conventions automatically.
+- **CI matrix** — every push runs against PHP 8.3 / 8.4 / 8.5 × Laravel 12 / 13 (6 cells) + dedicated API contract job.
+- 🚀 **AI vibe-coding pack ships in the box** — every release includes the [Padosoft Claude pack](#-ai-vibe-coding-pack-included) under `.claude/` (skills, rules, agents, slash-commands). The moment you `composer require` this package and open the project in Claude Code, the agent picks up Padosoft's house conventions automatically.
 - 🧪 **Opt-in live test suite** — point `PATENT_BOX_LIVE_API_KEY` at a real provider key and run `vendor/bin/phpunit --testsuite Live` to verify classifier accuracy and PDF rendering against real APIs. Default suite remains 100% offline.
 
 ## Comparison vs alternatives
@@ -146,6 +177,8 @@ If you are evaluating how to assemble an Italian Patent Box dossier today, here 
 | Machine-readable JSON sidecar (gestionale-friendly)    |             ❌           |            ❌           |              ❌                |             ❌            |                ✅                |
 | Cost-cap pre-flight guard                              |             N/A          |            N/A          |              N/A               |             N/A           |                ✅                |
 | Hand-graded accuracy gate (≥ 80% F1)                   |             N/A          |            N/A          |              N/A               |             N/A           |                ✅                |
+| Stable HTTP API for admin/automations                  |             ❌           |            ❌           |              ❌                |             ❌            |                ✅                |
+| Production admin web panel available                   |             ❌           |            ❌           |              ❌                |             ❌            |                ✅                |
 | Reproducible by Agenzia delle Entrate auditor          |             ⚠️ partial    |            ❌           |              ❌                |             ⚠️ partial     |                ✅                |
 | Time to assemble FY dossier                            |          days            |          days           |          ~10–20 h              |          days             |             minutes              |
 
@@ -197,6 +230,14 @@ REGOLO_API_KEY=rg_live_...
 PATENT_BOX_DRIVER=regolo
 PATENT_BOX_MODEL=claude-sonnet-4-6
 ```
+
+Want the web admin panel?
+
+```bash
+composer require padosoft/laravel-patent-box-tracker-admin
+```
+
+See the [companion admin package](https://github.com/padosoft/laravel-patent-box-tracker-admin) for full setup and panel routes.
 
 ## Quick start
 
@@ -341,32 +382,6 @@ if (! $verified->isValid()) {
 }
 ```
 
-### Optional HTTP API (v1)
-
-The package is CLI-first and fluent-API-first by default.  
-To expose a versioned HTTP surface for admin panels, enable the API in config:
-
-```php
-'api' => [
-    'enabled' => true,
-    'prefix' => 'api/patent-box',
-    'middleware' => ['api', 'auth:sanctum'], // host-app choice
-],
-```
-
-Current v1 endpoints include:
-
-- health and capabilities
-- repository validation
-- dry-run cost projection
-- queued tracking-session creation
-- tracking sessions/commits/evidence/dossiers read endpoints
-- queued dossier render
-- session-scoped dossier download
-- hash-chain integrity verification
-
-Reference: [`docs/API_REFERENCE.md`](docs/API_REFERENCE.md)
-
 ### Extending the pipeline with a custom collector
 
 ```php
@@ -392,6 +407,58 @@ $this->app->tag([CalendarCollector::class], 'patent-box.collectors');
 
 The registry validates at boot that every tagged FQCN actually implements `EvidenceCollector`, and that no two collectors' `supports()` predicates overlap (R23).
 
+## HTTP API v1 (stable)
+
+The package is CLI-first and fluent-API-first by default. The HTTP API is **opt-in** (off by default) and **stable** since v1.0.
+
+Enable it in config:
+
+```php
+// config/patent-box-tracker.php
+'api' => [
+    'enabled'    => true,
+    'prefix'     => 'api/patent-box',
+    'middleware' => ['api'],            // or ['api', 'auth:sanctum'] etc.
+    'rate_limiter' => '60,1',            // 60 hits per minute per IP/user
+    'auth_token' => env('PATENT_BOX_API_TOKEN'),  // optional bearer/header gate
+],
+```
+
+### Surface
+
+| Method | Path | Purpose |
+|---|---|---|
+| GET   | `/api/patent-box/v1/health` | Readiness probe |
+| GET   | `/api/patent-box/v1/capabilities` | Frontend bootstrap (locales, regimes, providers, limits) |
+| POST  | `/api/patent-box/v1/repositories/validate` | Validate a repo path before any LLM cost |
+| POST  | `/api/patent-box/v1/tracking-sessions/dry-run` | Cost projection / pre-flight |
+| POST  | `/api/patent-box/v1/tracking-sessions` | Queue a new tracking session |
+| GET   | `/api/patent-box/v1/tracking-sessions` | List with filters/pagination |
+| GET   | `/api/patent-box/v1/tracking-sessions/{id}` | Detail |
+| GET   | `/api/patent-box/v1/tracking-sessions/{id}/commits` | Commits with advanced filters (`ai_attribution`, `rd_confidence_min/max`, `search`) |
+| GET   | `/api/patent-box/v1/tracking-sessions/{id}/evidence` | Evidence with `path_like` / `search` |
+| GET   | `/api/patent-box/v1/tracking-sessions/{id}/dossiers` | Dossier list with `format`/`locale` filters and `meta` |
+| GET   | `/api/patent-box/v1/tracking-sessions/{id}/dossiers/{dossier}` | Dossier detail |
+| GET   | `/api/patent-box/v1/tracking-sessions/{id}/dossiers/{dossier}/download` | Session-scoped, path-traversal-safe download |
+| POST  | `/api/patent-box/v1/tracking-sessions/{id}/dossiers` | Queue dossier render |
+| GET   | `/api/patent-box/v1/tracking-sessions/{id}/integrity` | Hash-chain verification |
+
+### Response envelope
+
+Every response uses the same envelope:
+
+```json
+{
+  "data": { "...": "..." },
+  "meta": { "page": 1, "per_page": 20, "total": 134 },
+  "error": null
+}
+```
+
+Errors use a fixed taxonomy: `validation_failed`, `not_found`, `conflict`, `cost_cap_exceeded`, `unauthorized`, `rate_limited`, `internal_error`.
+
+Full reference: [`docs/API_REFERENCE.md`](docs/API_REFERENCE.md).
+
 ## Configuration reference
 
 The full default config lives at `config/patent-box-tracker.php`. Key entries:
@@ -405,13 +472,18 @@ The full default config lives at `config/patent-box-tracker.php`. Key entries:
 | `patent-box-tracker.classifier.batch_size`         | int     | `20`                              | Commits per LLM call. Higher = cheaper, lower = more diff context per commit.          |
 | `patent-box-tracker.classifier.cost_cap_eur_per_run` | float | `50.00`                           | Hard stop. Run aborts with exit code 2 before exceeding this projected cost.           |
 | `patent-box-tracker.regime`                        | string  | `documentazione_idonea`           | Italian Patent Box regime. `documentazione_idonea` enables the penalty-protection contract under D.M. 6 ottobre 2022; `non_documentazione` is the alternative. |
-| `patent-box-tracker.locale`                        | string  | `it`                              | Dossier locale. `it` ships in v0.1; `en` and others planned for v0.2.                  |
+| `patent-box-tracker.locale`                        | string  | `it`                              | Dossier locale. `it` ships in v1.0; `en` and others planned for v1.1.                  |
 | `patent-box-tracker.excluded_authors`              | array   | `['dependabot[bot]', 'renovate[bot]', 'github-actions[bot]']` | Author email substrings skipped during the git walk so bot-authored commits do not count as qualified R&D. |
 | `patent-box-tracker.renderer.driver`               | string  | `browsershot`                     | `browsershot` (Chromium) or `dompdf` fallback.                                         |
 | `patent-box-tracker.renderer.browsershot.chrome_path` | string\|null | `null`                       | Override the headless Chromium binary path; defaults to Browsershot's auto-detection.  |
 | `patent-box-tracker.renderer.browsershot.timeout`  | int     | `60`                              | Browsershot render timeout (seconds).                                                  |
+| `patent-box-tracker.api.enabled`                   | bool    | `false`                           | Mount the HTTP API v1 routes when `true`.                                              |
+| `patent-box-tracker.api.prefix`                    | string  | `api/patent-box`                  | URL prefix for the API.                                                                |
+| `patent-box-tracker.api.middleware`                | array   | `['api']`                         | Middleware chain applied to the API group (auth, etc.).                                |
+| `patent-box-tracker.api.rate_limiter`              | string  | `60,1`                            | "max,minutes" passed to Laravel's `throttle:` middleware.                              |
+| `patent-box-tracker.api.auth_token`                | string\|null | `env('PATENT_BOX_API_TOKEN')` | Optional bearer/header token gate. Disabled when null.                                 |
 
-The W4.A scaffold ships exactly the keys listed above. Cost-model inputs (`hourly_rate_eur`, `daily_hours_max`), evidence-collector knobs (`docs_paths`, `proximity_days`, `first_parent_only`), and storage routing (`disk`) are added by W4.B / W4.C alongside the code that reads them — the documentation evolves with the feature surface, not ahead of it. Every key is also overridable per-call via the fluent builder or the YAML cross-repo config (W4.D).
+Every key is also overridable per-call via the fluent builder or the YAML cross-repo config.
 
 ## Architecture
 
@@ -450,6 +522,12 @@ flowchart LR
         Json[JsonDossierRenderer — hash-chain signed]
     end
 
+    subgraph Surfaces[Delivery surfaces]
+        Cli[Artisan + fluent builder]
+        Api[HTTP API v1 — opt-in]
+        Admin[Admin web panel — separate package]
+    end
+
     subgraph LLM[laravel/ai SDK]
         Sdk[(any provider — Regolo / OpenAI / Anthropic / Gemini)]
     end
@@ -479,13 +557,18 @@ flowchart LR
 
     Pdf --> TD
     Json --> TD
+
+    TD --> Cli
+    TD --> Api
+    Api --> Admin
 ```
 
 A few notes on the architecture:
 
-- **Collectors are independent.** Each implements `EvidenceCollector` with a non-overlapping `supports()` predicate. v0.1 ships four; future versions add more without breaking the registry.
+- **Collectors are independent.** Each implements `EvidenceCollector` with a non-overlapping `supports()` predicate. v1.0 ships four; future versions add more without breaking the registry.
 - **The classifier is the only LLM-touching component.** Everything upstream is deterministic git + filesystem walk. Everything downstream is template rendering + cryptographic hashing. The non-determinism budget is bounded to one component, and that component runs at `temperature=0` with a fixed seed.
 - **Storage is the audit trail.** `tracking_sessions` records the classifier provider / model / seed; `tracked_commits` records the hash chain; `tracked_dossiers` records the SHA-256 of every rendered artefact. The dossier you hand to Agenzia delle Entrate is reproducible from the same DB at any point within the 5-year audit window.
+- **Three delivery surfaces, one core.** CLI (Artisan + fluent builder), HTTP API v1, and the optional companion admin web panel all read/write the same storage and the same dossier artefacts.
 
 ## 🚀 AI vibe-coding pack included
 
@@ -498,18 +581,30 @@ Every release of this package includes the [Padosoft Claude pack](.claude/) unde
 ```
 .claude/
 ├── skills/
+│   ├── patent-box-enterprise/          ← macro-branch + subtask-PR + Copilot review loop
 │   ├── copilot-pr-review-loop/         ← R36: 9-step PR flow (--reviewer copilot,
 │   │                                       wait CI green, wait Copilot review,
 │   │                                       fix, re-CI, merge only when both green)
-│   ├── branching-strategy-feature-vx/  ← R37: feature/v*.*.x integration branches
-│   ├── ci-failure-investigation/       ← R22: artefact-first CI failure protocol
-│   ├── pluggable-pipeline-registry/    ← R23: FQCN validation + supports() mutex
-│   ├── docs-match-code/                ← R9: README / config / migration drift gate
-│   └── (more skills sync'd from sister padosoft/* packages)
-├── rules/                              ← Padosoft baseline coding rules
+│   ├── pre-push-self-review/           ← diff self-review against recurring footguns
+│   ├── test-count-readme-sync/         ← keep README test counts honest
+│   ├── create-api-endpoint/            ← Laravel 13 thin-controller pipeline
+│   ├── create-controller/              ← controller patterns (web/API/admin)
+│   ├── create-service/                 ← service/action with DTO boundaries
+│   ├── create-test/                    ← unit/feature/E2E selection
+│   ├── create-crud-backend/            ← standard CRUD scaffolding
+│   ├── create-filesystem-helpers/      ← disk + path + retention helpers
+│   ├── admin-interface-backend/        ← admin page backend pipeline
+│   ├── admin-interface-frontend/       ← admin page frontend modules
+│   ├── admin-interface-component-audit/← REUSE/EXTEND/CREATE decisions
+│   ├── create-admin-interface/         ← orchestrator for full admin pages
+│   ├── playwright-enterprise-tester/   ← E2E discovery → authoring → diagnose → report
+│   └── review-pr-comments/             ← classify and route PR review feedback
+├── commands/                           ← /create-job, /create-setting, /domain-scaffold,
+│                                          /domain-service, /pagespeed-review, /playwright-tester
+├── rules/                              ← Padosoft baseline coding rules (Laravel + general + Playwright)
 └── agents/
-    ├── copilot-review-anticipator      ← pre-push review sub-agent
-    └── classifier-prompt-tuner         ← package-specific golden-set tuner
+    ├── admin-interface-architect       ← admin design assistant
+    └── playwright-enterprise-tester    ← Playwright sub-agent
 ```
 
 ### Why this matters
@@ -528,7 +623,7 @@ Do not want the pack? Add `.claude/` to your `.gitignore` (or delete it locally)
 
 ### Want to contribute a skill?
 
-The same pack is shared across `padosoft/laravel-ai-regolo`, `padosoft/laravel-flow`, `padosoft/eval-harness`, `padosoft/laravel-pii-redactor`, and `padosoft/laravel-patent-box-tracker` — open a PR on any of those repos and we will sync the skill across the family.
+The same pack is shared across `padosoft/laravel-ai-regolo`, `padosoft/laravel-flow`, `padosoft/eval-harness`, `padosoft/laravel-pii-redactor`, `padosoft/laravel-patent-box-tracker`, and `padosoft/laravel-patent-box-tracker-admin` — open a PR on any of those repos and we will sync the skill across the family.
 
 ## Testing
 
@@ -556,9 +651,11 @@ Coverage breakdown:
 | `TrackCommandTest`                 | `php artisan patent-box:track <fixture-repo>` end-to-end with `Http::fake()`. No live HTTP calls.        |
 | `CrossRepoCommandTest`             | YAML config + 3 fixture repos → one session with 3 repository-roles, cross-repo summary correct.         |
 | `RenderCommandTest`                | Pre-populated session → PDF exists, page count > 1, JSON sidecar valid against schema.                   |
+| `Api/*Test`                        | Full HTTP API v1 coverage — auth gate, rate limit, envelope contract, error taxonomy, integrity check.   |
+| `ApiContractFixturesTest`          | Fixture-driven contract tests guarantee `/v1` response shape stability across releases.                  |
 | `StandaloneAgnosticTest`           | Architecture test — package source contains zero `KnowledgeDocument` / `KbSearchService` / `lopadova/*` references. |
 
-CI matrix: PHP **8.3 / 8.4 / 8.5** × Laravel **12 / 13** (6 cells), plus a separate static-analysis job that runs PHPStan and Pint.
+CI matrix: PHP **8.3 / 8.4 / 8.5** × Laravel **12 / 13** (6 cells), plus a separate static-analysis job that runs PHPStan and Pint and a dedicated API-contract job.
 
 ### Running the live test suite (against a real LLM provider)
 
@@ -572,13 +669,11 @@ The live suite is **opt-in by design**:
 
 #### 1. Configure the environment
 
-The bare minimum is a single env var:
-
 ```bash
 export PATENT_BOX_LIVE_API_KEY=rg_live_...
 ```
 
-Optional overrides (defaults pick the same models the package ships as defaults):
+Optional overrides:
 
 ```bash
 export PATENT_BOX_LIVE_PROVIDER=regolo
@@ -598,7 +693,7 @@ $env:PATENT_BOX_LIVE_API_KEY = "rg_live_..."
 vendor/bin/phpunit --testsuite Live
 ```
 
-…or, with the testdox formatter so each scenario prints by name:
+…or with the testdox formatter so each scenario prints by name:
 
 ```bash
 vendor/bin/phpunit --testsuite Live --testdox
@@ -611,11 +706,11 @@ vendor/bin/phpunit --testsuite Live --testdox
 | `ClassifierLiveTest`          | 5 hand-picked real `feature/v4.x` commits → ≥ 80% match against the golden labels.              | ~€0.05        |
 | `RendererLiveTest`            | Generates a real PDF and validates it opens in `pdf-parser` without errors.                     | minimal       |
 
-**Total cost per run**: well under €0.10 with the default small-model selection. Pick a heavier model via `PATENT_BOX_LIVE_MODEL` if you want to validate a specific catalogue entry — the cost scales linearly.
+**Total cost per run**: well under €0.10 with the default small-model selection.
 
 #### CI policy
 
-The live suite is **never** run from this package's `.github/workflows/ci.yml`. The matrix invokes `vendor/bin/phpunit` (default config = offline suite). To run the live suite in your own pipeline:
+The live suite is **never** run from this package's `.github/workflows/ci.yml`. To run it in your own pipeline:
 
 ```yaml
 - name: Live verification (manual workflow_dispatch only)
@@ -625,16 +720,14 @@ The live suite is **never** run from this package's `.github/workflows/ci.yml`. 
   run: vendor/bin/phpunit --testsuite Live
 ```
 
-Open an issue or PR if you want a `workflow_dispatch` job added to this repo to support scheduled live verification.
-
 ## Roadmap
 
 | Version | Status   | Highlights                                                                                                  |
 |---------|----------|-------------------------------------------------------------------------------------------------------------|
-| v0.1    | code complete; tag pending | 4 evidence collectors + deterministic LLM classifier + Italian PDF + JSON sidecar + hash-chain tamper evidence + cross-repo YAML orchestration + cost-cap guard + hand-graded golden set ≥ 80% F1 + opt-in Live testsuite + AI vibe-coding pack. **First public release.** |
-| v0.2    | planned  | Time-tracking integrations (Toggl / Harvest / RescueTime / Clockify). Calendar collector for off-keyboard R&D. Live terminal session capture (Cursor / Claude Code). Token-by-token AI-vs-human line-level attribution. English locale for the dossier template. |
-| v0.3    | planned  | Direct UIBM / SIAE / EPO API integration — auto-link IP filings to dossier entries.                         |
-| v1.0    | tracking | Web UI dashboard (Filament panel). Tax-jurisdiction support beyond Italy (UK Patent Box, Irish Knowledge Box, German FuE-Zulage). Multi-tenant SaaS deployment. |
+| **v1.0** | ✅ shipped | 4 evidence collectors + deterministic LLM classifier + Italian PDF + JSON sidecar + hash-chain tamper evidence + cross-repo YAML orchestration + cost-cap guard + hand-graded golden set ≥ 80% F1 + opt-in Live testsuite + AI vibe-coding pack + **stable HTTP API v1** + **companion admin web panel** (separate package). |
+| v1.1    | planned  | Time-tracking integrations (Toggl / Harvest / RescueTime / Clockify). Calendar collector for off-keyboard R&D. Live terminal session capture (Cursor / Claude Code). Token-by-token AI-vs-human line-level attribution. English locale for the dossier template. |
+| v1.2    | planned  | Direct UIBM / SIAE / EPO API integration — auto-link IP filings to dossier entries. SSE / websocket live progress for long classification runs. Cursor pagination for large sessions. |
+| v2.0    | tracking | Tax-jurisdiction support beyond Italy (UK Patent Box, Irish Knowledge Box, German FuE-Zulage). Multi-tenant SaaS deployment. Pluggable jurisdictional dossier templates. |
 
 Open issues and feature votes: [github.com/padosoft/laravel-patent-box-tracker/issues](https://github.com/padosoft/laravel-patent-box-tracker/issues).
 
@@ -647,7 +740,7 @@ Contributions are welcome — bug reports, test cases, new evidence collectors, 
 3. Run `vendor/bin/phpunit` and `vendor/bin/pint --test` locally.
 4. Open a PR with a clear description, a test that covers the change, and (if you touch the classifier prompt) a re-run of the golden-set validator showing F1 ≥ 80%.
 
-We follow the project conventions documented in [`CONTRIBUTING.md`](CONTRIBUTING.md). Please respect the existing concern split (`src/Sources/`, `src/Classifier/`, `src/Renderers/`, `src/Hash/`) when adding capabilities — it keeps the package legible and audit-friendly.
+We follow the project conventions documented in [`CONTRIBUTING.md`](CONTRIBUTING.md). Please respect the existing concern split (`src/Sources/`, `src/Classifier/`, `src/Renderers/`, `src/Hash/`, `src/Http/`) when adding capabilities — it keeps the package legible and audit-friendly.
 
 ### Adding a new evidence collector
 
@@ -667,6 +760,10 @@ Special note on dossier integrity: if you discover a way to mutate a tracked dos
 Apache-2.0 — see [`LICENSE`](LICENSE).
 
 Built and maintained by [Padosoft](https://padosoft.com), authored by Lorenzo Padovani. Initially developed alongside [AskMyDocs](https://github.com/lopadova/AskMyDocs) — and dogfooded against Padosoft's own FY2026 Italian Patent Box dossier — but the package is fully **standalone agnostic**: no AskMyDocs dependency, no Padosoft proprietary glue. It works in any Laravel 12/13 application that has `laravel/ai` installed.
+
+Companion package:
+
+- [`padosoft/laravel-patent-box-tracker-admin`](https://github.com/padosoft/laravel-patent-box-tracker-admin) — production-grade Laravel admin web panel on top of the v1 HTTP API. Optional, drop-in.
 
 Sister packages in the Padosoft AI stack:
 

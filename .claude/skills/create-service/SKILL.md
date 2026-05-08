@@ -1,3 +1,8 @@
+---
+name: create-service
+description: Use when extracting business logic into a Laravel 13 service or action object — explicit input (params or DTO), single responsibility, injected dependencies, deterministic output. Also covers when to introduce a DTO and when to split a service. Trigger on tasks like "create service for X", "extract action", "refactor controller logic into service".
+---
+
 # Create Service
 
 Pattern per creare un service o action object in Laravel.

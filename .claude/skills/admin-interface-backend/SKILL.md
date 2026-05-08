@@ -1,3 +1,8 @@
+---
+name: admin-interface-backend
+description: Use when implementing the backend of a complex Laravel admin page (filters, KPI, lists, exports). Guides Request/DTO/service/controller/route layout, output contract design, and the minimum tests required. Trigger on tasks like "build admin index", "add filtered admin page", "write backend for admin dashboard".
+---
+
 # Admin Interface Backend
 
 Skill per implementare il backend di una pagina admin Laravel complessa.

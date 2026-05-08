@@ -1,3 +1,8 @@
+---
+name: create-api-endpoint
+description: Use when adding or refactoring a Laravel 13 HTTP API endpoint. Drives the route → thin controller → FormRequest → DTO → service/action → JsonResource → feature test pipeline, with stable response shape and consistent status codes. Trigger on tasks like "add API endpoint", "expose X via API", or "create REST route".
+---
+
 # Create API Endpoint
 
 Skill per creare endpoint API moderni in Laravel 13.

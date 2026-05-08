@@ -61,7 +61,7 @@ final class TrackingDryRunController extends Controller
             try {
                 $count = $support->commitCountForWindow($path, $from, $to, $excludedAuthors);
             } catch (\InvalidArgumentException $exception) {
-                return ApiResponse::error('invalid_repository', $exception->getMessage(), [], 422);
+                return ApiResponse::error('validation_failed', $exception->getMessage(), [], 422);
             }
             $total += $count;
             $rows[] = [
@@ -86,3 +86,4 @@ final class TrackingDryRunController extends Controller
         ]);
     }
 }
+

@@ -6,6 +6,25 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-05-08
+
+### Added
+- **First stable release.** Public PHP API and HTTP API `/v1` are now locked under SemVer.
+- Stable HTTP API v1 surface: foundation (`/health`, `/capabilities`), read endpoints (sessions, commits, evidence, dossiers list/detail, integrity), write/queue endpoints (validate repository, dry-run, queue tracking session, queue dossier render), session-scoped dossier download, optional bearer/header token gate (`PATENT_BOX_API_TOKEN`), configurable rate limiter, unified `{data, meta?, error}` envelope, fixed error taxonomy, fixture-driven contract tests in CI.
+- Companion admin web panel published as a separate optional package: [`padosoft/laravel-patent-box-tracker-admin`](https://github.com/padosoft/laravel-patent-box-tracker-admin), built on top of the v1 API.
+- AI vibe-coding pack consolidation: every repo-local skill and command under `.claude/` now exposes proper YAML frontmatter (`name` + `description`) so triggers fire contextually in Claude Code.
+- `docs/RELEASE_NOTES_v1.0.0.md` documenting the stable cut.
+
+### Changed
+- README rebuilt for the community: stable/admin/vibe badges, "What ships in v1.0" highlights, companion admin panel callout, three-surface architecture diagram (CLI / API / admin), HTTP API v1 surface table, updated roadmap (v1.0 shipped, v1.1 / v1.2 / v2.0 planned), refreshed AI pack inventory.
+- `ValidateRepositoryController` now emits `validation_failed` (was `invalid_repository`) for invalid repository paths, aligning with the unified v1 error taxonomy.
+- Roadmap and config notes updated to reflect that the locale `it` ships in v1.0 and other locales are scheduled for v1.1.
+
+### Breaking
+- Clients that branched on `error.code = "invalid_repository"` from `POST /v1/repositories/validate` should align to `error.code = "validation_failed"`. SemVer compatibility starts here.
+
+## [0.1.x]
+
 ### Added
 - **W4.A — repository scaffold.** `composer.json` (PHP 8.3+, Laravel 12 / 13, `laravel/ai` ^0.6, `symfony/yaml` ^7|^8), `PatentBoxTrackerServiceProvider`, `config/patent-box-tracker.php` defaults (Regolo classifier, `documentazione_idonea` regime, Italian locale, four canonical collectors registered), `phpunit.xml` with the `Unit` + opt-in `Live` testsuites, GitHub Actions matrix on PHP 8.3 / 8.4 / 8.5 × Laravel 12 / 13, README following the canonical 14-section Padosoft WOW structure, `.claude/` vibe-coding pack inherited from the Padosoft baseline.
 - **API v1 Foundations, Read and Write.** Added opt-in HTTP API with versioned prefix `/api/patent-box/v1`, contract envelope (`data`/`meta`/`error`) via `ApiResponse`, central error mapping middleware, Foundation/Read/Write endpoints for sessions, commits, evidence, dossier metadata/download, integrity, repository validation, dry-run, and queue-backed tracking/dossier rendering.
@@ -32,4 +51,5 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 ### Removed
 - N/A
 
-[Unreleased]: https://github.com/padosoft/laravel-patent-box-tracker/commits/main
+[Unreleased]: https://github.com/padosoft/laravel-patent-box-tracker/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/padosoft/laravel-patent-box-tracker/releases/tag/v1.0.0

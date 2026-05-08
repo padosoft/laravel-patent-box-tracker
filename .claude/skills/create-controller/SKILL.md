@@ -1,3 +1,8 @@
+---
+name: create-controller
+description: Use when adding or refactoring a Laravel 13 controller (web, API, or admin). Drives thin-controller patterns — FormRequest validation, DTO/command objects, delegation to service/action, coherent view/resource/redirect responses, plus the minimum feature test. Trigger on tasks like "add controller for X", "refactor controller", "expose admin action".
+---
+
 # Create Controller
 
 Pattern base per introdurre un controller Laravel.

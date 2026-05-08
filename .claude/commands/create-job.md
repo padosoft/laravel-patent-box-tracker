@@ -1,3 +1,8 @@
+---
+name: create-job
+description: Use when introducing an asynchronous Laravel 13 Job for long-running work, slow external integrations, exports/imports, or side effects not appropriate inside the web request. Drives a thin Job + DTO + service workflow with explicit payload, retry/timeout policy, and tests for both service and dispatch. Trigger on tasks like "queue this", "make this async", "create job for X".
+---
+
 # Create Job
 
 Pattern per introdurre un Job in Laravel 13.

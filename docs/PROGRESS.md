@@ -1,5 +1,58 @@
 # PROGRESS
 
+## 2026-05-08 — v1.0.0 cut
+
+- Cut stabile **v1.0.0** preparato direttamente su `main` (autorizzazione esplicita utente per push diretto su master).
+- Aggiunti contenuti per la release:
+  - `docs/RELEASE_NOTES_v1.0.0.md` con highlights, breaking change unico (`invalid_repository` → `validation_failed`), upgrade path.
+  - `CHANGELOG.md` aggiornato con sezione `[1.0.0] - 2026-05-08` e diff link verso `HEAD`.
+  - `README.md` rifatto per la community: badge stable/admin/vibe-coding, sezione "What ships in v1.0", richiamo al companion package `padosoft/laravel-patent-box-tracker-admin`, diagramma architettura aggiornato (tre delivery surfaces: CLI / API / admin), tabella API v1 surface, roadmap riallineata (v1.0 shipped, v1.1 / v1.2 / v2.0 planned), inventario pack `.claude/` aggiornato.
+- Allineamento `.claude/`:
+  - aggiunto frontmatter (`name` + `description`) a tutti gli 11 skill repo-local mancanti (admin-interface-*, create-* family, playwright-enterprise-tester).
+  - aggiunto frontmatter ai 5 command repo-local (`create-job`, `create-setting`, `domain-scaffold`, `domain-service`, `playwright-tester`).
+- Fix codice incluso nel cut v1.0:
+  - `src/Http/Controllers/Api/V1/ValidateRepositoryController.php`: ora restituisce `error.code = validation_failed` invece di `invalid_repository`, coerente con la error taxonomy unificata.
+- Tag `v1.0.0` e GitHub release pubblicati.
+
+## 2026-05-08
+
+- Stato roadmap package: tutti i macro da 1 a 7 risultano materializzati in `main` con release pubblica `v0.1.3`.
+- Stato subtask tecnico:
+  - Macro 1 (Foundation): envelope/error taxonomy/contract base validati.
+  - Macro 2 (Read APIs): endpoint list/detail/commits/evidence/dossiers/integrity disponibili.
+  - Macro 3 (Write & Jobs): endpoint validate/dry-run/create/render con stato coda `queued` e job state updates.
+  - Macro 4 (Security): token optional + rate-limit + download path-bound + CI fixture.
+  - Macro 5 (Contracts/Docs/CI): contract fixture suite + test suite e reference docs aggiornati.
+  - Macro 6 (Release): release notes `v0.1.3` pubblicati e mergeati.
+  - Macro 7 (Finalization): chiusura loop remota completata lato stato.
+- Stato PR/loop:
+  - nessuna PR aperta in corso (`gh pr list --state open` restituisce vuoto);
+  - PR recenti (`10`-`19`) risultano mergeate/chiuse correttamente.
+- Gate locali rilevanti:
+  - `php -v` disponibile (8.4.20).
+  - `composer validate --strict --no-check-publish` ✅.
+  - `vendor/bin/phpunit.bat tests/Feature/Api` ✅ (`41` test, `225` assertions).
+  - `vendor/bin/phpunit.bat` (suite completa) ⏱️ timeout in ambiente locale e resta come blocker tecnico.
+  - `composer test` non disponibile (script assente in `composer.json`).
+- Note operative:
+  - Il blocco storico `Win32 error 5` non è più rilevante in questa sessione; la chiusura remota avviene con stato `PR closed/merged` coerente.
+  - Nessuna azione bloccante aperta per questo macro set lato package.
+
+## 2026-05-08
+
+- Stato operativo locale package:
+  - `src/Http/Controllers/Api/V1/TrackingDryRunController.php`:
+    normalizzato fallback repository non valido su `error.code = validation_failed`.
+  - `src/Http/Controllers/Api/V1/ValidateRepositoryController.php`:
+    stessa normalizzazione `error.code = validation_failed`.
+  - `tests/Feature/Api/TrackingWriteApiTest.php` esteso con test contract `test_dry_run_returns_standard_error_shape_on_invalid_repository`.
+- Verifica audit:
+  - scan completo `rg` su `src/Http/Controllers/Api/V1` senza `response()->json` nei controller Foundation/Write.
+  - `HealthController` e `CapabilitiesController` confermati con `ApiResponse::success` envelope.
+- Stato macro/subtask:
+  - Macro 1 (Foundation Hardening) e Macro 2 (Read API) risultano già materializzate in `main` con release `v0.1.3` marcata.
+  - Restano da aprire/chiudere in ambiente remoto i loop PR/Copilot/CI per i micro-step futuri se richiesto dal processo enterprise.
+
 ## 2026-05-08
 
 - Stato macro/loop package aggiornato dopo ri-merge in `main`:

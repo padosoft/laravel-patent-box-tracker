@@ -1,3 +1,8 @@
+---
+name: create-test
+description: Use when adding tests for new or refactored Laravel 13 code. Picks the right level (unit, feature, browser/E2E), respects the existing test framework (PHPUnit vs Pest), enforces behavior-not-implementation testing and readable factories/fixtures. Trigger on tasks like "add test for X", "cover this controller", "write feature test".
+---
+
 # Create Test
 
 Per nuovo codice Laravel:

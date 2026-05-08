@@ -39,7 +39,7 @@ final class ValidateRepositoryController extends Controller
         try {
             $support->assertRepository($path);
         } catch (\InvalidArgumentException $exception) {
-            return ApiResponse::error('invalid_repository', $exception->getMessage(), [], 422);
+            return ApiResponse::error('validation_failed', $exception->getMessage(), [], 422);
         }
         $excludedAuthors = array_values(array_filter((array) config('patent-box-tracker.excluded_authors', []), 'is_string'));
         $count = $support->commitCountForWindow($path, $from, $to, $excludedAuthors);

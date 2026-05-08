@@ -1,3 +1,8 @@
+---
+name: domain-service
+description: Use when designing a clean Laravel 13 application workflow — Request/CLI input → DTO → Service/Action → optional Job → Response/Resource. Keeps the controller as orchestrator and the service HTTP-free and unit-testable; splits oversized services into smaller actions. Trigger on tasks like "design the workflow for X", "add use case", "split this service".
+---
+
 # Domain Service
 
 Usa questo pattern per un workflow applicativo chiaro e testabile.

@@ -113,6 +113,28 @@ final class TrackingWriteApiTest extends TestCase
             ->assertJsonPath('error.code', 'validation_failed');
     }
 
+    public function test_dry_run_returns_standard_error_shape_on_invalid_repository(): void
+    {
+        $this->postJson('/api/patent-box/v1/tracking-sessions/dry-run', [
+            'mode' => 'single_repo',
+            'period' => [
+                'from' => '2026-01-01',
+                'to' => '2026-12-31',
+            ],
+            'classifier' => [
+                'provider' => 'regolo',
+                'model' => 'claude-sonnet-4-6',
+            ],
+            'repositories' => [
+                [
+                    'path' => __DIR__.'/../../fixtures/repos/does-not-exist.git',
+                    'role' => 'primary_ip',
+                ],
+            ],
+        ])->assertStatus(422)
+            ->assertJsonPath('error.code', 'validation_failed');
+    }
+
     public function test_dry_run_cross_repo_requires_primary_ip_repository(): void
     {
         $this->postJson('/api/patent-box/v1/tracking-sessions/dry-run', [

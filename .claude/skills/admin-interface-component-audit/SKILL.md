@@ -1,3 +1,8 @@
+---
+name: admin-interface-component-audit
+description: Use BEFORE creating or refactoring any admin interface to audit existing UI components, services, and helpers and decide REUSE / EXTEND / CREATE-DOMAIN / CREATE-GLOBAL for each piece. Trigger when starting a new admin page, when asked to "check existing components first", or before any "create-admin-interface" run.
+---
+
 # Component Audit
 
 Prima di creare una nuova interfaccia admin:

@@ -1,3 +1,8 @@
+---
+name: create-crud-backend
+description: Use when scaffolding a standard Laravel 13 CRUD backend (model+migration, FormRequest, resource controller or API endpoints, view/JSON wiring, full validation/create/update/delete tests). Trigger on tasks like "create CRUD for X", "scaffold resource for Y", "add admin CRUD module".
+---
+
 # Create CRUD Backend
 
 Per un CRUD admin standard:

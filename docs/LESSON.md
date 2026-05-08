@@ -2,6 +2,18 @@
 
 ## 2026-05-08
 
+- In roadmap package, il ciclo completo è ora chiuso in `main` con release `v0.1.3` pubblicata; quando `gh pr list` mostra solo PR chiuse/mergeate, si può marcare il macro come formalmente pronto anche se il processo locale resta con timeout sulla suite completa.
+- `composer validate --strict --no-check-publish` e `vendor/bin/phpunit.bat tests/Feature/Api` sono la coppia di gate minime affidabili qui: 1) validano `composer.json`, 2) convalidano contract/hardening API (`41` test, `225` assertions in questa sessione).
+- `vendor/bin/phpunit.bat` su suite completa può timeout anche in ambienti con risorse limitate: registrare questo comportamento come rischio residuo e non bloccante.
+- `composer test` è da verificare a livello repository: in questa sessione il comando non esiste (`Command "test" is not defined`).
+
+## 2026-05-08
+
+- In API write/foundation, errori di repo inesistente e validazioni business devono sempre rientrare in `validation_failed` per coerenza contract, anche in controller "legacy-style" con `catch` specifici.
+- Prima della chiusura di un subtask, verificare anche assenza completa di `response()->json` nei controller API v1, non solo presenza di middleware wrapper.
+
+## 2026-05-08
+
 - In questa sessione `gh` era inizialmente bloccato, ma ora risulta autenticato con `read:project`; i check PR e i loop sono tornati operativi.
 - In catene di PR, un PR precedente puo essere chiuso/superseded senza perdita di lavoro; registrare in `PROGRESS.md` solo lo stato operativo del PR corrente.
 - `pull_request` dovrebbe essere triggerato senza filtro `branches` quando la roadmap usa PR intermedie su branch non-maini.
