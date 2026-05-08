@@ -16,7 +16,7 @@ final class ListTrackingSessionsController extends Controller
 {
     public function __invoke(Request $request): JsonResponse
     {
-        $perPage = max(1, min((int) $request->query('per_page', 25), 100));
+        $perPage = max(1, min((int) $request->query('per_page', '25'), 100));
 
         $query = TrackingSession::query()->orderByDesc('id');
 
@@ -101,7 +101,8 @@ final class ListTrackingSessionsController extends Controller
     }
 
     /**
-     * @return array{commit_count:int,qualified_commit_count:int,repository_count:int}
+     * @param  list<int>  $sessionIds
+     * @return array<int, array{commit_count:int,qualified_commit_count:int,repository_count:int}>
      */
     private function summariesFor(array $sessionIds): array
     {

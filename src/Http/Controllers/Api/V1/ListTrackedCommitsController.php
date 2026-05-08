@@ -20,7 +20,7 @@ final class ListTrackedCommitsController extends Controller
             return ApiResponse::error('not_found', 'The requested resource was not found.', [], 404);
         }
 
-        $perPage = max(1, min((int) $request->query('per_page', 50), 200));
+        $perPage = max(1, min((int) $request->query('per_page', '50'), 200));
         $query = TrackedCommit::query()
             ->where('tracking_session_id', $session->id)
             ->orderByDesc('committed_at')
@@ -83,7 +83,7 @@ final class ListTrackedCommitsController extends Controller
                 'repository_role' => $commit->repository_role,
                 'author_name' => $commit->author_name,
                 'author_email' => $commit->author_email,
-                'committed_at' => $commit->committed_at?->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z'),
+                'committed_at' => $this->iso($commit->committed_at),
                 'message_subject' => $this->subject((string) ($commit->message ?? '')),
                 'files_changed_count' => $commit->files_changed_count !== null ? (int) $commit->files_changed_count : null,
                 'insertions' => $commit->insertions !== null ? (int) $commit->insertions : null,
@@ -115,5 +115,17 @@ final class ListTrackedCommitsController extends Controller
         $line = strtok($message, "\n");
 
         return $line === false ? '' : trim($line);
+    }
+
+    private function iso(mixed $value): ?string
+    {
+        $tz = new \DateTimeZone('UTC');
+        if ($value instanceof \DateTimeImmutable) {
+            return $value->setTimezone($tz)->format('Y-m-d\TH:i:s\Z');
+        }
+        if ($value instanceof \DateTime) {
+            return (clone $value)->setTimezone($tz)->format('Y-m-d\TH:i:s\Z');
+        }
+        return null;
     }
 }
