@@ -154,6 +154,61 @@ final class TrackingReadApiTest extends TestCase
             ->assertJsonPath('meta.total', 1);
     }
 
+    public function test_show_dossier_returns_metadata_for_matching_session(): void
+    {
+        $tmp = tempnam(sys_get_temp_dir(), 'patent-box-dossier-show-');
+        file_put_contents($tmp, '{"ok":true}');
+
+        try {
+            $dossier = TrackedDossier::query()->create([
+                'tracking_session_id' => $this->session->id,
+                'format' => 'json',
+                'locale' => 'it',
+                'path' => $tmp,
+                'byte_size' => 11,
+                'sha256' => hash('sha256', '{"ok":true}'),
+                'generated_at' => '2026-05-07 10:35:00',
+            ]);
+
+            $this->getJson('/api/patent-box/v1/tracking-sessions/'.$this->session->id.'/dossiers/'.$dossier->id)
+                ->assertOk()
+                ->assertJsonPath('data.id', (int) $dossier->id)
+                ->assertJsonPath('data.tracking_session_id', (int) $this->session->id)
+                ->assertJsonPath('data.format', 'json');
+        } finally {
+            if (is_string($tmp)) {
+                @unlink($tmp);
+            }
+        }
+    }
+
+    public function test_show_dossier_returns_not_found_when_dossier_belongs_to_another_session(): void
+    {
+        $otherSession = TrackingSession::query()->create(['status' => TrackingSession::STATUS_RENDERED]);
+        $tmp = tempnam(sys_get_temp_dir(), 'patent-box-dossier-show-');
+        file_put_contents($tmp, '{"ok":true}');
+
+        try {
+            $dossier = TrackedDossier::query()->create([
+                'tracking_session_id' => $otherSession->id,
+                'format' => 'json',
+                'locale' => 'it',
+                'path' => $tmp,
+                'byte_size' => 11,
+                'sha256' => hash('sha256', '{"ok":true}'),
+                'generated_at' => now(),
+            ]);
+
+            $this->getJson('/api/patent-box/v1/tracking-sessions/'.$this->session->id.'/dossiers/'.$dossier->id)
+                ->assertStatus(404)
+                ->assertJsonPath('error.code', 'not_found');
+        } finally {
+            if (is_string($tmp)) {
+                @unlink($tmp);
+            }
+        }
+    }
+
     public function test_integrity_endpoint_reports_verified_chain(): void
     {
         $this->assertSame(2, TrackedCommit::query()->where('tracking_session_id', $this->session->id)->count());

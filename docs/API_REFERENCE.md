@@ -132,6 +132,7 @@ Supported filters:
 
 - `GET /tracking-sessions/{trackingSession}/dossiers`
 - `POST /tracking-sessions/{trackingSession}/dossiers`
+- `GET /tracking-sessions/{trackingSession}/dossiers/{dossier}`
 
 Queue render body:
 
@@ -164,6 +165,19 @@ Queue render body:
 - `format`
 - `locale`
 - `per_page`
+
+## Dossier Detail
+
+- `GET /tracking-sessions/{trackingSession}/dossiers/{dossier}`
+
+Returns dossier metadata envelope (`data.id`, `data.format`, `data.locale`, `data.path`, `data.byte_size`, `data.sha256`, `data.generated_at`).
+
+Security behavior:
+
+- dossier must belong to the requested `trackingSession`
+- file path must resolve to an existing file
+- recorded `sha256` and `byte_size` must match filesystem content
+- otherwise returns `404`
 
 ## Dossier Download
 
