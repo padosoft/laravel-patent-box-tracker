@@ -10,9 +10,10 @@
   - PR #13 (`Subtask 5.4: finalize release docs and contract fixture pipeline`) chiusa nel percorso macro5.
   - PR #12 (`test(api): stabilize API rate limit test`) mergeata.
   - PR #11/10/9/7/6 consolidati nel flusso `main`.
-- Stato attuale PR: nessuna PR aperta al momento.
-- Stato blocco: nessun blockers infrastrutturale attivo da questa sessione.
-- Nota: i subtask read-model risultano ora consolidati in merge separati su `main`.
+  - Creati documenti di release finale 0.1.3 in `docs/RELEASE_NOTES_v0.1.3.md` (in attesa tag).
+  - Stato attuale PR: nessuna PR aperta al momento.
+  - Stato blocco: nessun blockers infrastrutturale attivo da questa sessione.
+  - Nota: i subtask read-model risultano ora consolidati in merge separati su `main`.
 
 ## 2026-05-08
 
