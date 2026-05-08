@@ -6,6 +6,19 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-05-08
+
+### Security
+- Tighten the `spatie/browsershot` (`require-dev`) constraint from `^4.0|^5.0` to `^5.0.5` so the package can no longer resolve to a Browsershot version vulnerable to:
+  - **CVE-2024-21544** (medium) — LFI via leading `%20` before `file://` (fixed in 5.0.1).
+  - **CVE-2024-21547** (high) — Directory Traversal via `file:\\` URI normalization (fixed in 5.0.2).
+  - **CVE-2024-21549** (medium) — LFI bypass via `view-source:file://` (fixed in 5.0.3).
+  - **CVE-2025-1022** (high) — Path Traversal in `setHtml()` (fixed in 5.0.5).
+  - **CVE-2025-1026** (medium) — LFI in `setUrl()` (fixed in 5.0.5).
+  - **CVE-2025-3192** (high) — SSRF in `setUrl()` allowing localhost access and directory listing (fixed in 5.0.5+).
+- Closes the 6 corresponding GitHub Dependabot alerts opened on `main`.
+- `composer audit` now reports no advisories.
+
 ## [1.0.0] - 2026-05-08
 
 ### Added
@@ -51,5 +64,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 ### Removed
 - N/A
 
-[Unreleased]: https://github.com/padosoft/laravel-patent-box-tracker/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/padosoft/laravel-patent-box-tracker/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/padosoft/laravel-patent-box-tracker/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/padosoft/laravel-patent-box-tracker/releases/tag/v1.0.0

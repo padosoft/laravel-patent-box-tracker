@@ -1,5 +1,15 @@
 # PROGRESS
 
+## 2026-05-08 — v1.0.1 security patch
+
+- Risolte le 6 GitHub Dependabot alerts (3 high, 3 moderate) tutte su `spatie/browsershot` (dev dep):
+  - CVE-2024-21544 / -21547 / -21549, CVE-2025-1022 / -1026 / -3192 — coprono LFI/Directory Traversal/SSRF.
+  - Vincolo aggiornato in `composer.json`: `^4.0|^5.0` → `^5.0.5`.
+  - `composer audit` (con e senza dev) ora pulito.
+- Aggiunti `docs/RELEASE_NOTES_v1.0.1.md` e sezione `[1.0.1] - 2026-05-08` nel `CHANGELOG.md` con tabella CVE + impatto + upgrade.
+- Push diretto su `main` autorizzato dall'utente, tag annotato `v1.0.1` e GitHub Release pubblicata.
+- Lesson consolidata: vincoli compositi tipo `^4.0|^5.0` su renderer/PDF dev-deps richiedono floor minimo security-aware (`^5.0.5`) per non riaccendere alert su default branch.
+
 ## 2026-05-08 — v1.0.0 cut
 
 - Cut stabile **v1.0.0** preparato direttamente su `main` (autorizzazione esplicita utente per push diretto su master).

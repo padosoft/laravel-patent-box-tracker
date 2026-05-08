@@ -1,5 +1,12 @@
 # LESSON
 
+## 2026-05-08 — Dependabot floor lesson
+
+- Vincoli composer compositi tipo `^4.0|^5.0` su dev-deps PDF/renderer (es. `spatie/browsershot`) sembrano "tolleranti" ma in realtà ammettono installazioni vulnerabili. Risultato pratico: 6 alert Dependabot (LFI, Directory Traversal, SSRF) restano `open` sul default branch anche se il package è opt-in.
+- Pattern operativo: per ogni dev-dep che è anche pacchetto suggerito a runtime, fissare un floor security-aware (`^5.0.5`) invece del semplice "any major minore".
+- Verifica end-to-end: `composer audit` (anche con `--no-dev`) deve riportare "No security vulnerability advisories found" prima del tag.
+- Dependabot guarda `composer.json`, non `composer.lock` (specie quando lock è ignored). Stringere il vincolo nel manifest è la sola fix che chiude le alert in modo persistente.
+
 ## 2026-05-08
 
 - In roadmap package, il ciclo completo è ora chiuso in `main` con release `v0.1.3` pubblicata; quando `gh pr list` mostra solo PR chiuse/mergeate, si può marcare il macro come formalmente pronto anche se il processo locale resta con timeout sulla suite completa.
