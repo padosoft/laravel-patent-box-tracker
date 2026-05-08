@@ -6,6 +6,10 @@
 </p>
 
 <p align="center">
+  <img src="resources/banner.png" alt="laravel-patent-box-tracker — audit-grade Italian Patent Box dossier generator for Laravel" width="100%">
+</p>
+
+<p align="center">
   <a href="https://github.com/padosoft/laravel-patent-box-tracker/releases/latest"><img alt="Stable release" src="https://img.shields.io/github/v/release/padosoft/laravel-patent-box-tracker?label=stable&color=2ea44f"></a>
   <a href="https://github.com/padosoft/laravel-patent-box-tracker/actions/workflows/ci.yml"><img alt="CI status" src="https://img.shields.io/github/actions/workflow/status/padosoft/laravel-patent-box-tracker/ci.yml?branch=main&label=tests"></a>
   <a href="https://packagist.org/packages/padosoft/laravel-patent-box-tracker"><img alt="Packagist version" src="https://img.shields.io/packagist/v/padosoft/laravel-patent-box-tracker.svg?label=packagist"></a>
