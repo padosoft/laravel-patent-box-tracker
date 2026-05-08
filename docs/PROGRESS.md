@@ -3,6 +3,7 @@
 ## 2026-05-08
 
 - Package: subtask `4.1 Authorization and middleware override strategy` in corso su branch `task/api-security-hardening`.
+- Subtask `4.4 Rate limiting and abuse guardrails` verificato con test (`ApiRateLimitTest`) che imposta un limiter temporaneo e attende `429 Too Many Attempts`.
 - Aggiunti:
   - configurazione facoltativa `patent-box-tracker.api.auth_token` e env `PATENT_BOX_API_TOKEN`;
   - middleware `ProtectPatentBoxApi` applicato automaticamente alla catena API quando il token è impostato;
