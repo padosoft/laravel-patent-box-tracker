@@ -22,6 +22,7 @@ return [
         'prefix' => env('PATENT_BOX_API_PREFIX', 'api/patent-box'),
         'middleware' => [],
         'rate_limiter' => env('PATENT_BOX_API_RATE_LIMITER', ''),
+        'auth_token' => env('PATENT_BOX_API_TOKEN', ''),
     ],
 
     /*

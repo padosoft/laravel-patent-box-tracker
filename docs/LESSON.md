@@ -25,3 +25,9 @@
 - 2026-05-07: per garantire contratto stabile `{error:{...}}`, alcuni endpoint write/read ora validano esplicitamente gli input con `Validator` e normalizzano `not_found/conflict` in controller quando il flusso implicito del middleware non intercettava in modo affidabile i fallback.
 - 2026-05-07: in questa macchina i run completi `--testsuite Feature`/default possono andare in timeout prolungato; nel frattempo conviene isolare suite per superficie (`tests/Feature/Api`, `Architecture`) per mantenere prove verdi verificabili mentre si indaga il blocco del resto.
 - 2026-05-07: regola operativa obbligatoria consolidata in rules/agents/claude: avanzamento automatico block-by-block fino al 100% roadmap, con stop solo su blocker esterni reali.
+
+## 2026-05-08
+
+- Dettaglio dossier di una sessione (`GET /tracking-sessions/{trackingSession}/dossiers/{dossier}`): non basta verificare solo l'ownership DB, va validata anche l'esistenza fisica del file.
+- Rispetto dello scope sessione nei read endpoints: se l'ID non corrisponde al sessione corrente, anche con dossier valido nel DB, la risposta deve restituire `error.code = not_found`.
+- Per Macro 4.1, il token API opzionale (`PATENT_BOX_API_TOKEN`) è stato introdotto come primo layer di protezione: non richiede dipendenze host (`auth`/Sanctum), resta compatibile con `patent-box-tracker.api.middleware` personalizzato e risponde `error.code = unauthorized` su token mancante/non valido.
