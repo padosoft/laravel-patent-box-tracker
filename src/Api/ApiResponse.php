@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 final class ApiResponse
 {
     /**
-     * @param  array|Arrayable<string, mixed>  $data
+     * @param  array<array-key, mixed>|Arrayable<array-key, mixed>  $data
      * @param  array<string, mixed>|null  $meta
      */
     public static function success(array|Arrayable $data, ?array $meta = null, int $status = 200): JsonResponse

@@ -35,20 +35,26 @@ final class ShowTrackingSessionController extends Controller
             ])
             ->all();
 
-        $dossiers = TrackedDossier::query()
+        $dossierRows = TrackedDossier::query()
             ->where('tracking_session_id', $session->id)
             ->orderByDesc('generated_at')
             ->orderByDesc('id')
-            ->get()
-            ->map(static fn (TrackedDossier $dossier): array => [
+            ->get();
+        $dossiers = [];
+        foreach ($dossierRows as $dossier) {
+            if (! $dossier instanceof TrackedDossier) {
+                continue;
+            }
+
+            $dossiers[] = [
                 'id' => (int) $dossier->id,
                 'format' => (string) $dossier->format,
                 'locale' => (string) $dossier->locale,
                 'byte_size' => $dossier->byte_size !== null ? (int) $dossier->byte_size : null,
                 'sha256' => $dossier->sha256,
-                'generated_at' => $dossier->generated_at?->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z'),
-            ])
-            ->all();
+                'generated_at' => $this->iso($dossier->generated_at),
+            ];
+        }
 
         $head = TrackedCommit::query()
             ->where('tracking_session_id', $session->id)
@@ -76,15 +82,19 @@ final class ShowTrackingSessionController extends Controller
             'repositories' => $repositories,
             'dossiers' => $dossiers,
             'hash_chain_head' => is_string($head) ? $head : null,
-            'finished_at' => $this->iso($session->finished_at),
-            'created_at' => $this->iso($session->created_at),
+            'finished_at' => $this->iso($session->getAttribute('finished_at')),
+            'created_at' => $this->iso($session->getAttribute('created_at')),
         ]);
     }
 
     private function iso(mixed $value): ?string
     {
-        if ($value instanceof \DateTimeInterface) {
-            return $value->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z');
+        $tz = new \DateTimeZone('UTC');
+        if ($value instanceof \DateTimeImmutable) {
+            return $value->setTimezone($tz)->format('Y-m-d\TH:i:s\Z');
+        }
+        if ($value instanceof \DateTime) {
+            return (clone $value)->setTimezone($tz)->format('Y-m-d\TH:i:s\Z');
         }
 
         return null;

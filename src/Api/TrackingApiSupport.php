@@ -22,6 +22,9 @@ final class TrackingApiSupport
         }
     }
 
+    /**
+     * @param  list<string>  $excludedAuthors
+     */
     public function commitCountForWindow(
         string $path,
         DateTimeImmutable $from,
