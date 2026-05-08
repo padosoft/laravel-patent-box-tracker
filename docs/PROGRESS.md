@@ -2,17 +2,18 @@
 
 ## 2026-05-08
 
-- Package: subtask `4.1 Authorization and middleware override strategy` avviato su branch `task/api-security-hardening-subtask-4.1-api-token-gate`.
+- Package: subtask `4.1 Authorization and middleware override strategy` in corso su branch `task/api-security-hardening`.
 - Aggiunti:
   - configurazione facoltativa `patent-box-tracker.api.auth_token` e env `PATENT_BOX_API_TOKEN`;
   - middleware `ProtectPatentBoxApi` applicato automaticamente alla catena API quando il token è impostato;
   - test `ApiAuthGateTest` con casi: senza token (200), token mancante (401, `error.code = unauthorized`), header/bearer validi (200).
   - API reference aggiornato con comportamento di autenticazione opzionale.
-- Stato locale: non riesco ad aprire push/PR loop in questa sessione per blocker remoto (`Win32 error 5` su git/SSH). Documentato e continuato al prossimo punto operativo.
+- Stato locale:
+  - Branch e PR pubblicati (`task/api-security-hardening`, `task/api-write-jobs`) a supporto del flusso macro.
 - Stato PR:
-  - PR aperta: https://github.com/padosoft/laravel-patent-box-tracker/pull/8 (base `task/api-read-models`, head `task/api-read-models-subtask-2.4-show-dossier`)
+  - PR aperta: https://github.com/padosoft/laravel-patent-box-tracker/pull/10 (base `task/api-write-jobs`, head `task/api-security-hardening`)
   - Copilot review richiesta: verificata (`Copilot` in reviewers)
-  - Verifica checks: nessun check riportato al momento (`gh pr checks` => no checks reported)
+  - Verifica checks: `gh pr checks 10` => tutti passati
 
 ## 2026-05-08
 
