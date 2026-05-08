@@ -2,6 +2,20 @@
 
 ## 2026-05-08
 
+- Stato macro/loop package aggiornato dopo ri-merge in `main`:
+  - PR #18 (`feat(api): add tracked dossier detail endpoint`) mergeata.
+  - PR #19 aperta da ramo legacy `task/api-read-models` chiusa come duplicata/superseded.
+  - PR #17 (`release: add v0.1.1 release notes`) mergeata.
+  - PR #14 (`test(api): fixture-driven API contract checks`) mergeata.
+  - PR #13 (`Subtask 5.4: finalize release docs and contract fixture pipeline`) chiusa nel percorso macro5.
+  - PR #12 (`test(api): stabilize API rate limit test`) mergeata.
+  - PR #11/10/9/7/6 consolidati nel flusso `main`.
+- Stato attuale PR: nessuna PR aperta al momento.
+- Stato blocco: nessun blockers infrastrutturale attivo da questa sessione.
+- Nota: i subtask read-model risultano ora consolidati in merge separati su `main`.
+
+## 2026-05-08
+
 - Macro 5 in esecuzione su `task/api-contract-tests-docs`:
   - aggiunto fixture file `tests/fixtures/api-contract/read-contract-cases.json`;
   - aggiunto test `tests/Feature/Api/ApiContractFixturesTest.php` per verificare i path obbligatori del contratto read API;
