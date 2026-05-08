@@ -97,6 +97,7 @@ final class PatentBoxTrackerServiceProvider extends ServiceProvider
     {
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'patent-box-tracker');
+        $this->registerApiRoutes();
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -117,5 +118,14 @@ final class PatentBoxTrackerServiceProvider extends ServiceProvider
                 CrossRepoCommand::class,
             ]);
         }
+    }
+
+    private function registerApiRoutes(): void
+    {
+        if (! (bool) config('patent-box-tracker.api.enabled', false)) {
+            return;
+        }
+
+        $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
     }
 }

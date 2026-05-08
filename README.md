@@ -332,6 +332,32 @@ if (! $verified->isValid()) {
 }
 ```
 
+### Optional HTTP API (v1)
+
+The package is CLI-first and fluent-API-first by default.  
+To expose a versioned HTTP surface for admin panels, enable the API in config:
+
+```php
+'api' => [
+    'enabled' => true,
+    'prefix' => 'api/patent-box',
+    'middleware' => ['api', 'auth:sanctum'], // host-app choice
+],
+```
+
+Current v1 endpoints include:
+
+- health and capabilities
+- repository validation
+- dry-run cost projection
+- queued tracking-session creation
+- tracking sessions/commits/evidence/dossiers read endpoints
+- queued dossier render
+- session-scoped dossier download
+- hash-chain integrity verification
+
+Reference: [`docs/API_REFERENCE.md`](docs/API_REFERENCE.md)
+
 ### Extending the pipeline with a custom collector
 
 ```php
