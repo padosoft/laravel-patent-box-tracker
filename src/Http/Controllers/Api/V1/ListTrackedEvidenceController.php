@@ -74,8 +74,12 @@ final class ListTrackedEvidenceController extends Controller
 
     private function iso(mixed $value): ?string
     {
-        if ($value instanceof \DateTimeInterface) {
-            return $value->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z');
+        $tz = new \DateTimeZone('UTC');
+        if ($value instanceof \DateTimeImmutable) {
+            return $value->setTimezone($tz)->format('Y-m-d\TH:i:s\Z');
+        }
+        if ($value instanceof \DateTime) {
+            return (clone $value)->setTimezone($tz)->format('Y-m-d\TH:i:s\Z');
         }
 
         return null;

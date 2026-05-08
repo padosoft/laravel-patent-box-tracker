@@ -88,8 +88,8 @@ final class ListTrackingSessionsController extends Controller
                     'actual_eur' => $session->cost_eur_actual !== null ? (float) $session->cost_eur_actual : null,
                 ],
                 'summary' => $summary,
-                'finished_at' => $this->iso($session->finished_at),
-                'created_at' => $this->iso($session->created_at),
+                'finished_at' => $this->iso($session->getAttribute('finished_at')),
+                'created_at' => $this->iso($session->getAttribute('created_at')),
             ];
         }
 
@@ -136,8 +136,12 @@ final class ListTrackingSessionsController extends Controller
 
     private function iso(mixed $value): ?string
     {
-        if ($value instanceof \DateTimeInterface) {
-            return $value->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z');
+        $tz = new \DateTimeZone('UTC');
+        if ($value instanceof \DateTimeImmutable) {
+            return $value->setTimezone($tz)->format('Y-m-d\TH:i:s\Z');
+        }
+        if ($value instanceof \DateTime) {
+            return (clone $value)->setTimezone($tz)->format('Y-m-d\TH:i:s\Z');
         }
 
         return null;

@@ -126,6 +126,7 @@ final class ListTrackedCommitsController extends Controller
         if ($value instanceof \DateTime) {
             return (clone $value)->setTimezone($tz)->format('Y-m-d\TH:i:s\Z');
         }
+
         return null;
     }
 }

@@ -26,11 +26,18 @@ final class VerifySessionIntegrityController extends Controller
             ->orderBy('id')
             ->get();
 
-        $manifest = $commits->map(static fn (TrackedCommit $commit): array => [
-            'sha' => (string) $commit->sha,
-            'prev' => $commit->hash_chain_prev,
-            'self' => (string) ($commit->hash_chain_self ?? ''),
-        ])->all();
+        $manifest = [];
+        foreach ($commits as $commit) {
+            if (! $commit instanceof TrackedCommit) {
+                continue;
+            }
+
+            $manifest[] = [
+                'sha' => (string) $commit->sha,
+                'prev' => $commit->hash_chain_prev,
+                'self' => (string) ($commit->hash_chain_self ?? ''),
+            ];
+        }
 
         $verified = $hashChainBuilder->verify($manifest);
 
