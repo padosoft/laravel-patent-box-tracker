@@ -20,7 +20,7 @@ final class ListTrackedEvidenceController extends Controller
             return ApiResponse::error('not_found', 'The requested resource was not found.', [], 404);
         }
 
-        $perPage = max(1, min((int) $request->query('per_page', 50), 200));
+        $perPage = max(1, min((int) $request->query('per_page', '50'), 200));
         $query = TrackedEvidence::query()
             ->where('tracking_session_id', $session->id)
             ->orderByDesc('linked_commit_count')
@@ -59,8 +59,8 @@ final class ListTrackedEvidenceController extends Controller
                 'path' => $evidence->path,
                 'slug' => $evidence->slug,
                 'title' => $evidence->title,
-                'first_seen_at' => $evidence->first_seen_at?->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z'),
-                'last_modified_at' => $evidence->last_modified_at?->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z'),
+                'first_seen_at' => $this->iso($evidence->first_seen_at),
+                'last_modified_at' => $this->iso($evidence->last_modified_at),
                 'linked_commit_count' => (int) ($evidence->linked_commit_count ?? 0),
             ];
         }
@@ -70,5 +70,14 @@ final class ListTrackedEvidenceController extends Controller
             'per_page' => (int) $paginator->perPage(),
             'total' => (int) $paginator->total(),
         ]);
+    }
+
+    private function iso(mixed $value): ?string
+    {
+        if ($value instanceof \DateTimeInterface) {
+            return $value->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z');
+        }
+
+        return null;
     }
 }
