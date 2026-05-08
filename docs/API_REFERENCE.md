@@ -132,6 +132,29 @@ Supported filters:
 - `GET /tracking-sessions/{trackingSession}/dossiers`
 - `POST /tracking-sessions/{trackingSession}/dossiers`
 
+## Dossier detail
+
+- `GET /tracking-sessions/{trackingSession}/dossiers/{dossier}`
+
+Returns dossier metadata for the specified session and dossier.
+
+Response fields:
+
+- `id`
+- `tracking_session_id`
+- `format`
+- `locale`
+- `path`
+- `byte_size`
+- `sha256`
+- `generated_at`
+
+Security and integrity behavior:
+
+- returns `404` with `error.code = not_found` when session is missing
+- returns `404` when dossier is not linked to the session
+- returns `404` when dossier path does not point to an existing file
+
 Queue render body:
 
 ```json

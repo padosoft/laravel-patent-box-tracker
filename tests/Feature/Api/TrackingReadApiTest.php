@@ -73,6 +73,30 @@ final class TrackingReadApiTest extends TestCase
             ->assertJsonPath('data.dossiers.0.format', 'json');
     }
 
+    public function test_show_tracking_session_missing_returns_standard_error(): void
+    {
+        $this->getJson('/api/patent-box/v1/tracking-sessions/999999')
+            ->assertNotFound()
+            ->assertJsonStructure(['error' => ['code', 'message', 'details']])
+            ->assertJsonPath('error.code', 'not_found');
+
+        $this->getJson('/api/patent-box/v1/tracking-sessions/999999/commits')
+            ->assertNotFound()
+            ->assertJsonPath('error.code', 'not_found');
+
+        $this->getJson('/api/patent-box/v1/tracking-sessions/999999/evidence')
+            ->assertNotFound()
+            ->assertJsonPath('error.code', 'not_found');
+
+        $this->getJson('/api/patent-box/v1/tracking-sessions/999999/dossiers')
+            ->assertNotFound()
+            ->assertJsonPath('error.code', 'not_found');
+
+        $this->getJson('/api/patent-box/v1/tracking-sessions/999999/integrity')
+            ->assertNotFound()
+            ->assertJsonPath('error.code', 'not_found');
+    }
+
     public function test_list_commits_supports_phase_filter(): void
     {
         $this->assertSame(1, TrackedCommit::query()
@@ -152,6 +176,77 @@ final class TrackingReadApiTest extends TestCase
             ->assertJsonPath('data.0.tracking_session_id', (int) $this->session->id)
             ->assertJsonPath('data.0.sha256', str_repeat('a', 64))
             ->assertJsonPath('meta.total', 1);
+    }
+
+    public function test_show_dossier_returns_detail_payload(): void
+    {
+        $dossier = TrackedDossier::query()
+            ->where('tracking_session_id', $this->session->id)
+            ->first();
+        $this->assertNotNull($dossier);
+
+        $content = json_encode(['test' => true], JSON_THROW_ON_ERROR);
+        $contentPath = tempnam(sys_get_temp_dir(), 'pbox-dossier');
+        if ($contentPath === false) {
+            $this->fail('Unable to create temporary dossier file.');
+        }
+        $write = file_put_contents($contentPath, $content);
+        if ($write === false) {
+            unlink($contentPath);
+            $this->fail('Unable to write temporary dossier file.');
+        }
+
+        $dossier->update([
+            'path' => $contentPath,
+            'byte_size' => strlen($content),
+            'sha256' => hash('sha256', $content),
+        ]);
+
+        $this->getJson('/api/patent-box/v1/tracking-sessions/'.$this->session->id.'/dossiers/'.$dossier->id)
+            ->assertOk()
+            ->assertJsonPath('data.id', (int) $dossier->id)
+            ->assertJsonPath('data.tracking_session_id', (int) $this->session->id)
+            ->assertJsonPath('data.sha256', hash('sha256', $content))
+            ->assertJsonPath('data.format', 'json');
+
+        unlink($contentPath);
+    }
+
+    public function test_show_dossier_returns_standard_not_found_when_dossier_missing(): void
+    {
+        $this->getJson('/api/patent-box/v1/tracking-sessions/'.$this->session->id.'/dossiers/999999')
+            ->assertNotFound()
+            ->assertJsonPath('error.code', 'not_found');
+    }
+
+    public function test_show_dossier_respects_session_scope(): void
+    {
+        $otherSession = TrackingSession::query()->create([
+            'tax_identity_json' => [
+                'denomination' => 'Padosoft',
+                'p_iva' => 'IT11111111111',
+                'fiscal_year' => '2026',
+                'regime' => 'documentazione_idonea',
+            ],
+            'period_from' => '2026-01-01 00:00:00',
+            'period_to' => '2026-12-31 00:00:00',
+            'classifier_provider' => 'regolo',
+            'classifier_model' => 'claude-sonnet-4-6',
+            'classifier_seed' => 1,
+            'status' => TrackingSession::STATUS_CLASSIFIED,
+            'cost_eur_projected' => 0,
+            'cost_eur_actual' => 0,
+            'finished_at' => '2026-05-07 10:00:00',
+        ]);
+
+        $dossier = TrackedDossier::query()
+            ->where('tracking_session_id', $this->session->id)
+            ->first();
+        $this->assertNotNull($dossier);
+
+        $this->getJson('/api/patent-box/v1/tracking-sessions/'.$otherSession->id.'/dossiers/'.$dossier->id)
+            ->assertNotFound()
+            ->assertJsonPath('error.code', 'not_found');
     }
 
     public function test_integrity_endpoint_reports_verified_chain(): void
