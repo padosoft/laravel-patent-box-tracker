@@ -53,7 +53,7 @@
     "method": "get",
     "uri": "/api/patent-box/v1/tracking-sessions/{session_id}/integrity",
     "status": 200,
-    "required_paths": ["data", "data.is_valid", "data.report"]
+    "required_paths": ["data", "data.verified", "data.head", "data.commit_count", "data.first_failure"]
   },
   {
     "name": "not found contract",

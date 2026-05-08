@@ -36,8 +36,9 @@ final class ApiContractFixturesTest extends TestCase
     public function test_read_contract_fixtures_are_respected(): void
     {
         /** @var array<int, array{name: string, method: string, uri: string, status: int, required_paths: array<int, string>}> $cases */
+        $fixturePath = dirname(__DIR__, 2).'/fixtures/api-contract/read-contract-cases.json';
         $cases = json_decode(
-            (string) file_get_contents(__DIR__.'/../../fixtures/api-contract/read-contract-cases.json'),
+            (string) file_get_contents($fixturePath),
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -49,13 +50,15 @@ final class ApiContractFixturesTest extends TestCase
             $response->assertStatus($case['status']);
 
             foreach ($case['required_paths'] as $path) {
-                $value = $this->readPath($response, $path);
-                $this->assertNotNull($value, sprintf('Case "%s" missing path "%s"', $case['name'], $path));
+                $this->assertTrue(
+                    $this->hasPath($response, $path),
+                    sprintf('Case "%s" missing path "%s"', $case['name'], $path)
+                );
             }
         }
     }
 
-    private function readPath(TestResponse $response, string $path): mixed
+    private function hasPath(TestResponse $response, string $path): bool
     {
         $payload = $response->json();
         $segments = explode('.', $path);
@@ -77,10 +80,10 @@ final class ApiContractFixturesTest extends TestCase
                 }
             }
 
-            return null;
+            return false;
         }
 
-        return $cursor;
+        return true;
     }
 
     private function seedSession(): void
