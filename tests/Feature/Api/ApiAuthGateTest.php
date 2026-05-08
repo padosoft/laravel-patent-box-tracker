@@ -56,4 +56,3 @@ final class ApiAuthGateTest extends TestCase
             ->assertOk();
     }
 }
-

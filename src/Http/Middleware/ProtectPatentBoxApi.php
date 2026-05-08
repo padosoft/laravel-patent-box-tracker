@@ -37,4 +37,3 @@ final class ProtectPatentBoxApi
         return $next($request);
     }
 }
-
