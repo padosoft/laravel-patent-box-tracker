@@ -2,6 +2,8 @@
 
 ## 2026-05-08
 
+- Macro 6 avviata su `task/release-readme-tag` (subtask 6.1/6.2 kickoff): preparazione release notes e consolidamento finale doc.
+
 - Macro 5 in esecuzione su `task/api-contract-tests-docs`:
   - aggiunto fixture file `tests/fixtures/api-contract/read-contract-cases.json`;
   - aggiunto test `tests/Feature/Api/ApiContractFixturesTest.php` per verificare i path obbligatori del contratto read API;
@@ -18,12 +20,12 @@
   - PR #12 (rate limiter stabilization + hardening branch tip) merged.
   - PR #11, #10 ora chiusi/superseded in catena.
 - Stato PR corrente (subtask attivo):
-  - PR attiva: #13 (`task/api-contract-tests-docs-subtask-5.4-release-docs` -> `task/api-contract-tests-docs`).
+  - PR #13 merged in `task/api-contract-tests-docs` (`Subtask 5.4: finalize release docs and contract fixture pipeline`).
   - Subtask obiettivo: chiusura Macro 5 (release/readiness/doc alignment + contract fixture pipeline).
-  - Stato locale: branch subtask e docs/test/ci aggiornati, PR aperta.
+  - Stato locale: subtask completo, pronto per macro merge.
   - Remote/GH disponibile in questa sessione (`read:project` verificato).
   - Copilot review richiesta con successo: user `Copilot` in reviewer.
-  - CI attiva in pending su 6 job matrix.
+  - CI completata su 6 job matrix (pass).
 - Azioni completate (questo subtask):
   - `.github/workflows/ci.yml` aggiornato a `pull_request` globale per eseguire CI anche su PR intermedie (non solo verso `main`).
   - aggiornamenti in `CHANGELOG.md`/`README.md` per API v1 contract/security hardening e status `v0.1.1`.
@@ -32,7 +34,7 @@
 
 ### Bloccanti
 
-- Nessun blocker infrastrutturale bloccante in questa fase. CI pending in attesa esecuzione remota.
+- Nessun blocker infrastrutturale bloccante in questa fase. Macro 6 prossima: `task/release-readme-tag`.
 
 ## 2026-05-08
 

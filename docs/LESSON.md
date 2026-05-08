@@ -2,6 +2,8 @@
 
 ## 2026-05-08
 
+- PR chain pattern confermato: quando `task/api-contract-tests-docs-subtask-5.4-release-docs` viene mergiata in `task/api-contract-tests-docs`, la PR può riportare stato direttamente `merged` con CI 6/6 green, riducendo il rischio di lock-in su stato "in corso".
+- Per i subtask package con CI lunga, `pull_request` globale nel workflow è fondamentale per attivare check su PR intermedi (`PR #13` ora green su tutti gli ambienti dopo fallback branch publish).
 - In questa sessione `gh` era inizialmente bloccato, ma ora risulta autenticato con `read:project`; i check PR e i loop sono tornati operativi.
 - In catene di PR, un PR precedente puo essere chiuso/superseded senza perdita di lavoro; registrare in `PROGRESS.md` solo lo stato operativo del PR corrente.
 - `pull_request` dovrebbe essere triggerato senza filtro `branches` quando la roadmap usa PR intermedie su branch non-maini.
