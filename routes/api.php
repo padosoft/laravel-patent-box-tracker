@@ -14,6 +14,7 @@ use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\ListTrackedEvidenceControl
 use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\ListTrackingSessionsController;
 use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\QueueRenderDossierController;
 use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\QueueTrackingSessionController;
+use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\ShowTrackedDossierController;
 use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\ShowTrackingSessionController;
 use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\TrackingDryRunController;
 use Padosoft\PatentBoxTracker\Http\Controllers\Api\V1\ValidateRepositoryController;
@@ -50,6 +51,7 @@ Route::prefix($prefix)
             Route::get('/tracking-sessions/{trackingSession}/evidence', ListTrackedEvidenceController::class);
             Route::get('/tracking-sessions/{trackingSession}/dossiers', ListTrackedDossiersController::class);
             Route::post('/tracking-sessions/{trackingSession}/dossiers', QueueRenderDossierController::class);
+            Route::get('/tracking-sessions/{trackingSession}/dossiers/{dossier}', ShowTrackedDossierController::class);
             Route::get('/tracking-sessions/{trackingSession}/dossiers/{dossier}/download', DownloadTrackedDossierController::class);
             Route::get('/tracking-sessions/{trackingSession}/integrity', VerifySessionIntegrityController::class);
         });

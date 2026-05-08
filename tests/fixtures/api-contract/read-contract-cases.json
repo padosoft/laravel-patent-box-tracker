@@ -49,6 +49,13 @@
     "required_paths": ["data", "meta"]
   },
   {
+    "name": "session dossier detail",
+    "method": "get",
+    "uri": "/api/patent-box/v1/tracking-sessions/{session_id}/dossiers/{dossier_id}",
+    "status": 200,
+    "required_paths": ["data", "data.id", "data.tracking_session_id", "data.format", "data.sha256"]
+  },
+  {
     "name": "session integrity",
     "method": "get",
     "uri": "/api/patent-box/v1/tracking-sessions/{session_id}/integrity",

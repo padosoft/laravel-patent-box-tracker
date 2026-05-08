@@ -16,6 +16,10 @@ final class ApiContractFixturesTest extends TestCase
 {
     private TrackingSession $session;
 
+    private TrackedDossier $dossier;
+
+    private ?string $dossierPath = null;
+
     /**
      * @param  Application  $app
      */
@@ -33,6 +37,15 @@ final class ApiContractFixturesTest extends TestCase
         $this->seedSession();
     }
 
+    protected function tearDown(): void
+    {
+        if (is_string($this->dossierPath) && $this->dossierPath !== '') {
+            @unlink($this->dossierPath);
+        }
+
+        parent::tearDown();
+    }
+
     public function test_read_contract_fixtures_are_respected(): void
     {
         /** @var array<int, array{name: string, method: string, uri: string, status: int, required_paths: array<int, string>}> $cases */
@@ -45,7 +58,11 @@ final class ApiContractFixturesTest extends TestCase
         );
 
         foreach ($cases as $case) {
-            $uri = str_replace('{session_id}', (string) $this->session->id, $case['uri']);
+            $uri = str_replace(
+                ['{session_id}', '{dossier_id}'],
+                [(string) $this->session->id, (string) $this->dossier->id],
+                $case['uri']
+            );
             $response = $this->json($case['method'], $uri);
             $response->assertStatus($case['status']);
 
@@ -158,13 +175,17 @@ final class ApiContractFixturesTest extends TestCase
             'linked_commit_count' => 1,
         ]);
 
-        TrackedDossier::query()->create([
+        $tmp = tempnam(sys_get_temp_dir(), 'patent-box-contract-dossier-');
+        $this->dossierPath = is_string($tmp) ? $tmp : sys_get_temp_dir().'/patent-box-contract-dossier-fallback.json';
+        file_put_contents($this->dossierPath, '{"ok":true}');
+
+        $this->dossier = TrackedDossier::query()->create([
             'tracking_session_id' => $this->session->id,
             'format' => 'json',
             'locale' => 'it',
-            'path' => 'storage/dossiers/1.json',
-            'byte_size' => 1024,
-            'sha256' => str_repeat('a', 64),
+            'path' => $this->dossierPath,
+            'byte_size' => 11,
+            'sha256' => hash('sha256', '{"ok":true}'),
             'generated_at' => '2026-05-07 10:30:00',
         ]);
     }
