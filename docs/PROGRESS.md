@@ -20,6 +20,7 @@
   - middleware `ProtectPatentBoxApi` applicato automaticamente alla catena API quando il token è impostato;
   - test `ApiAuthGateTest` con casi: senza token (200), token mancante (401, `error.code = unauthorized`), header/bearer validi (200).
   - API reference aggiornato con comportamento di autenticazione opzionale.
+- Workflow CI aggiornato su `pull_request` senza filtro `branches`, così i gate partono anche per PR su branch macro.
 - Stato locale:
   - Branch e PR pubblicati (`task/api-security-hardening`, `task/api-write-jobs`) a supporto del flusso macro.
 - Stato PR:
