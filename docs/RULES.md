@@ -33,6 +33,7 @@ If any point fails, fix and loop again.
 
 - Do not stop after completing one block and do not wait for a user "go ahead" between roadmap blocks.
 - Continue automatically to the next roadmap block until 100% completion.
+- End of each single step/substep: explicitly continue to the next roadmap point without asking for confirmation.
 - Stop only for hard blockers:
   - missing external access (GitHub push/PR/Copilot/CI unavailable),
   - required secrets/credentials unavailable,

@@ -6,6 +6,8 @@ Goal: implement a production-grade, opt-in HTTP API layer inside `padosoft/larav
 
 Execution model: macro branches + subtask PR loop with mandatory local tests, Copilot review, CI green, and merge gates per subtask and per macro.
 
+Regola operativa obbligatoria: a fine di ogni step/substep della roadmap, non fermarsi e continuare subito al punto successivo senza chiedere conferma.
+
 ## Deep Analysis Findings
 
 ### Current strengths
@@ -161,4 +163,3 @@ For every subtask and macro PR:
 9. Merge.
 
 If remote checks cannot be executed in-session, record exact blocked action in `docs/PROGRESS.md` and do not mark task complete.
-

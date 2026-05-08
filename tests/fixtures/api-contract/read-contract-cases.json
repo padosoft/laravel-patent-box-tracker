@@ -1,0 +1,72 @@
+[
+  {
+    "name": "health envelope",
+    "method": "get",
+    "uri": "/api/patent-box/v1/health",
+    "status": 200,
+    "required_paths": ["data", "data.status", "data.version"]
+  },
+  {
+    "name": "capabilities envelope",
+    "method": "get",
+    "uri": "/api/patent-box/v1/capabilities",
+    "status": 200,
+    "required_paths": ["data", "data.package", "data.package.name", "data.roles"]
+  },
+  {
+    "name": "sessions list",
+    "method": "get",
+    "uri": "/api/patent-box/v1/tracking-sessions",
+    "status": 200,
+    "required_paths": ["data", "meta", "meta.total"]
+  },
+  {
+    "name": "session detail",
+    "method": "get",
+    "uri": "/api/patent-box/v1/tracking-sessions/{session_id}",
+    "status": 200,
+    "required_paths": ["data", "data.id", "data.status", "data.tax_identity"]
+  },
+  {
+    "name": "session commits list",
+    "method": "get",
+    "uri": "/api/patent-box/v1/tracking-sessions/{session_id}/commits",
+    "status": 200,
+    "required_paths": ["data", "meta", "meta.total", "meta.per_page"]
+  },
+  {
+    "name": "session evidence list",
+    "method": "get",
+    "uri": "/api/patent-box/v1/tracking-sessions/{session_id}/evidence",
+    "status": 200,
+    "required_paths": ["data", "meta", "meta.total", "meta.per_page"]
+  },
+  {
+    "name": "session dossiers list",
+    "method": "get",
+    "uri": "/api/patent-box/v1/tracking-sessions/{session_id}/dossiers",
+    "status": 200,
+    "required_paths": ["data", "meta"]
+  },
+  {
+    "name": "session integrity",
+    "method": "get",
+    "uri": "/api/patent-box/v1/tracking-sessions/{session_id}/integrity",
+    "status": 200,
+    "required_paths": ["data", "data.verified", "data.head", "data.commit_count", "data.first_failure"]
+  },
+  {
+    "name": "not found contract",
+    "method": "get",
+    "uri": "/api/patent-box/v1/tracking-sessions/999999",
+    "status": 404,
+    "required_paths": ["error", "error.code", "error.message"]
+  },
+  {
+    "name": "validation contract",
+    "method": "post",
+    "uri": "/api/patent-box/v1/tracking-sessions",
+    "status": 422,
+    "required_paths": ["error", "error.code", "error.details"]
+  }
+]

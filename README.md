@@ -50,7 +50,16 @@
 > - **W4.C** — `PdfDossierRenderer` (Browsershot + DomPDF fallback) + `JsonDossierRenderer` + Italian Blade template + `HashChainBuilder` + `RenderCommand`.
 > - **W4.D** — `TrackCommand` (`patent-box:track`) + `CrossRepoCommand` (`patent-box:cross-repo`) + `CrossRepoConfigValidator` + the fluent builder API documented in [Quick start](#quick-start).
 >
-> The next milestone is the `v0.1.0` tag and the corresponding Packagist publish. The Roadmap section below is now accurate; planned items are explicitly tagged for v0.2 and beyond.
+> API v1 is now active, hardened and tested on:
+>
+> - `GET /api/patent-box/v1/health`
+> - `GET /api/patent-box/v1/capabilities`
+> - read endpoints per sessioni/commits/evidence/dossier/integrity
+> - write endpoints con coda per tracciamento classificazione e render
+> - optional API auth + rate limiter
+> - unified API error/error code contract
+>
+> The next milestone is the `v0.1.1` tag and the corresponding Packagist publish. The Roadmap section below is now accurate; planned items are explicitly tagged for v0.2 and beyond.
 
 ## Why this package
 
