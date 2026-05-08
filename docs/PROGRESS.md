@@ -1,5 +1,32 @@
 # PROGRESS
 
+## 2026-05-08
+
+- Package: subtask `4.1 Authorization and middleware override strategy` avviato su branch `task/api-security-hardening-subtask-4.1-api-token-gate`.
+- Aggiunti:
+  - configurazione facoltativa `patent-box-tracker.api.auth_token` e env `PATENT_BOX_API_TOKEN`;
+  - middleware `ProtectPatentBoxApi` applicato automaticamente alla catena API quando il token è impostato;
+  - test `ApiAuthGateTest` con casi: senza token (200), token mancante (401, `error.code = unauthorized`), header/bearer validi (200).
+  - API reference aggiornato con comportamento di autenticazione opzionale.
+- Stato locale: non riesco ad aprire push/PR loop in questa sessione per blocker remoto (`Win32 error 5` su git/SSH). Documentato e continuato al prossimo punto operativo.
+- Stato PR:
+  - PR aperta: https://github.com/padosoft/laravel-patent-box-tracker/pull/8 (base `task/api-read-models`, head `task/api-read-models-subtask-2.4-show-dossier`)
+  - Copilot review richiesta: verificata (`Copilot` in reviewers)
+  - Verifica checks: nessun check riportato al momento (`gh pr checks` => no checks reported)
+
+## 2026-05-08
+
+- Package avanzato a `task/api-read-models` con consolidamento Macro 2:
+  - Subtask `2.4 Dossier detail endpoint`: completato.
+  - Aggiunti:
+    - `GET /tracking-sessions/{trackingSession}/dossiers/{dossier}` con risposta detail e validazioni coerenti (`not_found` su sessione assente, dossier non associato, path assente/non file).
+    - test `TrackingReadApiTest` per missing read routes (`not_found`) e per `show dossier` (payload + scope/session integrity).
+    - aggiornamento `docs/API_REFERENCE.md` con sezione Dossier detail.
+  - Stato locale:
+    - `vendor/bin/phpunit.bat tests/Feature/Api` eseguito in questa sessione: `OK (36 tests, 179 assertions)`.
+    - PR aperta: https://github.com/padosoft/laravel-patent-box-tracker/pull/7
+    - Copilot review richiesta con bot `copilot-pull-request-reviewer[bot]`.
+
 ## 2026-05-07 (Aggiornamento operativo)
 
 - Subtask `task/api-foundation-hardening` (Macro 1): risolte tutte le 5 regressioni API contract rilevate.
