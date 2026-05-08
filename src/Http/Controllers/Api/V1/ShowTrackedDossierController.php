@@ -23,7 +23,22 @@ final class ShowTrackedDossierController extends Controller
             ->where('id', $dossier)
             ->where('tracking_session_id', $session->id)
             ->first();
-        if (! $row instanceof TrackedDossier || ! is_string($row->path) || $row->path === '' || ! is_file($row->path)) {
+        if (! $row instanceof TrackedDossier || ! is_string($row->path) || $row->path === '') {
+            return ApiResponse::error('not_found', 'The requested resource was not found.', [], 404);
+        }
+        $realPath = realpath($row->path);
+        if ($realPath === false || ! is_file($realPath)) {
+            return ApiResponse::error('not_found', 'The requested resource was not found.', [], 404);
+        }
+        $hash = hash_file('sha256', $realPath);
+        $size = filesize($realPath);
+        if ($hash === false || $size === false) {
+            return ApiResponse::error('not_found', 'The requested resource was not found.', [], 404);
+        }
+        if ($row->sha256 !== null && $row->sha256 !== $hash) {
+            return ApiResponse::error('not_found', 'The requested resource was not found.', [], 404);
+        }
+        if ($row->byte_size !== null && (int) $row->byte_size !== (int) $size) {
             return ApiResponse::error('not_found', 'The requested resource was not found.', [], 404);
         }
 
@@ -41,14 +56,12 @@ final class ShowTrackedDossierController extends Controller
 
     private function iso(mixed $value): ?string
     {
-        $tz = new \DateTimeZone('UTC');
-        if ($value instanceof \DateTimeImmutable) {
-            return $value->setTimezone($tz)->format('Y-m-d\TH:i:s\Z');
-        }
-        if ($value instanceof \DateTime) {
-            return (clone $value)->setTimezone($tz)->format('Y-m-d\TH:i:s\Z');
+        if (! $value instanceof \DateTimeInterface) {
+            return null;
         }
 
-        return null;
+        return \DateTimeImmutable::createFromInterface($value)
+            ->setTimezone(new \DateTimeZone('UTC'))
+            ->format('Y-m-d\TH:i:s\Z');
     }
 }

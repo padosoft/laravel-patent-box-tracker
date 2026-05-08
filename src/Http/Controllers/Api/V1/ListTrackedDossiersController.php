@@ -62,14 +62,12 @@ final class ListTrackedDossiersController extends Controller
 
     private function iso(mixed $value): ?string
     {
-        $tz = new \DateTimeZone('UTC');
-        if ($value instanceof \DateTimeImmutable) {
-            return $value->setTimezone($tz)->format('Y-m-d\TH:i:s\Z');
-        }
-        if ($value instanceof \DateTime) {
-            return (clone $value)->setTimezone($tz)->format('Y-m-d\TH:i:s\Z');
+        if (! $value instanceof \DateTimeInterface) {
+            return null;
         }
 
-        return null;
+        return \DateTimeImmutable::createFromInterface($value)
+            ->setTimezone(new \DateTimeZone('UTC'))
+            ->format('Y-m-d\TH:i:s\Z');
     }
 }

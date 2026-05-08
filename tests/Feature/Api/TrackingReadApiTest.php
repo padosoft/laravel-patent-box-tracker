@@ -195,21 +195,22 @@ final class TrackingReadApiTest extends TestCase
             unlink($contentPath);
             $this->fail('Unable to write temporary dossier file.');
         }
+        try {
+            $dossier->update([
+                'path' => $contentPath,
+                'byte_size' => strlen($content),
+                'sha256' => hash('sha256', $content),
+            ]);
 
-        $dossier->update([
-            'path' => $contentPath,
-            'byte_size' => strlen($content),
-            'sha256' => hash('sha256', $content),
-        ]);
-
-        $this->getJson('/api/patent-box/v1/tracking-sessions/'.$this->session->id.'/dossiers/'.$dossier->id)
-            ->assertOk()
-            ->assertJsonPath('data.id', (int) $dossier->id)
-            ->assertJsonPath('data.tracking_session_id', (int) $this->session->id)
-            ->assertJsonPath('data.sha256', hash('sha256', $content))
-            ->assertJsonPath('data.format', 'json');
-
-        unlink($contentPath);
+            $this->getJson('/api/patent-box/v1/tracking-sessions/'.$this->session->id.'/dossiers/'.$dossier->id)
+                ->assertOk()
+                ->assertJsonPath('data.id', (int) $dossier->id)
+                ->assertJsonPath('data.tracking_session_id', (int) $this->session->id)
+                ->assertJsonPath('data.sha256', hash('sha256', $content))
+                ->assertJsonPath('data.format', 'json');
+        } finally {
+            @unlink($contentPath);
+        }
     }
 
     public function test_show_dossier_returns_standard_not_found_when_dossier_missing(): void
