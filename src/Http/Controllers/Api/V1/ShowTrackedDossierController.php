@@ -35,7 +35,20 @@ final class ShowTrackedDossierController extends Controller
             'path' => $row->path,
             'byte_size' => $row->byte_size !== null ? (int) $row->byte_size : null,
             'sha256' => $row->sha256,
-            'generated_at' => $row->generated_at?->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z'),
+            'generated_at' => $this->iso($row->generated_at),
         ]);
+    }
+
+    private function iso(mixed $value): ?string
+    {
+        $tz = new \DateTimeZone('UTC');
+        if ($value instanceof \DateTimeImmutable) {
+            return $value->setTimezone($tz)->format('Y-m-d\TH:i:s\Z');
+        }
+        if ($value instanceof \DateTime) {
+            return (clone $value)->setTimezone($tz)->format('Y-m-d\TH:i:s\Z');
+        }
+
+        return null;
     }
 }

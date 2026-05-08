@@ -35,21 +35,23 @@ final class ListTrackedDossiersController extends Controller
         }
 
         $paginator = $query->paginate($perPage);
-        $rows = collect($paginator->items())
-            ->filter(static fn (mixed $item): bool => $item instanceof TrackedDossier)
-            ->map(function (TrackedDossier $dossier): array {
-                return [
-                    'id' => (int) $dossier->id,
-                    'tracking_session_id' => (int) $dossier->tracking_session_id,
-                    'format' => (string) $dossier->format,
-                    'locale' => (string) $dossier->locale,
-                    'path' => $dossier->path,
-                    'byte_size' => $dossier->byte_size !== null ? (int) $dossier->byte_size : null,
-                    'sha256' => $dossier->sha256,
-                    'generated_at' => $this->iso($dossier->generated_at),
-                ];
-            })
-            ->all();
+        $rows = [];
+        foreach ($paginator->items() as $dossier) {
+            if (! $dossier instanceof TrackedDossier) {
+                continue;
+            }
+
+            $rows[] = [
+                'id' => (int) $dossier->id,
+                'tracking_session_id' => (int) $dossier->tracking_session_id,
+                'format' => (string) $dossier->format,
+                'locale' => (string) $dossier->locale,
+                'path' => $dossier->path,
+                'byte_size' => $dossier->byte_size !== null ? (int) $dossier->byte_size : null,
+                'sha256' => $dossier->sha256,
+                'generated_at' => $this->iso($dossier->generated_at),
+            ];
+        }
 
         return ApiResponse::success($rows, [
             'page' => (int) $paginator->currentPage(),
@@ -60,8 +62,12 @@ final class ListTrackedDossiersController extends Controller
 
     private function iso(mixed $value): ?string
     {
-        if ($value instanceof \DateTimeInterface) {
-            return $value->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z');
+        $tz = new \DateTimeZone('UTC');
+        if ($value instanceof \DateTimeImmutable) {
+            return $value->setTimezone($tz)->format('Y-m-d\TH:i:s\Z');
+        }
+        if ($value instanceof \DateTime) {
+            return (clone $value)->setTimezone($tz)->format('Y-m-d\TH:i:s\Z');
         }
 
         return null;

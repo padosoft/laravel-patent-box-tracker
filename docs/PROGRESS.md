@@ -3,14 +3,15 @@
 ## 2026-05-08
 
 - Package avanzato a `task/api-read-models` con consolidamento Macro 2:
-  - Subtask attivo: `2.4 Dossier detail endpoint`.
+  - Subtask `2.4 Dossier detail endpoint`: completato.
   - Aggiunti:
     - `GET /tracking-sessions/{trackingSession}/dossiers/{dossier}` con risposta detail e validazioni coerenti (`not_found` su sessione assente, dossier non associato, path assente/non file).
     - test `TrackingReadApiTest` per missing read routes (`not_found`) e per `show dossier` (payload + scope/session integrity).
     - aggiornamento `docs/API_REFERENCE.md` con sezione Dossier detail.
-- Stato locale:
-  - `vendor/bin/phpunit.bat tests/Feature/Api` eseguito in questa sessione: `OK (36 tests, 179 assertions)`.
-  - blocker remoto persistente: `Win32 error 5` su push/gh/PR loop.
+  - Stato locale:
+    - `vendor/bin/phpunit.bat tests/Feature/Api` eseguito in questa sessione: `OK (36 tests, 179 assertions)`.
+    - PR aperta: https://github.com/padosoft/laravel-patent-box-tracker/pull/7
+    - Copilot review richiesta con bot `copilot-pull-request-reviewer[bot]`.
 
 ## 2026-05-07 (Aggiornamento operativo)
 
