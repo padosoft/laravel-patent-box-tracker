@@ -1,0 +1,17 @@
+{
+  "name": "laravel-patent-box-tracker-docs",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node node_modules/@docmd/core/dist/bin/docmd.js dev --config docs-site/docmd.config.json",
+    "build": "node node_modules/@docmd/core/dist/bin/docmd.js build --config docs-site/docmd.config.json",
+    "check": "node docs-site/scripts/check-docs-links.mjs && node docs-site/scripts/check-no-raw-html.mjs"
+  },
+  "dependencies": {
+    "@docmd/core": "^0.8.6",
+    "@huggingface/transformers": "^4.2.0",
+    "docmd-search": "^0.1.0-alpha.0",
+    "onnxruntime-node": "^1.20.0"
+  }
+}

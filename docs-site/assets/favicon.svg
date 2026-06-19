@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="laravel-patent-box-tracker">
+  <rect width="64" height="64" rx="12" fill="#0d9488"/>
+  <path d="M18 14h22l8 8v28H18z" fill="#ecfeff"/>
+  <path d="M40 14v10h10" fill="#99f6e4"/>
+  <path d="M24 32h16M24 39h16M24 46h10" stroke="#0f766e" stroke-width="4" stroke-linecap="round"/>
+  <path d="M16 52h32" stroke="#134e4a" stroke-width="4" stroke-linecap="round"/>
+</svg>

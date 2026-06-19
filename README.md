@@ -27,6 +27,11 @@
   <em>v1.0.0 — production-ready. CLI + fluent API + stable HTTP API v1 + companion web admin panel + AI vibe-coding pack in the box.</em>
 </p>
 
+<p align="center">
+  <strong>Official docs:</strong>
+  <a href="https://doc.laravel-patent-box-tracker.padosoft.com">https://doc.laravel-patent-box-tracker.padosoft.com</a>
+</p>
+
 ---
 
 ## Table of contents

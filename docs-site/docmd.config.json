@@ -1,0 +1,215 @@
+{
+  "title": "laravel-patent-box-tracker",
+  "description": "Audit-grade Italian Patent Box dossier generator for Laravel.",
+  "url": "https://doc.laravel-patent-box-tracker.padosoft.com",
+  "src": "docs-site/content",
+  "out": "_site",
+  "base": "/",
+  "favicon": "docs-site/assets/favicon.svg",
+  "copyCode": true,
+  "pageNavigation": true,
+  "minify": true,
+  "theme": {
+    "name": "default",
+    "appearance": "system",
+    "primaryColor": "#0d9488",
+    "customCss": [
+      "docs-site/assets/custom.css"
+    ]
+  },
+  "layout": {
+    "spa": true,
+    "header": {
+      "enabled": true
+    },
+    "sidebar": {
+      "enabled": true,
+      "collapsible": true,
+      "defaultCollapsed": false
+    },
+    "footer": {
+      "style": "minimal",
+      "content": "Apache-2.0. Built by Padosoft for audit-grade Patent Box documentation."
+    },
+    "menubar": {
+      "enabled": true,
+      "left": [
+        {
+          "text": "Docs",
+          "url": "/"
+        },
+        {
+          "text": "GitHub",
+          "url": "https://github.com/padosoft/laravel-patent-box-tracker"
+        },
+        {
+          "text": "Packagist",
+          "url": "https://packagist.org/packages/padosoft/laravel-patent-box-tracker"
+        }
+      ]
+    },
+    "optionsMenu": {
+      "position": "header",
+      "components": {
+        "search": true,
+        "themeSwitch": true,
+        "sponsor": null
+      }
+    }
+  },
+  "navigation": [
+    {
+      "title": "Get Started",
+      "items": [
+        {
+          "title": "Overview",
+          "path": "/"
+        },
+        {
+          "title": "Quickstart",
+          "path": "/get-started/quickstart"
+        },
+        {
+          "title": "Installation",
+          "path": "/get-started/installation"
+        }
+      ]
+    },
+    {
+      "title": "Guides",
+      "items": [
+        {
+          "title": "Pipeline Workflow",
+          "path": "/guides/pipeline-workflow"
+        },
+        {
+          "title": "Single Repository Runs",
+          "path": "/guides/single-repository"
+        },
+        {
+          "title": "Cross Repository Runs",
+          "path": "/guides/cross-repository"
+        },
+        {
+          "title": "Worked Example",
+          "path": "/guides/worked-example"
+        }
+      ]
+    },
+    {
+      "title": "Concetti & Teoria",
+      "items": [
+        {
+          "title": "Motivazione",
+          "path": "/concetti/motivazione"
+        },
+        {
+          "title": "Teoria",
+          "path": "/concetti/teoria"
+        },
+        {
+          "title": "Gotcha & Limits",
+          "path": "/concetti/gotcha-limits"
+        }
+      ]
+    },
+    {
+      "title": "Architettura",
+      "items": [
+        {
+          "title": "Architecture Overview",
+          "path": "/architettura/overview"
+        },
+        {
+          "title": "Design",
+          "path": "/architettura/design"
+        },
+        {
+          "title": "Modello dati e contratto",
+          "path": "/architettura/modello-dati-contratto"
+        },
+        {
+          "title": "ADR",
+          "path": "/architettura/adr"
+        }
+      ]
+    },
+    {
+      "title": "Best Practices",
+      "items": [
+        {
+          "title": "Classification Hygiene",
+          "path": "/best-practices/classification-hygiene"
+        },
+        {
+          "title": "Evidence Strategy",
+          "path": "/best-practices/evidence-strategy"
+        }
+      ]
+    },
+    {
+      "title": "Operations",
+      "items": [
+        {
+          "title": "Deployment",
+          "path": "/operations/deployment"
+        },
+        {
+          "title": "Verification",
+          "path": "/operations/verification"
+        }
+      ]
+    },
+    {
+      "title": "Reference",
+      "items": [
+        {
+          "title": "CLI",
+          "path": "/reference/cli"
+        },
+        {
+          "title": "PHP API",
+          "path": "/reference/php-api"
+        },
+        {
+          "title": "HTTP API",
+          "path": "/reference/http-api"
+        },
+        {
+          "title": "Configuration",
+          "path": "/reference/configuration"
+        }
+      ]
+    }
+  ],
+  "plugins": {
+    "search": {
+      "semantic": true,
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "chunkSize": 512,
+      "chunkOverlap": 64,
+      "topK": 10,
+      "showConfidence": true
+    },
+    "git": {
+      "repo": "https://github.com/padosoft/laravel-patent-box-tracker",
+      "branch": "main",
+      "lastUpdated": true,
+      "commitHistory": true,
+      "maxCommits": 5
+    },
+    "seo": {
+      "author": "Lorenzo Padovani",
+      "twitter": "@padosoft"
+    },
+    "sitemap": {
+      "defaultChangefreq": "weekly",
+      "defaultPriority": 0.8,
+      "rootPriority": 1
+    },
+    "mermaid": {},
+    "math": {},
+    "llms": {},
+    "analytics": false
+  }
+}
