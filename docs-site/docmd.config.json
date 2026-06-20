@@ -1,20 +1,14 @@
 {
-  "title": "laravel-patent-box-tracker",
-  "description": "Audit-grade Italian Patent Box dossier generator for Laravel.",
-  "url": "https://doc.laravel-patent-box-tracker.padosoft.com",
-  "src": "docs-site/content",
-  "out": "_site",
-  "base": "/",
-  "favicon": "docs-site/assets/favicon.svg",
   "copyCode": true,
   "pageNavigation": true,
   "minify": true,
   "theme": {
-    "name": "default",
     "appearance": "system",
     "primaryColor": "#0d9488",
+    "name": "default",
+    "defaultMode": "dark",
     "customCss": [
-      "docs-site/assets/custom.css"
+      "assets/custom.css"
     ]
   },
   "layout": {
@@ -183,21 +177,6 @@
     }
   ],
   "plugins": {
-    "search": {
-      "semantic": true,
-      "model": "Xenova/all-MiniLM-L6-v2",
-      "chunkSize": 512,
-      "chunkOverlap": 64,
-      "topK": 10,
-      "showConfidence": true
-    },
-    "git": {
-      "repo": "https://github.com/padosoft/laravel-patent-box-tracker",
-      "branch": "main",
-      "lastUpdated": true,
-      "commitHistory": true,
-      "maxCommits": 5
-    },
     "seo": {
       "author": "Lorenzo Padovani",
       "twitter": "@padosoft"
@@ -210,6 +189,28 @@
     "mermaid": {},
     "math": {},
     "llms": {},
-    "analytics": false
-  }
+    "search": {
+      "enabled": true,
+      "semantic": true,
+      "placeholder": "Search the docs…"
+    },
+    "git": {
+      "repo": "https://github.com/padosoft/laravel-patent-box-tracker",
+      "branch": "main",
+      "editLink": true,
+      "lastUpdated": true,
+      "commitHistory": true,
+      "dateFormat": "relative"
+    },
+    "analytics": {
+      "enabled": false
+    }
+  },
+  "title": "laravel-patent-box-tracker",
+  "description": "Audit-grade Italian Patent Box dossier generator for Laravel.",
+  "url": "https://doc.laravel-patent-box-tracker.padosoft.com",
+  "src": "docs",
+  "out": "_site",
+  "base": "/",
+  "favicon": "assets/favicon.svg"
 }
